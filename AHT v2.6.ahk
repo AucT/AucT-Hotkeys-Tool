@@ -35,7 +35,7 @@ DebugPrivilegesEnable()
   VK_LIST = VK41,VK42,VK43,VK44,VK45,VK46,VK47,VK48,VK49,VK4A,VK4B,VK4C,VK4D,VK4E,VK4F,VK50,VK51,VK52,VK53,VK54,VK55,VK56,VK57,VK58,VK59,VK5A,VK30,VK31,VK32,VK33,VK34,VK35,VK36,VK37,VK38,VK39,VKC0,VKDB,VKDD,VKBE,VKBF,VKBA,VKDE
   HK_LIST = A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,0,1,2,3,4,5,6,7,8,9,``,[,],.,/,;,'
 
-Version=AucT Hotkeys Tool v2.5b
+Version=AucT Hotkeys Tool v2.6
 
   IniRead, profile, %A_WorkingDir%\settings.ini, Others, profile, General
 	if profile=General
@@ -996,6 +996,8 @@ btw - by the way
 -we - -weather
 -re - -repick
 -ra - -random
+-ro - -roll
+-1x1 - -apshomnp
 )
 
 MsgBox 64, Command List ,%Commandlist%
@@ -1012,7 +1014,8 @@ return
 UpdateCheck:
 UrlDownloadToFile, http://www.dota.zzl.org/latest.html, %A_Temp%\latest.html
 FileReadLine, NetVer, %A_Temp%\latest.html, 1
-If (Version <> NetVer){
+If (Version <> NetVer)
+{
 
    MsgBox 68, Update is available ,%NetVer% is available! `nWould you like to download new version?,5
 IfMsgBox Yes
@@ -1262,7 +1265,12 @@ menu, tray, togglecheck, Mouse Capture
 if WMC
 SetTimer,CheckActiveWar3
 else
+{
 SetTimer,CheckActiveWar3,off
+SetTimer,CheckInactiveWar3,Off
+DllCall("ClipCursor", UInt, 0)
+_locked:=0
+}
 return
 styledefault:
 IniWrite, %A_Space%, %A_WorkingDir%\%profileini%, Others, stylecolor
@@ -1450,7 +1458,6 @@ GuiEscape:
 GuiClose:
 ButtonHide:
 Gui, Hide
-TrayTip,AHT,I'm here, 3,1
 return
 
 ButtonExit:
@@ -1630,6 +1637,7 @@ LC(xx,yy)
    global top
    global cWidth
    global cHeight
+   global UAC
    if _locked
    {
    x:=left+cWidth*xx
@@ -1640,6 +1648,7 @@ LC(xx,yy)
    x:=A_ScreenWidth*xx
    y:=A_ScreenHeight*yy
    }
+
    BlockInput,MouseMove
    MouseGetPos, x0, y0
    if UAC
@@ -1648,27 +1657,64 @@ LC(xx,yy)
    sleep,1
    Click
    }
-   else {
+   else
+   {
    SendPlay, {Click %x%,  %y%, Left}{Click %x0%, %y0%, 0}
    }
    Send {Click %x0%,  %y0%, 0}
    BlockInput,MouseMoveOff
 }
 
+IsLearning()
+{
+   global _locked
+   global left
+   global top
+   global cWidth
+   global cHeight
+   if _locked
+   {
+   x:=left+cWidth*0.9595
+   y:=top+cHeight*0.878
+   }
+   else
+   {
+   x:=A_ScreenWidth*0.9595
+   y:=A_ScreenHeight*0.878
+   }
+
+PixelGetColor, color1, %x%, %y%
+if color1=0x000000
+	return 1
+return 0
+}
+
 LC1:
-   LC(.79,.95)
+	if IsLearning()
+		LC(.79,.81)
+	else
+		LC(.79,.95)
 return
 
 LC2:
-	LC(.84,.95)
+	if IsLearning()
+		LC(.84,.81)
+	else
+		LC(.84,.95)
 return
 
 LC3:
-   LC(.9,.95)
+	if IsLearning()
+		LC(.9,.81)
+	else
+		LC(.9,.95)
 return
 
 LC4:
-   LC(.95,.95)
+	if IsLearning()
+		LC(.95,.81)
+	else
+		LC(.95,.95)
 return
 
 LC5:
@@ -1688,7 +1734,7 @@ LC8:
 return
 
 LC9:
-   LC(.81,.79)
+   LC(.79,.81)
 return
 
 LC10:
@@ -2617,8 +2663,8 @@ VK(Param)
 		}
 }
 
-EmptyMem(PID="AHT v2.5b"){
-    pid:=(pid="AHT v2.5b") ? DllCall("GetCurrentProcessId") : pid
+EmptyMem(PID="AHT v2.6"){
+    pid:=(pid="AHT v2.6") ? DllCall("GetCurrentProcessId") : pid
     h:=DllCall("OpenProcess", "UInt", 0x001F0FFF, "Int", 0, "Int", pid)
     DllCall("SetProcessWorkingSetSize", "UInt", h, "Int", -1, "Int", -1)
     DllCall("CloseHandle", "Int", h)
