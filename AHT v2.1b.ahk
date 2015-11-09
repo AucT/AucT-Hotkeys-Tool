@@ -27,9 +27,7 @@ RunAsAdmin()
   VK_LIST = VK41,VK42,VK43,VK44,VK45,VK46,VK47,VK48,VK49,VK4A,VK4B,VK4C,VK4D,VK4E,VK4F,VK50,VK51,VK52,VK53,VK54,VK55,VK56,VK57,VK58,VK59,VK5A,VK30,VK31,VK32,VK33,VK34,VK35,VK36,VK37,VK38,VK39,VKC0,VKDB,VKDD,VKBE,VKBF,VKBA,VKDE
   HK_LIST = A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,0,1,2,3,4,5,6,7,8,9,``,[,],.,/,;,'
 
-SetTimer, CheckWarcraft    						;chat-suspending (by yayuhhz)
-Version=AucT Hotkeys Tool v2.1 				;current verison for update
-
+Version=AucT Hotkeys Tool v2.1b 				;current verison for update
 ;************************************************PROFILE MANAGEMENT********************************//////////////
   IniRead, profile, %A_WorkingDir%\settings.ini, Others, profile, General
 	if profile=General
@@ -65,7 +63,7 @@ gui,5:font, cwhite
   Menu, tray, add
   Menu, tray, add, Mouse Capture, SetWMC
   Menu, tray, add, Exit
-  Menu, Tray, Icon, %A_ScriptDir%\%A_ScriptName%,1,1
+  ;Menu, Tray, Icon, %A_ScriptDir%\%A_ScriptName%,1,1
 
   CoordMode,Mouse,Screen
   
@@ -194,6 +192,20 @@ gui,5:font, cwhite
 	else
 	Hotkey,% VK(autoall), ACa
   }
+  
+  ;***************************
+  	;Chat Suspending
+	IniRead, chat, %A_WorkingDir%\%profileini%, Others, chat, 1
+	IniRead, AutoDetect, %A_WorkingDir%\%profileini%, Others, AutoDetect, 1
+	if chat
+	{
+	Hotkey,*Enter, SendEnt
+	Hotkey,*NumpadEnter, SendEnt
+	Hotkey, ~*Esc, KEYSON
+	Hotkey, ~LButton, KEYSON
+	if AutoDetect
+	SetTimer, checklobby, 400
+	}
 ;************************************************MESSAGES***********************************************
   loop, 36 {
 	IniRead, mh%A_Index%, %A_WorkingDir%\%profileini%,Messages, hotkey%A_Index%, %A_Space%
@@ -470,6 +482,9 @@ Menu, Options, Add, Update at start, SetUpdateAtStart
 Menu, Options, Add
 Menu, Options, Add, Mouse Capture, SetWMC
 
+Menu, Chat-Suspend, Add, Chat-free in game, Setchat
+Menu, Chat-Suspend, Add, Chat-free in lobby, Setautodetect
+
 Menu, Submenu1, Add, default, styledefault
 Menu, Submenu1, Add
 Menu, Submenu1, Add, light purple, stylelpurple
@@ -483,8 +498,10 @@ Menu, Submenu1, Add, grey, stylegrey
 
 Menu, Options, Add, Color Style, :Submenu1
 
-
-
+if chat
+menu, Chat-Suspend, check, Chat-free in game
+if autodetect
+menu, Chat-Suspend, check, Chat-free in lobby
 if ScrollIndicator
 menu, Options, check, Scroll Indicator
 if sound
@@ -512,6 +529,7 @@ Menu, HelpMenu, Add, &About, About
 Menu, MyMenuBar, Add, &Profile, :ProfileMenu
 Menu, MyMenuBar, Add, &WarCraft, :WarCraft
 Menu, MyMenuBar, Add, &Options, :Options
+Menu, MyMenuBar, Add, &Chat-Suspend, :Chat-Suspend
 Menu, MyMenuBar, Add, &Help, :HelpMenu
 
 
@@ -594,12 +612,14 @@ Gui, Add, GroupBox, x6 y32 w450 h400,Messages
 
 mesinfo =
 (
-To change existant hotkey simply select it, change the hotkey/value and press "ADD"
-
 To make random message add "|" after each. For example:
 GJ|GREAT|nice1|I love u
 )
-gui, add, text, x30 y310 w410,%mesinfo%
+if darkstyle
+gui, font, cwhite
+else
+gui, font
+gui, add, text, x30 y390 w410,%mesinfo%
 gui, add, checkbox, x380 y55 w70 h30 vtoAll, To All?
 gui, font
 
@@ -608,8 +628,8 @@ gui, add, hotkey,vHotkeyChoose_Mes x30 y55 w100 h30,
 gui, add, button, gAddMes x140 y55 w110 h30, ADD
 gui, add, button, gDeleteMes x260 y55 w110 h30, DELETE
 
-Gui, Add, ListBox, x30 y90 w100 h212 vMes_Key gMes_MesUpdate altsubmit
-gui, add, edit, x140 y90 w300 h210 vMesEdit,
+Gui, Add, ListBox, x30 y90 w100 h295 vMes_Key gMes_MesUpdate altsubmit
+gui, add, edit, x140 y90 w300 h290 vMesEdit,
 
 gosub, Mes_KeyUpdate
 
@@ -704,6 +724,7 @@ if darkstyle
 gui, font, cwhite
 else
 gui, font
+
 Gui, Add, Hotkey, vScoreboard gScoreboard x26 y60 w80, %Scoreboard%
 Gui, Add, Text, x116 y60, Show ScoreBoard
 Gui, Add, Hotkey, vShare gShare x26 y95 w80, %Share%
@@ -1089,6 +1110,18 @@ IniWrite, %ShieldR%, %A_WorkingDir%\%profileini%, Others, ShieldR
 menu, options, togglecheck, Shield RightWin
 return
 
+SetChat:
+chat:=!chat
+IniWrite, %chat%, %A_WorkingDir%\%profileini%, Others, chat
+menu, Chat-Suspend, togglecheck, Chat-free in game
+return
+
+SetAutodetect:
+autodetect:=!autodetect
+IniWrite, %autodetect%, %A_WorkingDir%\%profileini%, Others, autodetect
+menu, Chat-Suspend, togglecheck, Chat-free in lobby
+return
+
 SetRunatStart:
 RunatStart:=!RunatStart
 IniWrite, %RunatStart%, %A_WorkingDir%\%profileini%, Others, RunatStart
@@ -1416,62 +1449,12 @@ gui, submit, nohide
 IniWrite, % %A_ThisLabel%, %A_WorkingDir%\%profileini%, Others, %A_ThisLabel%
 return
 
-
-KRvalue1:
-KRvalue2:
-KRvalue3:
-KRvalue4:
-KRvalue5:
-KRvalue6:
-KRvalue7:
-KRvalue8:
-KRvalue9:
-KRvalue10:
-KRvalue11:
-KRvalue12:
-gui, submit, nohide
-IniWrite, % %A_ThisLabel%, %A_WorkingDir%\%profileini%, RemapKey, %A_ThisLabel%
-return
-
 auto1:
 auto2:
 autoall:
 EnAutoCast:
 gui, submit, nohide
 IniWrite, % %A_ThisLabel%, %A_WorkingDir%\%profileini%, Auto-Casts, %A_ThisLabel%
-return
-
-SaveMessage:
-gui, submit, nohide
-loop, 5
-{
-IniWrite,% mh%A_index%, %A_WorkingDir%\%profileini%, Messages, hotkey%A_index%
-IniWrite,% mv%A_index%, %A_WorkingDir%\%profileini%, Messages, message%A_index%
-IniWrite,% amh%A_index%, %A_WorkingDir%\%profileini%, Messages, ahotkey%A_index%
-IniWrite,% amv%A_index%, %A_WorkingDir%\%profileini%, Messages, amessage%A_index%
-}
-return
-
-SM1:
-SM2:
-SM3:
-SM4:
-SM5:
-i := SubStr(A_ThisLabel,3)
-gui, submit, nohide
-IniWrite,% mh%i%, %A_WorkingDir%\%profileini%, Messages, hotkey%i%
-IniWrite,% mv%i%, %A_WorkingDir%\%profileini%, Messages, message%i%
-return
-
-SAM1:
-SAM2:
-SAM3:
-SAM4:
-SAM5:
-i := SubStr(A_ThisLabel,4)
-gui, submit, nohide
-IniWrite,% amh%i%, %A_WorkingDir%\%profileini%, Messages, ahotkey%i%
-IniWrite,% amv%i%, %A_WorkingDir%\%profileini%, Messages, amessage%i%
 return
 
 ;=====================================CORE CODE=================================
@@ -1802,7 +1785,7 @@ send {vk0D}
 sleep, 1
 }
 else {
-StringReplace, Mes%A_Index%, Mes%A_Index%,\n,`n, All
+StringReplace, m, m,\n,`n, All
 loop, parse, m, `n
 {
 	send %typemes% {Raw}%A_LoopField%
@@ -1850,15 +1833,6 @@ return
 
 
 StringReplace, MesEdit, MesEdit,`n,\n, All
-loop, 35 {
-IniRead, h, %A_WorkingDir%\%profileini%, Messages, hotkey%A_Index%, %A_Space%
-  if h=%HotkeyChoose_Mes% 
-  {
-  i=%A_Index%
-  break
-  }
-}
-if !i {
 loop {
 IniRead, h, %A_WorkingDir%\%profileini%, Messages, hotkey%A_Index%, %A_Space%
   if !h
@@ -1867,7 +1841,7 @@ IniRead, h, %A_WorkingDir%\%profileini%, Messages, hotkey%A_Index%, %A_Space%
   break
   }
 }
-}
+
 if toAll
 MesEdit:="ALL:" . MesEdit
 IniWrite, %HotkeyChoose_Mes%, %A_WorkingDir%\%profileini%, Messages, hotkey%i%
@@ -1921,15 +1895,6 @@ if HK_Remap=
 MsgBox 262160, Error ,Choose hotkey first!
 return
 }
-loop, 35 {
-IniRead, h, %A_WorkingDir%\%profileini%, RemapKey, KRhotkey%A_Index%, %A_Space%
-  if h=%HK_Remap% 
-  {
-  i=%A_Index%
-  break
-  }
-}
-if !i {
 loop {
 IniRead, h, %A_WorkingDir%\%profileini%, RemapKey, KRhotkey%A_Index%, %A_Space%
   if !h
@@ -1937,7 +1902,6 @@ IniRead, h, %A_WorkingDir%\%profileini%, RemapKey, KRhotkey%A_Index%, %A_Space%
   i=%A_Index%
   break
   }
-}
 }
 IniWrite, %HK_Remap%, %A_WorkingDir%\%profileini%, RemapKey, KRhotkey%i%
 IniWrite, %Value_Remap%, %A_WorkingDir%\%profileini%, RemapKey, KRvalue%i%
@@ -2241,7 +2205,15 @@ return
 gIgnore:
 squelch:="/squelch "
 send {Enter}-hhn{Enter}
-send {Enter}%squelch% 
+send {Enter}%squelch%
+if !A_IsSuspended
+{
+if ScrollIndicator
+   SetScrollLockState, Off
+if AutoDetect
+   SetTimer, checklobby, off
+Suspend, on
+}
 return
 
 GetHero:
@@ -2281,21 +2253,62 @@ return
 Switch:
 Suspend
 if !A_IsSuspended{
+   Hotkey,*Enter, SendEnt,on
+   Hotkey,*NumpadEnter, SendEnt,on
+   Hotkey, ~*Esc, KEYSON,on
+   Hotkey, ~LButton, KEYSON,on
    if ScrollIndicator
    SetScrollLockState, On
+   if AutoDetect
+   SetTimer, checklobby, on
    if Sound
    soundplay, *48
-   SetTimer, CheckWarcraft, On
 }
 Else{
+   Hotkey,*Enter, SendEnt,off
+   Hotkey,*NumpadEnter, SendEnt,off
+   Hotkey, ~*Esc, KEYSON,off
+   Hotkey, ~LButton, KEYSON,off
    if ScrollIndicator
    SetScrollLockState, Off
+   if AutoDetect
+   SetTimer, checklobby, off
    if Sound
    soundplay, *64
-   SetTimer, CheckChatting, Off
-   SetTimer, CheckWarcraft, Off
 }
 return
+
+KEYSON:
+Suspend, Permit
+Suspend, Off
+if ScrollIndicator
+SetScrollLockState, On
+if AutoDetect
+SetTimer, checklobby, on
+return
+
+SendEnt:
+	Suspend, Permit
+	Send, {Blind}{Enter}
+	Suspend
+	if !A_IsSuspended
+		{
+		if ScrollIndicator
+		SetScrollLockState, On
+		if Sound
+		soundplay, *48
+		if AutoDetect
+		SetTimer, checklobby, on
+		}
+	Else {
+		if ScrollIndicator
+		SetScrollLockState, Off
+		if Sound
+		soundplay, *64
+		if AutoDetect
+		SetTimer, checklobby, off
+		}
+	return
 
 
 PauseGame:
@@ -2493,108 +2506,14 @@ VK(Param)
 		}
 }
 
-EmptyMem(PID="AHT v2.1"){
-    pid:=(pid="AHT v2.1") ? DllCall("GetCurrentProcessId") : pid
+EmptyMem(PID="AHT v2.1b"){
+    pid:=(pid="AHT v2.1b") ? DllCall("GetCurrentProcessId") : pid
     h:=DllCall("OpenProcess", "UInt", 0x001F0FFF, "Int", 0, "Int", pid)
     DllCall("SetProcessWorkingSetSize", "UInt", h, "Int", -1, "Int", -1)
     DllCall("CloseHandle", "Int", h)
 }
 
-CheckChatting:
-	if ReadChatState(hWar3Proc, baseAddr, chatState)
-	{
-		if chatState
-			Suspend, On
-		else
-			Suspend, Off
-	}
-	else
-	{
-		SetTimer, CheckChatting, Off
-		DllCall("CloseHandle", "UInt", hWar3Proc)
-		hWar3Proc := 0
-		SetTimer, CheckWarcraft, On
-		Suspend, Off
-	}
-	Return
 
-ReadChatState(handle, baseAddr, ByRef chatState)
-{
-	if (DllCall("ReadProcessMemory", "UInt", handle, "UInt", baseAddr, "UInt*", chatState, "UInt", 4, "UInt", 0) = 0 || ErrorLevel)
-	{
-		;MsgBox,Error: Could not read memory location %baseAddr% (%A_LastError%).
-		Return 0
-	}
-	Return 1
-}
-
-CheckWarcraft:
-	IfWinNotActive, ahk_class Warcraft III
-		Return
-	SetTimer, CheckWarcraft, Off
-	Sleep, 5000
-	IfWinActive, ahk_class Warcraft III
-	{
-		WinGet, pid, PID
-		if hWar3Proc > 0
-			DllCall("CloseHandle", "UInt", hWar3Proc)
-		
-		;Gosub, CoordSetup
-		
-		hWar3Proc := DllCall("OpenProcess", "UInt", 0x0010 | 0x0400, "Int", 0, "UInt", pid)
-		if (hWar3Proc = 0 || ErrorLevel)
-		{
-			MsgBox,Error: Unable to open process (%A_LastError%).
-			SetTimer, CheckWarcraft, On
-			Return
-		}
-		baseAddr := GetBaseAddr(pid)
-		if (baseAddr = 0)
-		{
-			SetTimer, CheckWarcraft, On
-			Return
-		}
-		SetTimer, CheckChatting, 100
-	}
-	else
-		SetTimer, CheckWarcraft, On
-	Return
-
-GetBaseAddr(pid)
-{
-	hSnapshot := DllCall("CreateToolhelp32Snapshot", "UInt", 0x08, "UInt", pid)
-	if (hSnapshot < 0 || ErrorLevel)
-	{
-		MsgBox,Error: Unable to take module snapshot (%A_LastError%).
-		Return 0
-	}
-	
-	VarSetCapacity(me32, 548)
-	NumPut(548, me32)
-	
-	if DllCall("Module32First", "UInt", hSnapshot, "UInt", &me32)
-	{
-		VarSetCapacity(szModule, 256)
-		
-		Loop
-		{
-			DllCall("RtlMoveMemory", "Str", szModule, "UInt", &me32 + 32, "UInt", 256)
-			
-			if (szModule = "game.dll")
-			{
-				DllCall("CloseHandle", "UInt", hSnapshot)
-				Return NumGet(me32, 20, "UInt") + 0xAD15F0
-			}
-			
-			if !DllCall("Module32Next", "UInt", hSnapshot, "UInt", &me32)
-				Break
-		}
-	}
-	
-	DllCall("CloseHandle", "UInt", hSnapshot)
-	;MsgBox,Error: game.dll was not found
-	Return 0
-}
 
 
 RunAsAdmin() {
@@ -2611,3 +2530,39 @@ if not A_IsAdmin
       ExitApp
     }
 }
+
+checklobby:
+IfWinActive, Warcraft III
+{
+x:=A_ScreenWidth*0.738
+y:=A_ScreenHeight*0.019
+PixelGetColor, color1, %x%, %y%
+if color1=0x000000
+{
+   if A_IsSuspended {
+   Hotkey,*Enter, SendEnt,on
+   Hotkey,*NumpadEnter, SendEnt,on
+   Hotkey, ~*Esc, KEYSON,on
+   Hotkey, ~LButton, KEYSON,on
+   if ScrollIndicator
+   SetScrollLockState, On
+   if Sound
+   soundplay, *48
+   Suspend, Off
+   }
+}
+else{
+   if !A_IsSuspended{
+   Hotkey,*Enter, SendEnt,off
+   Hotkey,*NumpadEnter, SendEnt,off
+   Hotkey, ~*Esc, KEYSON,off
+   Hotkey, ~LButton, KEYSON,off
+   if ScrollIndicator
+   SetScrollLockState, Off
+   if Sound
+   soundplay, *64
+   Suspend, On
+   }
+   }
+  }
+return
