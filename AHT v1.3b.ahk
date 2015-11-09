@@ -193,12 +193,8 @@ IniRead, enaqm, config.ini,All-Quick-Message, EnAQM
 
 ;Window MOUSE CAPTURER
 IniRead, enwmc, config.ini,Window-Mouse-Capturer, EnWMC
-if (enwmc=on) {
-  WinGetPos, VarX, VarY, Width, Height, A
-  VarX2 := VarX + Width
-  VarY2 := VarY + Height
-  ClipCursor( True, VarX, VarY, VarX2, VarY2)
-}
+if (enwmc="on")
+  Gosub, WMC
 
 ;ShortKeys
 ::-u::-unlock
@@ -515,9 +511,43 @@ AQM4:
 Send +{+Enter}%aqmv4%{Enter}
 return
 
-ClipCursor( Confine=True, x1=0 , y1=0, x2=1, y2=1 ) {
- VarSetCapacity(R,16,0),  NumPut(x1,&R+0),NumPut(y1,&R+4),NumPut(x2,&R+8),NumPut(y2,&R+12)
-Return Confine ? DllCall( "ClipCursor", UInt,&R ) : DllCall( "ClipCursor" )
+_locked := false
+
+WMC:
+  if _locked {
+    DllCall("ClipCursor")
+    _locked := false
+  } else {
+    ActiveHwnd := WinExist("Warcraft III")
+    VarSetCapacity(rect,16)
+    if GetWindowClientRect(ActiveHwnd,rect) && DllCall("ClipCursor",UInt,&rect)
+      _locked := true
+  }
+  Return
+
+GetWindowClientRect(hwnd,ByRef rect) {
+  if !hwnd || VarSetCapacity(rect) < 16
+    Return 0
+
+  VarSetCapacity(cRect,16)
+  if !DllCall("GetClientRect",UInt,hwnd,UInt,&cRect)
+    Return 0
+
+  cWidth := NumGet(cRect,8,Int) - NumGet(cRect,0,Int)
+  cHeight := NumGet(cRect,12,Int) - NumGet(cRect,4,Int)
+  
+  if !DllCall("GetWindowRect",UInt,hwnd,UInt,&rect)
+    Return 0
+  
+  wWidth := NumGet(rect,8,Int) - NumGet(rect,0,Int)
+  margin := (wWidth - cWidth)//2
+
+  NumPut(NumGet(rect,8,Int) - margin,rect,8,Int)
+  NumPut(NumGet(rect,12,Int) - margin,rect,12,Int)
+  NumPut(NumGet(rect,8,Int) - cWidth,rect,0,Int)
+  NumPut(NumGet(rect,12,Int) - cHeight,rect,4,Int)
+  
+  Return 1
 }
 
 KEYSON:
