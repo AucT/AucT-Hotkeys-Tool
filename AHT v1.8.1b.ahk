@@ -46,7 +46,7 @@ Hotkey,+%i6%, i6S
 else {
 if %i1%
 Hotkey,%i1%, i1
-Hotkey,+%i1%, i1S
+;Hotkey,+%i1%, i1S
 if %i2%
 Hotkey,%i2%, i2
 Hotkey,+%i2%, i2S
@@ -524,7 +524,7 @@ i1:
 send {vk67}
 return
 i1S:
-send +{vk67}
+sendplay +{vk67}
 return
 i1Shop:
 if InShop()
@@ -536,7 +536,7 @@ i2:
 send {vk68}
 return
 i2S:
-send +{vk68}
+sendplay +{vk68}
 return
 i2Shop:
 if InShop()
@@ -548,7 +548,7 @@ i3:
 send {vk64}
 return
 i3S:
-send +{vk64}
+sendplay +{vk64}
 return
 i3Shop:
 if InShop()
@@ -560,7 +560,7 @@ i4:
 send {vk65}
 return
 i4S:
-send +{vk65}
+sendplay +{vk65}
 return
 i4Shop:
 if InShop()
@@ -572,7 +572,7 @@ i5:
 send {vk61}
 return
 i5S:
-send +{vk61}
+sendplay +{vk61}
 return
 i5Shop:
 if InShop()
@@ -584,7 +584,7 @@ i6:
 send {vk62}
 return
 i6S:
-send +{vk62}
+sendplay +{vk62}
 return
 i6Shop:
 if InShop()
@@ -1112,21 +1112,20 @@ SendEnt:
 	Suspend, Permit
 	Send, {Blind}{Enter}
 	Suspend
-	if (ScrollIndicator="on")
-	{
 	if !A_IsSuspended
 		{
+		if (ScrollIndicator="on")
 		SetScrollLockState, On
+		if (AutoDetect="on")
 		SetTimer, checklobby, on
 		}
-
 	Else {
+		if (ScrollIndicator="on")
 		SetScrollLockState, Off
+		if (AutoDetect="on")
 		SetTimer, checklobby, off
 		}
-	}
 	return
-	
 Snap:
 send {vk51}{vk51}{vk51}{vk52}
 return
