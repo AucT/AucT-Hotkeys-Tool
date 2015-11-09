@@ -28,7 +28,7 @@ FileInstall, Skills.jpg, %A_temp%\Skills.jpg
   #SingleInstance force          ;makes sure second execution of the tool will stop teh first
   #HotkeyInterval 0
   #NoEnv
-  #MaxThreads 25
+  #MaxThreads
   Process, priority, , High
   SetWorkingDir %A_ScriptDir%
   SetBatchLines, -1
@@ -38,7 +38,7 @@ FileInstall, Skills.jpg, %A_temp%\Skills.jpg
   VK_LIST = VK41,VK42,VK43,VK44,VK45,VK46,VK47,VK48,VK49,VK4A,VK4B,VK4C,VK4D,VK4E,VK4F,VK50,VK51,VK52,VK53,VK54,VK55,VK56,VK57,VK58,VK59,VK5A,VK30,VK31,VK32,VK33,VK34,VK35,VK36,VK37,VK38,VK39,VKC0,VKDB,VKDD,VKBE,VKBF,VKBA,VKDE,VKDC
   HK_LIST = A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,0,1,2,3,4,5,6,7,8,9,``,[,],.,/,;,',\
 
-Version=AucT Hotkeys Tool v2.7b			;current verison for update
+Version=AucT Hotkeys Tool v2.8			;current verison for update
 ;************************************************PROFILE MANAGEMENT********************************//////////////
   IniRead, profile, %A_WorkingDir%\settings.ini, Others, profile, General
 	if profile=General
@@ -189,10 +189,25 @@ gui,5:font, cwhite
 ;************************************************AUTO-CASTS*****************************************
 
   IniRead, EnAutoCast, %A_WorkingDir%\%profileini%, Auto-Casts, EnAutoCast, 0
+  IniRead, DoubleAutoCast, %A_WorkingDir%\%profileini%, Auto-Casts, DoubleAutoCast, 0
   IniRead, auto1, %A_WorkingDir%\%profileini%, Auto-Casts, auto1, !E
   IniRead, auto2, %A_WorkingDir%\%profileini%, Auto-Casts, auto2, !R
   IniRead, autoall, %A_WorkingDir%\%profileini%, Auto-Casts, autoALL, !F
   if %EnAutoCast%
+  {
+  if DoubleAutoCast
+  {
+  a1:=VK(auto1)
+  a2:=VK(auto2)
+  aa:=VK(autoall)
+  if %auto1%
+	Hotkey,~%a1%, DAC1
+  if %auto2%
+	Hotkey,~%a2%, DAC2
+  if %autoall%
+	Hotkey,~%aa%, DACa
+  }
+  else
   {
   if %auto1%
     if UAC
@@ -210,7 +225,7 @@ gui,5:font, cwhite
 	else
 	Hotkey,% VK(autoall), ACa
   }
-  
+  }
   ;***************************
   	;Chat Suspending
 	IniRead, chat, %A_WorkingDir%\%profileini%, Others, chat, 1
@@ -233,6 +248,7 @@ gui,5:font, cwhite
 ;************************************************INVOKER*********************************	
     IniRead, EnInvokerA, %A_WorkingDir%\%profileini%, Invoker, EnInvokerA, 0
 	IniRead, EnInvokerU, %A_WorkingDir%\%profileini%, Invoker, EnInvokerU, 0
+	IniRead, EnInvokerD, %A_WorkingDir%\%profileini%, Invoker, EnInvokerD, 0
 
 	IniRead, ColdSnapA, %A_WorkingDir%\%profileini%, Invoker, ColdSnapA, !Q
 	IniRead, GhostWalkA, %A_WorkingDir%\%profileini%, Invoker, GhostWalkA, !V
@@ -268,6 +284,41 @@ gui,5:font, cwhite
 	
 	if EnInvokerA
 	{
+	if EnInvokerD
+	{
+	if %ColdSnapA%
+	ColdSnapA:=VK(ColdSnapA)
+	GhostWalkA:=VK(GhostWalkA)
+	TornadoA:=VK(TornadoA)
+	AlacrityA:=VK(AlacrityA)
+	ChaosMeteorA:=VK(ChaosMeteorA)
+	SunStrikeA:=VK(SunStrikeA)
+	ForgeSpiritA:=VK(ForgeSpiritA)
+	IceWallA:=VK(IceWallA)
+	BlastA:=VK(BlastA)
+	EMPA:=VK(EMPA)
+	Hotkey,~%ColdSnapA%, DSnap
+	if %GhostWalkA%
+	Hotkey,~%GhostWalkA%, DWalk
+	if %TornadoA%
+	Hotkey,~%TornadoA%, DTornado
+	if %EMPA%
+	Hotkey,~%EMPA%, DEMP
+	if %AlacrityA%
+	Hotkey,~%AlacrityA%, DAlacrity
+	if %ChaosMeteorA%
+	Hotkey,~%ChaosMeteorA%, DMeteor
+	if %SunStrikeA%
+	Hotkey,~%SunStrikeA%, DStrike
+	if %ForgeSpiritA%
+	Hotkey,~%ForgeSpiritA%, DSpirit
+	if %IceWallA%
+	Hotkey,~%IceWallA%, DWall
+	if %BlastA%
+	Hotkey,~%BlastA%, DBlast
+	}
+	else
+	{
 	if %ColdSnapA%
 	Hotkey,% VK(ColdSnapA), Snap
 	if %GhostWalkA%
@@ -289,7 +340,42 @@ gui,5:font, cwhite
 	if %BlastA%
 	Hotkey,% VK(BlastA), Blast
 	}
+	}
 	if EnInvokerU
+	{
+	if EnInvokerD
+	{
+	ColdSnapU:=VK(ColdSnapU)
+	TornadoU:=VK(TornadoU)
+	EMPU:=VK(EMPU)
+	AlacrityU:=VK(AlacrityU)
+	SunStrikeU:=VK(SunStrikeU)
+	ChaosMeteorU:=VK(ChaosMeteorU)
+	ForgeSpiritU:=VK(ForgeSpiritU)
+	IceWallU:=VK(IceWallU)
+	BlastU:=VK(BlastU)
+	if %ColdSnapU%
+	Hotkey,~%ColdSnapU%, DSnap2
+	if %GhostWalkA%
+	Hotkey,~%GhostWalkU%, DWalk2
+	if %TornadoU%
+	Hotkey,~%TornadoU%, DTornado2
+	if %EMPU%
+	Hotkey,~%EMPU%, DEMP2
+	if %AlacrityA%
+	Hotkey,~%AlacrityU%, DAlacrity2
+	if %ChaosMeteorU%
+	Hotkey,~%ChaosMeteorU%, DMeteor2
+	if %SunStrikeU%
+	Hotkey,~%SunStrikeU%, DStrike2
+	if %ForgeSpiritU%
+	Hotkey,~%ForgeSpiritU%, DSpirit2
+	if %IceWallU%
+	Hotkey,~%IceWallU%, DWall2
+	if %BlastU%
+	Hotkey,~%BlastU%, DBlast2
+	}
+	else
 	{
 	if %ColdSnapU%
 	Hotkey,% VK(ColdSnapU), Snap2
@@ -312,6 +398,7 @@ gui,5:font, cwhite
 	if %BlastU%
 	Hotkey,% VK(BlastU), Blast2
 	}
+	}
 	if EnInvokerA or EnInvokerU
 	{
 	if %QQQ%
@@ -322,10 +409,22 @@ gui,5:font, cwhite
 	Hotkey,% VK(EEE), gEEE
 	if %il%
 	Hotkey,% VK(il), gilist
+	if EnInvokerD
+	{
+	AlacrityAS:=VK(AlacrityAS)
+	AlacrityUS:=VK(AlacrityUS)
+	if %AlacrityAS%
+	Hotkey,~%AlacrityAS%, DAlacrity3
+	if %AlacrityUS%
+	Hotkey,~%AlacrityUS%, DAlacrity4
+	}
+	else
+	{
 	if %AlacrityAS%
 	Hotkey,% VK(AlacrityAS), Alacrity3
 	if %AlacrityUS%
 	Hotkey,% VK(AlacrityUS), Alacrity4
+	}
 	}
 	
 	
@@ -608,7 +707,9 @@ if darkstyle
 gui, font, cwhite
 else
 gui, font
-Gui, Add, CheckBox,Checked%EnAutoCast% vEnAutoCast gEnAutoCast x36 y62 w300 h30 , Enable AutoCast Keys
+Gui, Add, CheckBox,Checked%EnAutoCast% vEnAutoCast gEnAutoCast x36 y62 w200 h30 , Enable AutoCast Keys
+Gui, Add, CheckBox,Checked%DoubleAutoCast% vDoubleAutoCast gSmartSkills x236 y62 w200 h30 ,Autocast on double click*
+gui, add, text, x30 y370 w410,*If double click is checked the autocast key isn't blocked
 Gui, Add, Picture, x36 y392 w30 h30 , %A_temp%\blue.gif
 Gui, Add, Picture, x170 y392 w30 h30 , %A_temp%\pink.gif
 Gui, Add, Picture, x314 y392 w30 h30 , %A_temp%\all.gif
@@ -660,6 +761,7 @@ else
 gui, font
 gui, add, Checkbox, Checked%EnInvokerA% vEnInvokerA gEnInvokerA x120 y55, Add Spell
 gui, add, checkbox, Checked%EnInvokerU% vEnInvokerU gEnInvokerU x220 y55, Use Spell
+gui, add, checkbox, Checked%EnInvokerD% vEnInvokerD gEnInvokerD x320 y55, Double Click*
 gui, add, text, x30 y90, Cold Snap
 gui, add, text, x30 y125, Ghost Walk
 gui, add, text, x30 y160, Tornado
@@ -684,6 +786,7 @@ gui, add, hotkey,vEEE gEEE x360 y160 w80, %EEE%
 gui, add, hotkey,vil gil x360 y195 w80, %il%
 gui, add, hotkey,vAlacrityAS gAlacrityAS x320 y265 w120, %AlacrityAS%
 gui, add, hotkey,vAlacrityUS gAlacrityUS x320 y335 w120, %AlacrityUS%
+gui, add, text, x320 y370, *Will not block keys`n*Will not work for QQQ,`nWWW, EEE, -il
 
 gui, add, hotkey,vColdSnapA gColdSnapA x120 y90 w80, %ColdSnapA%
 gui, add, hotkey,vColdSnapU gColdSnapU x220 y90 w80, %ColdSnapU%
@@ -816,6 +919,7 @@ EmptyMem()
 return
 
 :*b0:/l ::
+:*b0:l ::
 suspend, permit
 Input  arguments, V I , {enter}
 
@@ -842,7 +946,7 @@ reload
 return
 
 ::/reload::
-::/reload::
+::reload::
 suspend, permit
 send {esc}
 IniWrite, 1, %A_WorkingDir%\settings.ini, Others, DontShowConfigTemp
@@ -850,26 +954,19 @@ sleep 150
 send {enter}Script reloaded successfully{enter}
 reload
 return
-K::
-msgbox %A_ScreenWidth% %A_ScreenHeight% 
-return
 
 ::/exit::
+::exit::
 suspend, permit
 ExitApp
 return
 
 ::/suspend::
+::suspend::
 suspend, permit
 send {enter}
 sleep, 150
 gosub, switch
-return
-
-
-::btw::
-suspend, permit
-send by the way
 return
 
 ::-u::
@@ -987,13 +1084,12 @@ Commands:
 Commandlist =
 (
 Default Commands:
-/l ProfileName - will load profile (if it exists).
-/reload - will reload script
-/suspend - will pause (unpause) script
-/exit - will exit script
+/l ProfileName (or l ProfileName) - will load profile (if it exists).
+/reload (or reload) - will reload script
+/suspend (or suspend) - will pause (unpause) script
+/exit (or exit) - will exit script
 
 Default Hotstrings:
-btw - by the way
 -u - -unlock
 -wa - -water
 -we - -weather
@@ -1534,6 +1630,7 @@ return
 
 EnInvokerA:
 EnInvokerU:
+EnInvokerD:
 ColdSnapA:
 ColdSnapU:
 GhostWalkA:
@@ -1599,6 +1696,7 @@ auto1:
 auto2:
 autoall:
 EnAutoCast:
+DoubleAutoCast:
 gui, submit, nohide
 IniWrite, % %A_ThisLabel%, %A_WorkingDir%\%profileini%, Auto-Casts, %A_ThisLabel%
 return
@@ -1796,6 +1894,54 @@ AC1:
    MouseGetPos, x0, y0
    SendPlay, {Click %x1%,  %y%, Right}{Click %x2%,  %y%, Right}{Click %x2%,  %y2%, Right}{Click %x0%, %y0%, 0}
    BlockInput,MouseMoveOff
+return
+
+DAC1:
+if dac1
+{
+if UAC
+gosub, AC1UAC
+else
+gosub, AC1
+}
+dac1:=!dac1
+SetTimer, dac1off, -1000
+return
+
+dac1off:
+dac1:=0
+return
+
+DAC2:
+if dac2
+{
+if UAC
+gosub, AC2UAC
+else
+gosub, AC2
+}
+dac2:=!dac2
+SetTimer, dac2off, -1000
+return
+
+dac2off:
+dac2:=0
+return
+
+DACa:
+if daca
+{
+if UAC
+gosub, ACaUAC
+else
+gosub, ACa
+}
+daca:=!daca
+SetTimer, dacaoff, -1000
+return
+
+dacaoff:
+daca:=0
 return
 
 AC1UAC:
@@ -2154,6 +2300,294 @@ IniRead, h, %A_WorkingDir%\%profileini%, RemapKey, KRhotkey%A_Index%, %A_Space%
 }
 }
 ;==========================================INVOKER===========================================
+DSnap:
+if dsnap
+{
+gosub, Snap
+}
+dsnap:=!dsnap
+SetTimer, dsnapoff, -1000
+return
+
+dsnapoff:
+dsnap:=0
+return
+
+DWall:
+if dwall
+{
+gosub, Wall
+}
+dwall:=!dwall
+SetTimer, dwalloff, -1000
+return
+
+dwalloff:
+dwall:=0
+return
+
+DWalk:
+if dwalk
+{
+gosub, Walk
+}
+dwalk:=!dwalk
+SetTimer, dwalkoff, -1000
+return
+
+dwalkoff:
+dwalk:=0
+return
+
+DBlast:
+if dblast
+{
+gosub, Blast
+}
+dblast:=!dblast
+SetTimer, dblastoff, -1000
+return
+
+dblastoff:
+dblast:=0
+return
+
+DTornado:
+if dtornado
+{
+gosub, Tornado
+}
+dtornado:=!dtornado
+SetTimer, dtornadooff, -1000
+return
+
+dtornadooff:
+dtornado:=0
+return
+
+
+DSnap2:
+if dsnap2
+{
+gosub, Snap2
+}
+dsnap2:=!dsnap2
+SetTimer, dsnap2off, -1000
+return
+
+dsnap2off:
+dsnap2:=0
+return
+
+DWall2:
+if dwall2
+{
+gosub, Wall2
+}
+dwall2:=!dwall2
+SetTimer, dwall2off, -1000
+return
+
+dwall2off:
+dwall2:=0
+return
+
+DWalk2:
+if dwalk2
+{
+gosub, Walk2
+}
+dwalk2:=!dwalk2
+SetTimer, dwalk2off, -1000
+return
+
+dwalk2off:
+dwalk2:=0
+return
+
+DEMP:
+if demp
+{
+gosub, EMP
+}
+demp:=!demp
+SetTimer, dempoff, -1000
+return
+
+dempoff:
+demp:=0
+return
+
+DEMP2:
+if demp2
+{
+gosub, EMP2
+}
+demp2:=!demp2
+SetTimer, demp2off, -1000
+return
+
+demp2off:
+demp2:=0
+return
+
+DMeteor:
+if DMeteor
+{
+gosub, Meteor
+}
+DMeteor:=!DMeteor
+SetTimer, DMeteoroff, -1000
+return
+
+DMeteoroff:
+DMeteor:=0
+return
+
+DMeteor2:
+if DMeteor2
+{
+gosub, Meteor2
+}
+DMeteor2:=!DMeteor2
+SetTimer, DMeteor2off, -1000
+return
+
+DMeteor2off:
+DMeteor2:=0
+return
+
+DStrike:
+if DStrike
+{
+gosub, Strike
+}
+DStrike:=!DStrike
+SetTimer, DStrikeoff, -1000
+return
+
+DStrikeoff:
+DStrike:=0
+return
+
+DStrike2:
+if DStrike2
+{
+gosub, Strike2
+}
+DStrike2:=!DStrike2
+SetTimer, DStrike2off, -1000
+return
+
+DStrike2off:
+DStrike2:=0
+return
+
+DSpirit:
+if DSpirit
+{
+gosub, Spirit
+}
+DSpirit:=!DSpirit
+SetTimer, DSpiritoff, -1000
+return
+
+DSpiritoff:
+DSpirit:=0
+return
+
+DSpirit2:
+if DSpirit2
+{
+gosub, Spirit2
+}
+DSpirit2:=!DSpirit2
+SetTimer, DSpirit2off, -1000
+return
+
+DSpirit2off:
+DSpirit:=0
+return
+
+DBlast2:
+if dblast2
+{
+gosub, Blast2
+}
+dblast2:=!dblast2
+SetTimer, dblast2off, -1000
+return
+
+dblast2off:
+dblast2:=0
+return
+
+DTornado2:
+if dtornado2
+{
+gosub, Tornado2
+}
+dtornado2:=!dtornado2
+SetTimer, dtornado2off, -1000
+return
+
+dtornado2off:
+dtornado2:=0
+return
+
+
+DAlacrity:
+if dalacrity
+{
+gosub, Alacrity
+}
+dalacrity:=!dalacrity
+SetTimer, dalacrityoff, -1000
+return
+
+dalacrityoff:
+dalacrity:=0
+return
+
+DAlacrity2:
+if dalacrity2
+{
+gosub, Alacrity2
+}
+dalacrity2:=!dalacrity2
+SetTimer, dalacrity2off, -1000
+return
+
+dalacrity2off:
+dalacrity2:=0
+return
+
+DAlacrity3:
+if dalacrity3
+{
+gosub, Alacrity3
+}
+dalacrity3:=!dalacrity3
+SetTimer, dalacrity3off, -1000
+return
+
+dalacrity3off:
+dalacrity3:=0
+return
+
+DAlacrity4:
+if dalacrity4
+{
+gosub, Alacrity4
+}
+dalacrity4:=!dalacrity4
+SetTimer, dalacrity4off, -1000
+return
+
+dalacrity4off:
+dalacrity4:=0
+return
+
 Snap:
 send {vk51}{vk51}{vk51}{vk52}
 return
@@ -2693,8 +3127,8 @@ VK(Param)
 		}
 }
 
-EmptyMem(PID="AHT v2.7b"){
-    pid:=(pid="AHT v2.7b") ? DllCall("GetCurrentProcessId") : pid
+EmptyMem(PID="AHT v2.8"){
+    pid:=(pid="AHT v2.8") ? DllCall("GetCurrentProcessId") : pid
     h:=DllCall("OpenProcess", "UInt", 0x001F0FFF, "Int", 0, "Int", pid)
     DllCall("SetProcessWorkingSetSize", "UInt", h, "Int", -1, "Int", -1)
     DllCall("CloseHandle", "Int", h)
