@@ -8,8 +8,7 @@
 setbatchlines -1
 setkeydelay -1
 CoordMode,Mouse,Screen
-;#IfWinActive Warcraft III
-;Inventory
+IniRead, ShopIndependence, config.ini, Others, ShopIndependence
 IniRead, ScrollIndicator, config.ini, Others, ScrollIndicator
 if (ScrollIndicator="on")
 SetScrollLockState, On
@@ -23,7 +22,28 @@ IniRead, i3, config.ini, Inventory, item3
 IniRead, i4, config.ini, Inventory, item4
 IniRead, i5, config.ini, Inventory, item5
 IniRead, i6, config.ini, Inventory, item6
-
+if (ShopIndependence="on")
+{
+if %i1%
+Hotkey,%i1%, i1Shop
+Hotkey,+%i1%, i1S
+if %i2%
+Hotkey,%i2%, i2Shop
+Hotkey,+%i2%, i2S
+if %i3%
+Hotkey,%i3%, i3Shop
+Hotkey,+%i3%, i3S
+if %i4%
+Hotkey,%i4%, i4Shop
+Hotkey,+%i4%, i4S
+if %i5%
+Hotkey,%i5%, i5Shop
+Hotkey,+%i5%, i5S
+if %i6%
+Hotkey,%i6%, i6Shop
+Hotkey,+%i6%, i6S
+}
+else {
 if %i1%
 Hotkey,%i1%, i1
 Hotkey,+%i1%, i1S
@@ -43,6 +63,7 @@ if %i6%
 Hotkey,%i6%, i6
 Hotkey,+%i6%, i6S
 }
+}
 
 
 ;Auto-Casts
@@ -58,12 +79,15 @@ Hotkey,%autoa%, ACa
 
 ;Chat Suspending
 IniRead, enchat, config.ini, Others, enchat
+IniRead, AutoDetect, config.ini, Others, AutoDetect
 if (enchat="on")
 {
 Hotkey,*Enter, SendEnt
 Hotkey,*NumpadEnter, SendEnt
 Hotkey, ~*Esc, KEYSON
 Hotkey, ~LButton, KEYSON
+if (AutoDetect="on")
+SetTimer, checklobby, 2000
 }
 
 ;CustomKeys
@@ -114,7 +138,6 @@ IniRead, GAJ, config.ini,Others, GarenaAutoJoiner
 IniRead, p, config.ini,Others, pause
 IniRead, toggle, config.ini,Others, toggle
 IniRead, share, config.ini,Others, share
-IniRead, wait, config.ini,Others, wait
 IniRead, hero, config.ini,Others, hero
 IniRead, ignore, config.ini,Others, ignore
 IniRead, dis1, config.ini,Disable, dis1
@@ -309,7 +332,7 @@ GarenaJoiner:
 gojoin:=!gojoin
 if gojoin
 {
-SetTimer, autojoin, 5001
+SetTimer, autojoin, 5010
 gosub, autojoin
 }
 else
@@ -319,9 +342,49 @@ return
 autojoin:
 send, {click} {click}
 sleep, 2500
+IfWinExist, ahk_class SkinDialog, Sorry
 send, {space}
+else
+SetTimer, autojoin, off
 return
-#IfWinActive Warcraft III
+
+checklobby:
+IfWinActive, Warcraft III
+{
+x1:=A_ScreenWidth*0.622
+x2:=A_ScreenWidth*0.738
+x3:=A_ScreenWidth*0.8333
+y:=A_ScreenHeight*0.019
+
+PixelGetColor, color1, %x1%, %y%
+PixelGetColor, color2, %x2%, %y%
+PixelGetColor, color3, %x3%, %y%
+if (color1=0x000000 and color2=0x000000 and color3=0x000000)
+{
+   if A_IsSuspended {
+   Hotkey,*Enter, SendEnt,on
+   Hotkey,*NumpadEnter, SendEnt,on
+   Hotkey, ~*Esc, KEYSON,on
+   Hotkey, ~LButton, KEYSON,on
+   if (ScrollIndicator="on")
+   SetScrollLockState, On
+   Suspend, Off
+   }
+}
+else{
+   if !A_IsSuspended{
+   Hotkey,*Enter, SendEnt,off
+   Hotkey,*NumpadEnter, SendEnt,off
+   Hotkey, ~*Esc, KEYSON,off
+   Hotkey, ~LButton, KEYSON,off
+   if (ScrollIndicator="on")
+   SetScrollLockState, Off
+   Suspend, On
+   }
+   }
+  }
+return
+
 AC1:
    BlockInput, On
    MouseGetPos, x0, y0
@@ -399,7 +462,7 @@ return
 
 TimeNow:
 FormatTime, TimeString,, Time
-sendplay {enter}The current time is %TimeString%.{enter}
+send {enter}The current time is %TimeString%.{enter}
 return
 
 Switch:
@@ -424,7 +487,7 @@ return
 
 
 PauseGame:
-sendplay {vk79}{vk4D}{vk52}
+send {vk79}{vk4D}{vk52}
 return
 
 SB:
@@ -446,43 +509,89 @@ SB:
    BlockInput, Off
 return
 
+InShop()
+{
+x:=A_ScreenWidth*0.53
+y:=A_ScreenHeight*0.914
+PixelGetColor, color, %x%, %y%
+if color=0x000000
+return 1
+else
+return 0
+}
+
 i1:
-sendplay {vk67}
+send {vk67}
 return
 i1S:
-sendplay +{vk67}
+send +{vk67}
 return
+i1Shop:
+if InShop()
+Send %i1%
+else
+send {vk67}
+return 
 i2:
-sendplay {vk68}
+send {vk68}
 return
 i2S:
-sendplay +{vk68}
+send +{vk68}
 return
+i2Shop:
+if InShop()
+Send %i2%
+else
+send {vk68}
+return 
 i3:
-sendplay {vk64}
+send {vk64}
 return
 i3S:
-sendplay +{vk64}
+send +{vk64}
 return
+i3Shop:
+if InShop()
+Send %i3%
+else
+send {vk64}
+return 
 i4:
-sendplay {vk65}
+send {vk65}
 return
 i4S:
-sendplay +{vk65}
+send +{vk65}
 return
+i4Shop:
+if InShop()
+Send %i4%
+else
+send {vk65}
+return 
 i5:
-sendplay {vk61}
+send {vk61}
 return
 i5S:
-sendplay +{vk61}
+send +{vk61}
 return
+i5Shop:
+if InShop()
+Send %i5%
+else
+send {vk61}
+return 
 i6:
-sendplay {vk62}
+send {vk62}
 return
 i6S:
-sendplay +{vk62}
+send +{vk62}
 return
-
+i6Shop:
+if InShop()
+Send %i6%
+else
+send {vk62}
+return 
 Share:
 BlockInput, On
 MouseGetPos, x0, y0
@@ -512,57 +621,46 @@ y7:=A_ScreenHeight*0.482
 y8:=A_ScreenHeight*0.527
 y9:=A_ScreenHeight*0.574
 }
-sendplay {vk7A}
-
-sleep, %wait%
-SendPlay, {Click %x%,  %y1%, 0}
-sleep, %wait%
+send {vk7A}
+Send {Click %x%,  %y1%, 0}
 Click
-SendPlay, {Click %x%,  %y2%, 0}
-sleep, %wait%
+Send {Click %x%,  %y2%, 0}
 Click
-SendPlay, {Click %x%,  %y3%, 0}
-sleep, %wait%
+Send {Click %x%,  %y3%, 0}
 Click
-SendPlay, {Click %x%,  %y4%, 0}
-sleep, %wait%
+Send {Click %x%,  %y4%, 0}
 Click
-SendPlay, {Click %x%,  %y5%, 0}
-sleep, %wait%
+Send {Click %x%,  %y5%, 0}
 Click
-SendPlay, {Click %x%,  %y6%, 0}
-sleep, %wait%
+Send {Click %x%,  %y6%, 0}
 Click
-SendPlay, {Click %x%,  %y7%, 0}
-sleep, %wait%
+Send {Click %x%,  %y7%, 0}
 Click
-SendPlay, {Click %x%,  %y8%, 0}
-sleep, %wait%
+Send {Click %x%,  %y8%, 0}
 Click
-SendPlay, {Click %x%,  %y9%, 0}
-sleep, %wait%
+Send {Click %x%,  %y9%, 0}
 Click
-sendplay {Enter}
-SendPlay, {Click %x0%,  %y0%, 0}
+Send {Enter}
+Send {Click %x0%,  %y0%, 0}
 BlockInput, Off
 return
   
 Hero:
-sendplay {vk70}{vk70}
+send {vk70}{vk70}
 return
 
 RemapKey1:
-sendplay %RKsendkey1%
+send %RKsendkey1%
 return
 RemapKey2:
-sendplay %RKsendkey2%
+send %RKsendkey2%
 return
 RemapKey3:
-sendplay %RKsendkey3%
+send %RKsendkey3%
 return
 
 Ignore:
-sendplay {Enter}-hhn{Enter}{Enter}/squelch
+send {Enter}-hhn{Enter}{Enter}/squelch
 SetScrollLockState, Off
 Suspend, on
 return
@@ -585,7 +683,7 @@ FastTp1:
    }
    ;
    SendPlay, {Click %x%,  %y%, 0}
-   sendplay {vk67}
+   send {vk67}
    ;Click
    Click
    SendPlay, {Click %x0%,  %y0%, 0}
@@ -605,7 +703,7 @@ FastTp2:
    x:=A_ScreenWidth*0.715
    y:=A_ScreenHeight*0.8428
    }
-   sendplay {vk68}
+   send {vk68}
    SendPlay, {Click %x%,  %y%, 0}
    Click
    SendPlay, {Click %x0%,  %y0%, 0}
@@ -625,7 +723,7 @@ FastTp3:
    x:=A_ScreenWidth*0.6637
    y:=A_ScreenHeight*0.9047
    }
-   sendplay {vk64}
+   send {vk64}
    SendPlay, {Click %x%,  %y%, 0}
    Click
    SendPlay, {Click %x0%,  %y0%, 0}
@@ -645,7 +743,7 @@ FastTp4:
    x:=A_ScreenWidth*0.715
    y:=A_ScreenHeight*0.9047
    }
-   sendplay {vk65}
+   send {vk65}
    SendPlay, {Click %x%,  %y%, 0}
    Click
    SendPlay, {Click %x0%,  %y0%, 0}
@@ -664,7 +762,7 @@ FastTp5:
    x:=A_ScreenWidth*0.6637
    y:=A_ScreenHeight*0.967
    }
-   sendplay {vk61}
+   send {vk61}
    SendPlay, {Click %x%,  %y%, 0}
    Click
    SendPlay, {Click %x0%,  %y0%, 0}
@@ -684,7 +782,7 @@ FastTp6:
    x:=A_ScreenWidth*0.715
    y:=A_ScreenHeight*0.967
    }
-   sendplay {vk62}
+   send {vk62}
    SendPlay, {Click %x%,  %y%, 0}
    Click
    SendPlay, {Click %x0%,  %y0%, 0}
@@ -694,13 +792,13 @@ return
   
  ;Misses
 top:
-	sendplay {enter}MISS TOP!{enter}
+	send {enter}MISS TOP!{enter}
 return
 bot:
-	sendplay {enter}MISS BOTTOM!{enter}
+	send {enter}MISS BOTTOM!{enter}
 return
 mid:
-	sendplay {enter}MISS MID!{enter}
+	send {enter}MISS MID!{enter}
 return
 
 
@@ -909,56 +1007,57 @@ LC12:
 return
 
 QM1:
-sendplay {Enter}{RAW}%qmv1%
-sendplay {Enter}
+send {Enter}{RAW}%qmv1%
+send {Enter}
 return
 QM2:
-sendplay {Enter}{RAW}%qmv2%
-sendplay {Enter}
+send {Enter}{RAW}%qmv2%
+send {Enter}
 return
 QM3:
-sendplay {Enter}{RAW}%qmv3%
-sendplay {Enter}
+send {Enter}{RAW}%qmv3%
+send {Enter}
 return
 QM4:
-sendplay {Enter}{RAW}%qmv4%
-sendplay {Enter}
+send {Enter}{RAW}%qmv4%
+send {Enter}
 return
 LM1:
 Loop, parse, lmv1, `,
 {
-	sendplay {enter}{Raw}%A_LoopField%
-	sendplay {enter}
+	send {enter}{Raw}%A_LoopField%
+	send {enter}
 }
 return
 
 AQM1:
-sendplay +{Enter}{RAW}%aqmv1%
-sendplay {Enter}
+send +{Enter}{RAW}%aqmv1%
+send {Enter}
 return
 AQM2:
-sendplay +{Enter}{RAW}%aqmv2%
-sendplay {Enter}
+send +{Enter}{RAW}%aqmv2%
+send {Enter}
 return
 AQM3:
-sendplay +{Enter}{RAW}%aqmv3%
-sendplay {Enter}
+send +{Enter}{RAW}%aqmv3%
+send {Enter}
 return
 AQM4:
-sendplay +{+Enter}{RAW}%aqmv4%
-sendplay {Enter}
+send +{+Enter}{RAW}%aqmv4%
+send {Enter}
 return
 ALM1:
 Loop, parse, almv1, `,
 {
-	sendplay +{enter}{Raw}%A_LoopField%
-	sendplay {enter}
+	send +{enter}{Raw}%A_LoopField%
+	send {enter}
 }
 return
 
 _locked := 0
 
 WMC:
+  Suspend, Permit
   if _locked
   {
     DllCall("ClipCursor")
@@ -1016,53 +1115,57 @@ SendEnt:
 	if (ScrollIndicator="on")
 	{
 	if !A_IsSuspended
+		{
 		SetScrollLockState, On
+		SetTimer, checklobby, on
+		}
 
-	Else
+	Else {
 		SetScrollLockState, Off
+		SetTimer, checklobby, off
+		}
 	}
 	return
 	
 Snap:
-sendplay {vk51}{vk51}{vk51}{vk52}
+send {vk51}{vk51}{vk51}{vk52}
 return
 Wall:
-sendplay {vk51}{vk51}{vk45}{vk52}
+send {vk51}{vk51}{vk45}{vk52}
 return
 Blast:
-sendplay {vk51}{vk57}{vk45}{vk52}
+send {vk51}{vk57}{vk45}{vk52}
 return
 Tornado:
-sendplay {vk51}{vk57}{vk57}{vk52}
+send {vk51}{vk57}{vk57}{vk52}
 return
 Alacrity:
-sendplay {vk57}{vk57}{vk45}{vk52}
+send {vk57}{vk57}{vk45}{vk52}
 return
 Meteor:
-sendplay {vk57}{vk45}{vk45}{vk52}
+send {vk57}{vk45}{vk45}{vk52}
 return
 Strike:
-sendplay {vk45}{vk45}{vk45}{vk52}
+send {vk45}{vk45}{vk45}{vk52}
 return
 Walk:
-sendplay {vk51}{vk51}{vk57}{vk52}
+send {vk51}{vk51}{vk57}{vk52}
 return
 Spirit:
-sendplay {vk51}{vk45}{vk45}{vk52}
+send {vk51}{vk45}{vk45}{vk52}
 return
 EMP:
-sendplay {vk57}{vk57}{vk57}{vk52}
+send {vk57}{vk57}{vk57}{vk52}
 return
 QQQ:
-sendplay {vk51}{vk51}{vk51}
+send {vk51}{vk51}{vk51}
 return
 WWW:
-sendplay {vk57}{vk57}{vk57}
+send {vk57}{vk57}{vk57}
 return
 EEE:
-sendplay {vk45}{vk45}{vk45}
+send {vk45}{vk45}{vk45}
 return
 ilist:
-sendplay {Enter}-il{Enter}
+send {Enter}-il{Enter}
 return
-;#IfWinActive Garena
