@@ -9,6 +9,8 @@
 setbatchlines -1
 setkeydelay -1
 CoordMode,Mouse,Screen
+VK_LIST = VK41,VK42,VK43,VK44,VK45,VK46,VK47,VK48,VK49,VK4A,VK4B,VK4C,VK4D,VK4E,VK4F,VK50,VK51,VK52,VK53,VK54,VK55,VK56,VK57,VK58,VK59,VK5A,VKC0,VK30,VK31,VK32,VK33,VK34,VK35,VK36,VK37,VK38,VK39
+HK_LIST = A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,``,0,1,2,3,4,5,6,7,8,9
 IniRead, ShopIndependence, config.ini, Others, ShopIndependence
 IniRead, ScrollIndicator, config.ini, Others, ScrollIndicator
 if (ScrollIndicator="on")
@@ -23,6 +25,12 @@ IniRead, i3, config.ini, Inventory, item3
 IniRead, i4, config.ini, Inventory, item4
 IniRead, i5, config.ini, Inventory, item5
 IniRead, i6, config.ini, Inventory, item6
+  i1:=VK(i1)
+  i2:=VK(i2)
+  i3:=VK(i3)
+  i4:=VK(i4)
+  i5:=VK(i5)
+  i6:=VK(i6)
 if (ShopIndependence="on")
 {
 if %i1%
@@ -72,11 +80,11 @@ IniRead, auto1, config.ini, Auto-Casts, auto1
 IniRead, auto2, config.ini, Auto-Casts, auto2
 IniRead, autoa, config.ini, Auto-Casts, autoALL
 if %auto1%
-Hotkey,%auto1%, AC1
+Hotkey,% VK(auto1), AC1
 if %auto2%
-Hotkey,%auto2%, AC2
+Hotkey,% VK(auto2), AC2
 if %autoa%
-Hotkey,%autoa%, ACa
+Hotkey,% VK(autoa), ACa
 
 ;Chat Suspending
 IniRead, enchat, config.ini, Others, enchat
@@ -109,29 +117,29 @@ if (EnSkills="on")
 	IniRead, skill12, config.ini, CustomKeys, skill12
 
 	if %skill1%
-	Hotkey,%skill1%, LC1
+	Hotkey,% VK(skill1), LC1
 	if %skill2%
-	Hotkey,%skill2%, LC2
+	Hotkey,% VK(skill2), LC2
 	if %skill3%
-	Hotkey,%skill3%, LC3
+	Hotkey,% VK(skill3), LC3
 	if %skill4%
-	Hotkey,%skill4%, LC4
+	Hotkey,% VK(skill4), LC4
 	if %skill5%
-	Hotkey,%skill5%, LC5
+	Hotkey,% VK(skill5), LC5
 	if %skill6%
-	Hotkey,%skill6%, LC6
+	Hotkey,% VK(skill6), LC6
 	if %skill7%
-	Hotkey,%skill7%, LC7
+	Hotkey,% VK(skill7), LC7
 	if %skill8%
-	Hotkey,%skill8%, LC8
+	Hotkey,% VK(skill8), LC8
 	if %skill9%
-	Hotkey,%skill9%, LC9
+	Hotkey,% VK(skill9), LC9
 	if %skill10%
-	Hotkey,%skill10%, LC10
+	Hotkey,% VK(skill10), LC10
 	if %skill11%
-	Hotkey,%skill11%, LC11
+	Hotkey,% VK(skill11), LC11
 	if %skill12%
-	Hotkey,%skill12%, LC12
+	Hotkey,% VK(skill12), LC12
 }
 ;OTHERS
 IniRead, t, config.ini,Others, time
@@ -153,52 +161,52 @@ IniRead, fasttp4, config.ini, Others, FastTp4
 IniRead, fasttp5, config.ini, Others, FastTp5
 IniRead, fasttp6, config.ini, Others, FastTp6
 if %t%
-Hotkey,%t%, TimeNow
+Hotkey,% VK(t), TimeNow
 Hotkey, IfWinActive, Garena
 if %GAJ%
-Hotkey,%GAJ%, GarenaJoiner
+Hotkey,% VK(GAJ), GarenaJoiner
 Hotkey, IfWinActive, Warcraft III
 if %toggle%
-Hotkey,%toggle%, Switch
+Hotkey,% VK(toggle), Switch
 if %p%
-Hotkey,%p%, PauseGame
+Hotkey,% VK(p), PauseGame
 if %share%
-Hotkey,%share%, Share
+Hotkey,% VK(share), Share
 if %hero%
-Hotkey,%hero%, Hero
+Hotkey,% VK(hero), Hero
 if %ignore%
-Hotkey,%ignore%, Ignore
+Hotkey,% VK(ignore), Ignore
 if %dis1%
-Hotkey,%dis1%, Dis1
+Hotkey,% VK(dis1), Dis1
 if %dis2%
-Hotkey,%dis2%, Dis1
+Hotkey,% VK(dis2), Dis1
 if %dis3%
-Hotkey,%dis3%, Dis1
+Hotkey,% VK(dis3), Dis1
 if %dis4%
-Hotkey,%dis4%, Dis1
+Hotkey,% VK(dis4), Dis1
 if %fasttp1%
-Hotkey,%fasttp1%, FastTp1
+Hotkey,% VK(fasttp1), FastTp1
 if %fasttp2%
-Hotkey,%fasttp2%, FastTp2
+Hotkey,% VK(fasttp2), FastTp2
 if %fasttp3%
-Hotkey,%fasttp3%, FastTp3
+Hotkey,% VK(fasttp3), FastTp3
 if %fasttp4%
-Hotkey,%fasttp4%, FastTp4
+Hotkey,% VK(fasttp4), FastTp4
 if %fasttp5%
-Hotkey,%fasttp5%, FastTp5
+Hotkey,% VK(fasttp5), FastTp5
 if %fasttp6%
-Hotkey,%fasttp6%, FastTp6
+Hotkey,% VK(fasttp6), FastTp6
 
 ;MISSES
 IniRead, top, config.ini,Misses, Top
 IniRead, bot, config.ini,Misses, Bot
 IniRead, mid, config.ini,Misses, Mid
 if %top%
-Hotkey,%top%, top
+Hotkey,% VK(top), top
 if %bot%
-Hotkey,%bot%, bot
+Hotkey,% VK(bot), bot
 if %mid%
-Hotkey,%mid%, mid
+Hotkey,% VK(mid), mid
 
 ;RemapKeys
 IniRead, RKhotkey1, config.ini, RemapKeys, hotkey1
@@ -208,11 +216,11 @@ IniRead, RKsendkey1, config.ini, RemapKeys, sendkey1
 IniRead, RKsendkey2, config.ini, RemapKeys, sendkey2
 IniRead, RKsendkey3, config.ini, RemapKeys, sendkey3
 if %RKhotkey1%
-Hotkey, %RKhotkey1%, RemapKey1
+Hotkey, % VK(RKhotkey1), RemapKey1
 if %RKhotkey2%
-Hotkey, %RKhotkey2%, RemapKey2
+Hotkey, % VK(RKhotkey2), RemapKey2
 if %RKhotkey3%
-Hotkey, %RKhotkey3%, RemapKey3
+Hotkey, % VK(RKhotkey3), RemapKey3
 ;Invoker
 IniRead, EnableInvoker, config.ini, Invoker, EnableInvoker
 if (EnableInvoker="on")
@@ -233,39 +241,39 @@ if (EnableInvoker="on")
 	IniRead, il, config.ini, Invoker, il
 
 	if %ColdSnap%
-	Hotkey,%ColdSnap%, Snap
+	Hotkey,% VK(ColdSnap), Snap
 	if %GhostWalk%
-	Hotkey,%GhostWalk%, Walk
+	Hotkey,% VK(GhostWalk), Walk
 	if %Tornado%
-	Hotkey,%Tornado%, Tornado
+	Hotkey,% VK(Tornado), Tornado
 	if %EMP%
-	Hotkey,%EMP%, EMP
+	Hotkey,% VK(EMP), EMP
 	if %Alacrity%
-	Hotkey,%Alacrity%, Alacrity
+	Hotkey,% VK(Alacrity), Alacrity
 	if %ChaosMeteor%
-	Hotkey,%ChaosMeteor%, Meteor
+	Hotkey,% VK(ChaosMeteor), Meteor
 	if %SunStrike%
-	Hotkey,%SunStrike%, Strike
+	Hotkey,% VK(SunStrike), Strike
 	if %ForgeSpirit%
-	Hotkey,%ForgeSpirit%, Spirit
+	Hotkey,% VK(ForgeSpirit), Spirit
 	if %IceWall%
-	Hotkey,%IceWall%, Wall
+	Hotkey,% VK(IceWall), Wall
 	if %DeafeningBlast%
-	Hotkey,%DeafeningBlast%, Blast
+	Hotkey,% VK(DeafeningBlast), Blast
 	if %QQQ%
-	Hotkey,%QQQ%, QQQ
+	Hotkey,% VK(QQQ), QQQ
 	if %WWW%
-	Hotkey,%WWW%, WWW
+	Hotkey,% VK(WWW), WWW
 	if %EEE%
-	Hotkey,%EEE%, EEE
+	Hotkey,% VK(EEE), EEE
 	if %il%
-	Hotkey,%il%, ilist
+	Hotkey,% VK(il), ilist
 }
 
 ;ScoreBoard
 IniRead, sb, config.ini,Others, ScoreBoard
 if %sb%
-Hotkey,%sb%, SB
+Hotkey,% VK(sb), SB
 
 ;Quick Messages
 IniRead, enqm, config.ini,Allied-Quick-Message, EnQM
@@ -288,20 +296,20 @@ IniRead, enqm, config.ini,Allied-Quick-Message, EnQM
 		IniRead, lmv3, config.ini, Allied-Quick-Message, LMV3
 		
 		if %qmh1%
-			Hotkey,%qmh1%, QM1
+			Hotkey,% VK(qmh1), QM1
 		if %qmh2%
-			Hotkey,%qmh2%, QM2
+			Hotkey,% VK(qmh2), QM2
 		if %qmh3%
-			Hotkey,%qmh3%, QM3
+			Hotkey,% VK(qmh3), QM3
 		if %qmh4%
-			Hotkey,%qmh4%, QM4
+			Hotkey,% VK(qmh4), QM4
 		
 		if %lmh1%
-			Hotkey,%lmh1%, LM1
+			Hotkey,% VK(lmh1), LM1
 		if %lmh2%
-			Hotkey,%lmh2%, LM2
+			Hotkey,% VK(lmh2), LM2
 		if %lmh3%
-			Hotkey,%lmh3%, LM3
+			Hotkey,% VK(lmh3), LM3
 	}
 ;AQuick Messages
 IniRead, enaqm, config.ini,All-Quick-Message, EnAQM
@@ -323,26 +331,26 @@ IniRead, enaqm, config.ini,All-Quick-Message, EnAQM
 		IniRead, almh3, config.ini, All-Quick-Message, ALMH3
 		IniRead, almv3, config.ini, All-Quick-Message, ALMV3
 		if %aqmh1%
-			Hotkey,%aqmh1%, AQM1
+			Hotkey,% VK(aqmh1), AQM1
 		if %aqmh2%
-			Hotkey,%aqmh2%, AQM2
+			Hotkey,% VK(aqmh2), AQM2
 		if %aqmh3%
-			Hotkey,%aqmh3%, AQM3
+			Hotkey,% VK(aqmh3), AQM3
 		if %aqmh4%
-			Hotkey,%aqmh4%, AQM4
+			Hotkey,% VK(aqmh4), AQM4
 		if %almh1%
-			Hotkey,%almh1%, ALM1
+			Hotkey,% VK(almh1), ALM1
 		if %almh2%
-			Hotkey,%almh2%, ALM2
+			Hotkey,% VK(almh2), ALM2
 		if %almh3%
-			Hotkey,%almh3%, ALM3
+			Hotkey,% VK(almh3), ALM3
 	}
 
 ;Window MOUSE CAPTURER
 
 IniRead, wmc, config.ini,Window-Mouse-Capturer, WMC
 if %wmc%
-Hotkey,%wmc%,WMC
+Hotkey,% VK(wmc),WMC
 return
 
 GarenaJoiner:
@@ -1210,3 +1218,19 @@ return
 ilist:
 send {Enter}-il{Enter}
 return
+
+VK(Param) ; заменяет нужные хоткеи на виртуальные коды
+{
+   global
+   Hotkey:=RegExReplace(Param, "[\^\!\+\#]+(.*)", "$1")
+   If StrLen(Hotkey) > 1
+      return Param
+   Loop, parse, HK_LIST, CSV
+      If (Hotkey = A_LoopField)
+      {
+         Index := A_Index
+         Loop, parse, VK_LIST, CSV
+            If (A_Index = Index)
+               return % RegExReplace(Param, "(.*)" Hotkey, "$1" A_LoopField)
+      }
+}
