@@ -1,28 +1,44 @@
-; AutoHotkey Version: 1.x
-; Language:       English
-; Platform:       Win9x/NT/XP/
-; Author:         AucT <AucT.uz.ua@gmail.com>
-; Web-Site:		  AHT.isgreat.org
+; <COMPILER: v1.0.48.5>
+
+
+
+
+
+
+
 Process, priority, , High
 #SingleInstance force
-;#HotkeyInterval 0
+
+
 #InstallKeybdHook
 #UseHook On
 #MaxThreads 20
-;SetBatchLines, -1
-;SetKeyDelay , -1, 0
-;Thread, Interrupt , -1, -1	
-;SetTitleMatchMode, 3
-;SetDefaultMouseSpeed, 0
+
+
+
+
+
 SetWorkingDir %A_ScriptDir%
-  Version=AucT Hotkeys Tool v2.0rc4
+SetTimer, CheckWarcraft
+  Version=AucT Hotkeys Tool v2.0rc5
+
+  if !A_IsAdmin
+{
+    if A_IsCompiled
+       DllCall("shell32\ShellExecuteA","uint",0,"str","RunAs","str",A_ScriptFullPath,"uint",0,"str",A_WorkingDir,"int",1)
+    else
+       DllCall("shell32\ShellExecuteA","uint",0,"str","RunAs","str",A_AhkPath,"str","""" . A_ScriptFullPath . """","str",A_WorkingDir,"int",1)
+    ExitApp
+}
+DebugPrivilegesEnable()
+
   IniRead, profile, %A_WorkingDir%\settings.ini, Others, profile, General
 	if profile=General
 	profileini=settings.ini
 	else
 	profileini=%profile%.ini
-  
-  ;Menu
+
+
   Menu, tray, NoStandard
   Menu, Tray, Click, 1
   Menu, tray, add, Configuration, configuration
@@ -31,22 +47,23 @@ SetWorkingDir %A_ScriptDir%
   Menu, tray, add, About, About
   Menu, tray, add, Check update, UpdateCheck
   Menu, tray, add
+  Menu, tray, add, Mouse Capture, SetWMC
   Menu, tray, add, Exit
-  ;Menu, Tray, Icon, %A_ScriptDir%\%A_ScriptName%,1,1
+  Menu, Tray, Icon, %A_ScriptDir%\%A_ScriptName%,1,1
 
   CoordMode,Mouse,Screen
-  
+
   IniRead, ScrollIndicator, %A_WorkingDir%\%profileini%, Others, ScrollIndicator, 1
   if ScrollIndicator
   SetScrollLockState, On
+  IniRead, ReloadScr, %A_WorkingDir%\%profileini%,Others, ReloadScr, %A_Space%
+	if ReloadScr
+	Hotkey,% VK(ReloadScr), ReloadScript
   Hotkey, IfWinActive, Warcraft III
-  IniRead, WMC, %A_WorkingDir%\%profileini%,Others, WMC, %A_Space%
-  if %WMC%
-  {
-  Hotkey,% VK(WMC), gWMC
-  IniWrite, 0, %profileini%, Others, AutoDetect
-  }
-  ;Inventory -> Items
+  IniRead, WMC, %A_WorkingDir%\%profileini%,Others, WMC, 0
+  if WMC
+  SetTimer,CheckActiveWar3
+
   IniRead, EnInventory, %A_WorkingDir%\%profileini%, Inventory, EnInventory, 1
   IniRead, h1, %A_WorkingDir%\%profileini%, Inventory, item1, %A_Space%
   IniRead, h2, %A_WorkingDir%\%profileini%, Inventory, item2, %A_Space%
@@ -107,12 +124,12 @@ SetWorkingDir %A_ScriptDir%
 	}
 
 }
-  
-  
-  
-  ;CustomKeys
+
+
+
+
   IniRead, EnSkills, %A_WorkingDir%\%profileini%, CustomKeys, EnSkills, 0
-  
+
 	IniRead, skill1, %A_WorkingDir%\%profileini%, CustomKeys, skill1, Q
 	IniRead, skill2, %A_WorkingDir%\%profileini%, CustomKeys, skill2, W
 	IniRead, skill3, %A_WorkingDir%\%profileini%, CustomKeys, skill3, E
@@ -152,11 +169,11 @@ SetWorkingDir %A_ScriptDir%
 	if %skill12%
 	Hotkey,% VK(skill12), LC12
 }
-  
-  
-  ;Auto-Casts
+
+
+
   IniRead, EnAutoCast, %A_WorkingDir%\%profileini%, Auto-Casts, EnAutoCast, 0
-  
+
   IniRead, auto1, %A_WorkingDir%\%profileini%, Auto-Casts, auto1, !E
   IniRead, auto2, %A_WorkingDir%\%profileini%, Auto-Casts, auto2, !R
   IniRead, autoall, %A_WorkingDir%\%profileini%, Auto-Casts, autoALL, !F
@@ -169,7 +186,7 @@ SetWorkingDir %A_ScriptDir%
   if %autoall%
 	Hotkey,% VK(autoall), ACa
   }
-  
+
   IniRead, mh1, %A_WorkingDir%\%profileini%,Messages, hotkey1, %A_Space%
   IniRead, mv1, %A_WorkingDir%\%profileini%,Messages, message1, %A_Space%
   IniRead, mh2, %A_WorkingDir%\%profileini%,Messages, hotkey2, %A_Space%
@@ -190,7 +207,7 @@ SetWorkingDir %A_ScriptDir%
 	Hotkey,% VK(mh4), mv4
   if %mh5%
 	Hotkey,% VK(mh5), mv5
-  
+
   IniRead, amh1, %A_WorkingDir%\%profileini%,Messages, ahotkey1, %A_Space%
   IniRead, amv1, %A_WorkingDir%\%profileini%,Messages, amessage1, %A_Space%
   IniRead, amh2, %A_WorkingDir%\%profileini%,Messages, ahotkey2, %A_Space%
@@ -211,9 +228,9 @@ SetWorkingDir %A_ScriptDir%
 	Hotkey,% VK(amh4), amv4
   if %amh5%
 	Hotkey,% VK(amh5), amv5
-	
-	
-	
+
+
+
     IniRead, EnInvokerA, %A_WorkingDir%\%profileini%, Invoker, EnInvokerA, 0
 	IniRead, EnInvokerU, %A_WorkingDir%\%profileini%, Invoker, EnInvokerU, 0
 
@@ -227,10 +244,10 @@ SetWorkingDir %A_ScriptDir%
 	IniRead, ForgeSpiritA, %A_WorkingDir%\%profileini%, Invoker, ForgeSpiritA, !F
 	IniRead, IceWallA, %A_WorkingDir%\%profileini%, Invoker, IceWallA, !G
 	IniRead, BlastA, %A_WorkingDir%\%profileini%, Invoker, BlastA, !B
-	
+
 	IniRead, AlacrityAS, %A_WorkingDir%\%profileini%, Invoker, AlacrityAS, %A_Space%
 	IniRead, AlacrityUS, %A_WorkingDir%\%profileini%, Invoker, AlacrityUS, %A_Space%
-	
+
 	IniRead, ColdSnapU, %A_WorkingDir%\%profileini%, Invoker, ColdSnapU, ^Q
 	IniRead, GhostWalkU, %A_WorkingDir%\%profileini%, Invoker, GhostWalkU, ^V
 	IniRead, TornadoU, %A_WorkingDir%\%profileini%, Invoker, TornadoU, ^X
@@ -241,14 +258,14 @@ SetWorkingDir %A_ScriptDir%
 	IniRead, ForgeSpiritU, %A_WorkingDir%\%profileini%, Invoker, ForgeSpiritU, ^F
 	IniRead, IceWallU, %A_WorkingDir%\%profileini%, Invoker, IceWallU, ^G
 	IniRead, BlastU, %A_WorkingDir%\%profileini%, Invoker, BlastU, ^B
-	
-	
+
+
 	IniRead, QQQ, %A_WorkingDir%\%profileini%, Invoker, QQQ, %A_Space%
 	IniRead, WWW, %A_WorkingDir%\%profileini%, Invoker, WWW, %A_Space%
 	IniRead, EEE, %A_WorkingDir%\%profileini%, Invoker, EEE, %A_Space%
 	IniRead, il, %A_WorkingDir%\%profileini%, Invoker, il, %A_Space%
-	
-	
+
+
 	if EnInvokerA
 	{
 	if %ColdSnapA%
@@ -310,97 +327,102 @@ SetWorkingDir %A_ScriptDir%
 	if %AlacrityUS%
 	Hotkey,% VK(AlacrityUS), Alacrity4
 	}
-	
-	
 
-	;Chat Suspending
-	IniRead, chat, %A_WorkingDir%\%profileini%, Others, enchat, 1
-	IniRead, AutoDetect, %A_WorkingDir%\%profileini%, Others, AutoDetect, 1
-	if chat
-	{
-	Hotkey,*Enter, SendEnt
-	Hotkey,*NumpadEnter, SendEnt
-	Hotkey, ~*Esc, KEYSON
-	Hotkey, ~LButton, KEYSON
-	if AutoDetect
-	SetTimer, checklobby, 400
-	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	IniRead, sound, %A_WorkingDir%\%profileini%, Others, sound, 0
 	IniRead, Shield, %A_WorkingDir%\%profileini%, Others, Shield, 0
+	IniRead, ShieldR, %A_WorkingDir%\%profileini%, Others, ShieldR, 0
 	if Shield
 	Hotkey, LWin, disable
-	
+	if ShieldR
+	Hotkey, RWin, disable
+
 	IniRead, UpdateAtStart, %A_WorkingDir%\%profileini%, Others, UpdateAtStart, 0
-	if UpdateAtStart
-	gosub, UpdateCheckS
-	
+
 	IniRead, RunAtStart, %A_WorkingDir%\%profileini%, Others, RunAtStart, 0
 	if RunAtStart
 	FileCreateShortcut , %A_ScriptDir%\%A_ScriptName%, %A_Startup%\AHT.lnk
 	else{
-	IfExist %A_Startup%\AHT.lnk 
+	IfExist %A_Startup%\AHT.lnk
 	FileDelete, %A_Startup%\AHT.lnk
 	}
-	
+
 	IniRead, Scoreboard, %A_WorkingDir%\%profileini%,Others, Scoreboard, ``
 	if Scoreboard
 	Hotkey,%Scoreboard%, SB
-	
+
 	IniRead, share, %A_WorkingDir%\%profileini%,Others, share, F6
 	if %share%
 	Hotkey,% VK(share), ShareControl
-	
+
 	IniRead, ignore, %A_WorkingDir%\%profileini%,Others, ignore, ^S
 	if %ignore%
 	Hotkey,% VK(ignore), gIgnore
-	
-	IniRead, Garena, %A_WorkingDir%\%profileini%,Others, Garena, !G
+
+
+
+	IniRead, Garena, %A_WorkingDir%\%profileini%,Others, Garena, !J
 	Hotkey, IfWinActive, Garena
 	if %Garena%
 	Hotkey,% VK(Garena), GarenaJoiner
 	Hotkey, IfWinActive, Warcraft III
-	
+
+
+
 	IniRead, Time, %A_WorkingDir%\%profileini%,Others, time, %A_Space%
 	if %Time%
 	Hotkey,% VK(Time), TimeNow
-	
+
 	IniRead, toggle, %A_WorkingDir%\%profileini%,Others, toggle, Home
 	if %toggle%
 	Hotkey,% VK(toggle), Switch
-	
+
 	IniRead, pause, %A_WorkingDir%\%profileini%,Others, pause, !P
 	if %pause%
 	Hotkey,% VK(pause), PauseGame
-	
+
 	IniRead, Roshan, %A_WorkingDir%\%profileini%,Others, Roshan, %A_Space%
 	if %Roshan%
 	Hotkey,% VK(Roshan), Rosh
-	
+
 	IniRead, hero, %A_WorkingDir%\%profileini%,Others, hero, F1
 	if %hero%
 	Hotkey,% VK(hero), GetHero
-	
-	;HPBar
+
+
 	IniRead,AHP, %A_WorkingDir%\%profileini%,Others, AHP, ![
 	IniRead,EHP, %A_WorkingDir%\%profileini%,Others, EHP, !]
-	IniRead,AHPS, %A_WorkingDir%\%profileini%,Others, AHPS, 0
-	IniRead,EHPS, %A_WorkingDir%\%profileini%,Others, EHPS, 0
+
+
 	if %AHP%
 	Hotkey,%AHP%, ShowAHP
 	if %EHP%
 	Hotkey,%EHP%, ShowEHP
-	if AHPS
-	SetTimer, AHPST, 1000
-	if EHPS
-	SetTimer, EHPST, 1000
-	
+
+
+
+
+
 	IniRead, prog1, %A_WorkingDir%\%profileini%, Others, prog1, %A_Space%
 	IniRead, runprog1s, %A_WorkingDir%\%profileini%, Others, runprog1s, 0
 	IniRead, prog2, %A_WorkingDir%\%profileini%, Others, prog2, %A_Space%
 	IniRead, runprog2s, %A_WorkingDir%\%profileini%, Others, runprog2s, 0
 	IniRead, prog3, %A_WorkingDir%\%profileini%, Others, prog3, %A_Space%
 	IniRead, runprog3s, %A_WorkingDir%\%profileini%, Others, runprog3s, 0
-	
+
 	loop, 12
 	{
 	ttt:=A_Index+6
@@ -409,13 +431,13 @@ SetWorkingDir %A_ScriptDir%
 	if h%ttt%
 	Hotkey,% VK(h%ttt%), KR%A_Index%
 	VKR%A_Index%:=% VK(KRvalue%A_Index%)
-	
+
 	}
 
 	IniRead, DontShowConfig, %A_WorkingDir%\%profileini%,Others, DontShowConfig, 0
-;==================================================================================  
-;=====================================GUI==========================================
-;==================================================================================  
+
+
+
 if DontShowConfig
 {
 EmptyMem()
@@ -434,6 +456,7 @@ if ConfigCreated
 gui, show, autosize center, %Version% - %profile% profile
 }
 else {
+ConfigCreated:=1
 Menu, ProfileMenu, Add, &New Profile, ProfileNew
 Menu, ProfileMenu, Add
 Menu, ProfileMenu, Add, &General, ChooseGeneral
@@ -461,21 +484,50 @@ menu, warcraft, check, Use Customkeys
 else
 menu, warcraft, uncheck, Use Customkeys
 
+Menu, Options, Add, Scroll Indicator, SetScrollIndicator
+Menu, Options, Add, Sound Indicator, SetSoundIndicator
+Menu, Options, Add
+Menu, Options, Add, Shield LeftWin, SetShieldLWin
+Menu, Options, Add, Shield RightWin, SetShieldRWin
+Menu, Options, Add
+Menu, Options, Add, Run at start, SetRunatStart
+Menu, Options, Add, Update at start, SetUpdateAtStart
+Menu, Options, Add
+Menu, Options, Add, Mouse Capture, SetWMC
+
+if ScrollIndicator
+menu, Options, check, Scroll Indicator
+if sound
+menu, Options, check, Sound Indicator
+if Shield
+menu, Options, check, Shield LeftWin
+if ShieldR
+menu, Options, check, Shield RightWin
+if RunAtStart
+menu, Options, check, Run at start
+if UpdateAtStart
+menu, Options, check, Update at start
+if WMC {
+menu, Options, check, Mouse Capture
+menu, tray, check, Mouse Capture
+}
+
 
 Menu, HelpMenu, Add, &Check updates, UpdateCheck
 Menu, HelpMenu, Add, Getdota, getdota
 Menu, HelpMenu, Add, &F.A.Q., FAQ
 Menu, HelpMenu, Add, &About, About
 
-; Create the menu bar by attaching the sub-menus to it:
+
 Menu, MyMenuBar, Add, &Profile, :ProfileMenu
 Menu, MyMenuBar, Add, &WarCraft, :WarCraft
+Menu, MyMenuBar, Add, &Options, :Options
 Menu, MyMenuBar, Add, &Help, :HelpMenu
 
 
 Gui, Menu, MyMenuBar
 
-Gui, Add, Tab2, x0 y0 w470 h500 , Inventory|Skills|Autocast|Messages|Invoker|Remap|Others
+Gui, Add, Tab2, x0 y0 w470 h500 , Inventory|Skills|Autocast|Messages|Invoker|Remap|Other
 Gui, Tab, Inventory
 gui, font, cblue
 Gui, Add, GroupBox, x6 y32 w450 h400 , Inventory
@@ -528,30 +580,30 @@ Gui, Tab, Messages
 gui, font, cblue
 Gui, Add, GroupBox, x6 y32 w450 h200,Allies
 gui, font
-gui, add, hotkey,vmh1 gSaveMessage x30 y55 w80 h30, %mh1%
-gui, add, edit,vmv1 gSaveMessage x120 y55 w300 h30, %mv1%
-gui, add, hotkey,vmh2 gSaveMessage x30 y90 w80 h30, %mh2%
-gui, add, edit,vmv2 gSaveMessage x120 y90 w300 h30, %mv2%
-gui, add, hotkey,vmh3 gSaveMessage x30 y125 w80 h30, %mh3%
-gui, add, edit,vmv3 gSaveMessage x120 y125 w300 h30, %mv3%
-gui, add, hotkey,vmh4 gSaveMessage x30 y160 w80 h30, %mh4%
-gui, add, edit,vmv4 gSaveMessage x120 y160 w300 h30, %mv4%
-gui, add, hotkey,vmh5 gSaveMessage x30 y195 w80 h30, %mh5%
-gui, add, edit,vmv5 gSaveMessage x120 y195 w300 h30, %mv5%
+gui, add, hotkey,vmh1 gSM1 x30 y55 w80 h30, %mh1%
+gui, add, edit,vmv1 gSM1 x120 y55 w300 h30, %mv1%
+gui, add, hotkey,vmh2 gSM2 x30 y90 w80 h30, %mh2%
+gui, add, edit,vmv2 gSM2 x120 y90 w300 h30, %mv2%
+gui, add, hotkey,vmh3 gSM3 x30 y125 w80 h30, %mh3%
+gui, add, edit,vmv3 gSM3 x120 y125 w300 h30, %mv3%
+gui, add, hotkey,vmh4 gSM4 x30 y160 w80 h30, %mh4%
+gui, add, edit,vmv4 gSM4 x120 y160 w300 h30, %mv4%
+gui, add, hotkey,vmh5 gSM5 x30 y195 w80 h30, %mh5%
+gui, add, edit,vmv5 gSM5 x120 y195 w300 h30, %mv5%
 
 gui, font, cblue
 Gui, Add, GroupBox, x6 y247 w450 h200 , All
 gui, font
-gui, add, hotkey,vamh1 gSaveMessage x30 y270 w80 h30, %amh1%
-gui, add, edit,vamv1 gSaveMessage x120 y270 w300 h30, %amv1%
-gui, add, hotkey,vamh2 gSaveMessage x30 y305 w80 h30, %amh2%
-gui, add, edit,vamv2 gSaveMessage x120 y305 w300 h30, %amv2%
-gui, add, hotkey,vamh3 gSaveMessage x30 y340 w80 h30, %amh3%
-gui, add, edit,vamv3 gSaveMessage x120 y340 w300 h30, %amv3%
-gui, add, hotkey,vamh4 gSaveMessage x30 y375 w80 h30, %amh4%
-gui, add, edit,vamv4 gSaveMessage x120 y375 w300 h30, %amv4%
-gui, add, hotkey,vamh5 gSaveMessage x30 y410 w80 h30, %amh5%
-gui, add, edit,vamv5 gSaveMessage x120 y410 w300 h30, %amv5%
+gui, add, hotkey,vamh1 gSAM1 x30 y270 w80 h30, %amh1%
+gui, add, edit,vamv1 gSAM1 x120 y270 w300 h30, %amv1%
+gui, add, hotkey,vamh2 gSAM2 x30 y305 w80 h30, %amh2%
+gui, add, edit,vamv2 gSAM2 x120 y305 w300 h30, %amv2%
+gui, add, hotkey,vamh3 gSAM3 x30 y340 w80 h30, %amh3%
+gui, add, edit,vamv3 gSAM3 x120 y340 w300 h30, %amv3%
+gui, add, hotkey,vamh4 gSAM4 x30 y375 w80 h30, %amh4%
+gui, add, edit,vamv4 gSAM4 x120 y375 w300 h30, %amv4%
+gui, add, hotkey,vamh5 gSAM5 x30 y410 w80 h30, %amh5%
+gui, add, edit,vamv5 gSAM5 x120 y410 w300 h30, %amv5%
 
 
 Gui, Tab, Invoker
@@ -626,6 +678,44 @@ gui, add, button,vb%irk% gSetItem x250 y%yy% w80,% h%irk%
 gui, add, text, x335 y%yy%,=>
 gui, add, hotkey,vKRvalue%krvali% gKRvalue%krvali% x355 y%yy% w80,% KRvalue%krvali%
 }
+
+
+
+
+Gui, Tab, Other
+
+
+
+gui, font, cblue
+Gui, Add, GroupBox, x6 y32 w450 h270 , Other
+gui, font
+
+Gui, Add, Hotkey, vScoreboard gScoreboard x26 y60 w80, %Scoreboard%
+Gui, Add, Text, x116 y60, Show ScoreBoard
+Gui, Add, Hotkey, vShare gShare x26 y95 w80, %Share%
+Gui, Add, Text, x116 y95, Share Control
+Gui, Add, Hotkey, vIgnore gIgnore x26 y130 w80, %Ignore%
+Gui, Add, Text, x116 y130, Ignore (/squelch)
+Gui, Add, Hotkey, vAHP gAHP x26 y165 w80, %AHP%
+Gui, Add, Text, x116 y165, Show ally HP
+Gui, Add, Hotkey, vGarena gGarena x26 y200 w80, %Garena%
+Gui, Add, Text, x116 y200, Garena AutoJoin
+Gui, Add, Hotkey, vReloadScr gReloadScr x26 y235 w80, %ReloadScr%
+Gui, Add, Text, x116 y235, Reload Script
+
+Gui, Add, Hotkey, vTime gTime x250 y60 w80, %Time%
+Gui, Add, Text, x340 y60, Get Time
+Gui, Add, Hotkey, vtoggle gtoggle x250 y95 w80, %toggle%
+Gui, Add, Text, x340 y95, Pause Script
+Gui, Add, Hotkey, vpause gpause x250 y130 w80, %pause%
+Gui, Add, Text, x340 y130, Pause Game
+Gui, Add, Hotkey, vEHP gEHP x250 y165 w80, %EHP%
+Gui, Add, Text, x340 y165, Show enemy HP
+Gui, Add, Hotkey, vRoshan gRoshan x250 y200 w80, %Roshan%
+Gui, Add, Text, x340 y200, Rosh Notification
+Gui, Add, Hotkey, vHero gHero x250 y235 w80, %Hero%
+Gui, Add, Text, x340 y235, Get Hero
+
 gui, font, cblue
 Gui, Add, GroupBox, x6 y305 w450 h125,Run Program
 gui, font
@@ -644,56 +734,6 @@ gui, add, button, x+5 gBrowseProg3 w40,...
 gui, add, button, x+5 gRunProg3 w60,Run
 gui, add, checkbox,checked%runprog3s% vrunprog3s grunprog3s x+5 yp+4, Run At Start
 
-
-
-Gui, Tab, Others
-gui, font, cblue
-Gui, Add, GroupBox, x6 y32 w450 h130 , Options
-gui, font
-Gui, Add, CheckBox, Checked%chat% vchat gchat x36 y55 , Chat-Suspending
-Gui, Add, CheckBox, Checked%autodetect% vautodetect gautodetect y+10 , Lobby-Suspend
-Gui, Add, CheckBox, Checked%AHPS% vAHPS gAHPS y+10,Ally HP bar
-Gui, Add, CheckBox, Checked%EHPS% vEHPS gEHPS y+10,Enemy HP bar
-
-Gui, Add, CheckBox, Checked%ScrollIndicator% vScrollIndicator gScrollIndicator x180 y55, Scroll Indicator
-Gui, Add, CheckBox, Checked%sound% vsound gsound y+10 ,Sound Indicator
-
-Gui, Add, CheckBox, Checked%Shield% vShield gShield x310 y55 ,Shield LWin
-Gui, Add, CheckBox, Checked%RunAtStart% vRunAtStart gRunAtStart y+10 ,Run at start
-Gui, Add, CheckBox, Checked%UpdateAtStart% vUpdateAtStart gUpdateAtStart y+10 ,Update at start
-
-
-gui, font, cblue
-Gui, Add, GroupBox, x6 y165 w450 h260 , Other
-gui, font
-
-Gui, Add, Hotkey, vScoreboard gScoreboard x26 y185 w80, %Scoreboard%
-Gui, Add, Text, x116 y185, Show ScoreBoard
-Gui, Add, Hotkey, vShare gShare x26 y220 w80, %Share%
-Gui, Add, Text, x116 y220, Share Control
-Gui, Add, Hotkey, vIgnore gIgnore x26 y255 w80, %Ignore%
-Gui, Add, Text, x116 y255, Ignore (/squelch)
-Gui, Add, Hotkey, vAHP gAHP x26 y290 w80, %AHP%
-Gui, Add, Text, x116 y290, Show ally HP
-Gui, Add, Hotkey, vGarena gGarena x26 y325 w80, %Garena%
-Gui, Add, Text, x116 y325, Garena AutoJoin
-Gui, Add, Hotkey, vWMC gWMC x26 y360 w80, %WMC%
-Gui, Add, Text, x116 y360, Mouse Capture
-
-Gui, Add, Hotkey, vTime gTime x250 y185 w80, %Time%
-Gui, Add, Text, x340 y185, Get Time
-Gui, Add, Hotkey, vtoggle gtoggle x250 y220 w80, %toggle%
-Gui, Add, Text, x340 y220, Pause Script
-Gui, Add, Hotkey, vpause gpause x250 y255 w80, %pause%
-Gui, Add, Text, x340 y255, Pause Game
-Gui, Add, Hotkey, vEHP gEHP x250 y290 w80, %EHP%
-Gui, Add, Text, x340 y290, Show enemy HP
-Gui, Add, Hotkey, vRoshan gRoshan x250 y325 w80, %Roshan%
-Gui, Add, Text, x340 y325, Rosh Notification 
-Gui, Add, Hotkey, vHero gHero x250 y360 w80, %Hero%
-Gui, Add, Text, x340 y360, Get Hero
-
-
 Gui, Tab
 
 gui, add, checkbox,Checked%DontShowConfig% vDontShowConfig gDontShowConfig x16 y457, Don't show it later
@@ -702,7 +742,6 @@ Gui, Add, Button, x155 y450 w90 h30,&Hide
 Gui, Add, Button, gButtonReload x250 y450 w110 h30,&Reload
 Gui, Add, Button, x365 y450 w90 h30,E&xit
 gui, font
-ConfigCreated:=1
 Gui, Show, x209 y100 h500 w470, %Version% - %profile% profile
 }
 EmptyMem()
@@ -712,6 +751,9 @@ EmptyMem()
 		gosub, runprog2
 	if runprog3s
 		gosub, runprog3
+
+    if UpdateAtStart
+	gosub, UpdateCheckS
 return
 
 BrowseProg1:
@@ -796,12 +838,11 @@ getdota:
 run http://getdota.com
 return
 
-
 UpdateCheck:
-UrlDownloadToFile, http://www.aht.isgreat.org/latest.html, %A_Temp%\latest.html
+UrlDownloadToFile, http://www.dota.zzl.org/latest.html, %A_Temp%\latest.html
 FileReadLine, NetVer, %A_Temp%\latest.html, 1
 If (Version <> NetVer){
-   MsgBox, 4,, %NetVer% is available! `nWould you like to download new version?
+   MsgBox, 4,Check for update, %NetVer% is available! `nWould you like to download new version?
 IfMsgBox Yes
 	run http://aht.isgreat.org/download.html
 }
@@ -810,10 +851,10 @@ else
 return
 
 UpdateCheckS:
-UrlDownloadToFile, http://www.aht.isgreat.org/latest.html, %A_Temp%\latest.html
+UrlDownloadToFile, http://www.dota.zzl.org/latest.html, %A_Temp%\latest.html
 FileReadLine, NetVer, %A_Temp%\latest.html, 1
 If (Version <> NetVer){
-   MsgBox, 4,, %NetVer% is available! `nWould you like to download new version?
+   MsgBox, 4,Check for Update, %NetVer% is available! `nWould you like to download new version?
 IfMsgBox Yes
 	run http://aht.isgreat.org/download.html
 }
@@ -823,9 +864,9 @@ About:
 if aboutcreated
 gui, 2:show, autosize center, About
 else {
-Gui +Disabled  ; Disable main window.
+Gui +Disabled
 Gui 2:Default
-Gui, +owner1  ; Make the main window (Gui #1) the owner of the "about box" (Gui #2).
+Gui, +owner1
 
 gui, font, s10 cblue
 Gui, Add, GroupBox, x10 y0 w330 R1 , Author
@@ -840,10 +881,16 @@ gui, font, s10
 Gui, add, text,x130 y85,DenSiL7
 
 gui, font, s10 cblue
+Gui, Add, GroupBox, x10 w330 R1 ,Window mode, chat-suspend
+gui, font
+gui, font, s10
+Gui, add, text,x130 y145,yayuhhz
+
+gui, font, s10 cblue
 Gui, Add, GroupBox, x10 w330 R1 , Website
 gui, font
 gui, font, s10 underline
-Gui, add, text,x100 y145 gAHTISGREAT, AHT.ISGREAT.ORG
+Gui, add, text,x100 y205 gAHTISGREAT, AHT.ISGREAT.ORG
 gui, font
 gui, font, s10
 gui, add, button, x10 y+20 w330, OK
@@ -856,8 +903,8 @@ return
 2ButtonOK:
 2GuiClose:
 2GuiEscape:
-Gui, 1:-Disabled  ; Re-enable the main window (must be done prior to the next step).
-Gui, hide  ; Destroy the about box.
+Gui, 1:-Disabled
+Gui, hide
 return
 
 AHTISGREAT:
@@ -866,7 +913,7 @@ return
 
 
 
-;*******************************Warcraft III Registry Fixer***********************************
+
 WarRegFix:
 Gui 5:Default
 RegRead, CPath, HKEY_CURRENT_USER, Software\Blizzard Entertainment\Warcraft III,InstallPathX
@@ -942,10 +989,63 @@ RegWrite, REG_DWORD, HKEY_CURRENT_USER, Software\Blizzard Entertainment\Warcraft
 menu, warcraft, togglecheck, Use Customkeys
 return
 
+
+
+
+
+
+SetScrollIndicator:
+ScrollIndicator:=!ScrollIndicator
+IniWrite, %ScrollIndicator%, %A_WorkingDir%\%profileini%, Others, ScrollIndicator
+menu, options, togglecheck, Scroll Indicator
+return
+
+SetSoundIndicator:
+sound:=!sound
+IniWrite, %sound%, %A_WorkingDir%\%profileini%, Others, sound
+menu, options, togglecheck, Sound Indicator
+return
+
+SetShieldLWin:
+Shield:=!Shield
+IniWrite, %Shield%, %A_WorkingDir%\%profileini%, Others, Shield
+menu, options, togglecheck, Shield LeftWin
+return
+
+SetShieldRWin:
+ShieldR:=!ShieldR
+IniWrite, %ShieldR%, %A_WorkingDir%\%profileini%, Others, ShieldR
+menu, options, togglecheck, Shield RightWin
+return
+
+SetRunatStart:
+RunatStart:=!RunatStart
+IniWrite, %RunatStart%, %A_WorkingDir%\%profileini%, Others, RunatStart
+menu, options, togglecheck, Run at Start
+return
+
+SetUpdateatStart:
+UpdateatStart:=!UpdateatStart
+IniWrite, %UpdateatStart%, %A_WorkingDir%\%profileini%, Others, UpdateatStart
+menu, options, togglecheck, Update at Start
+return
+
+SetWMC:
+WMC:=!WMC
+IniWrite, %WMC%, %A_WorkingDir%\%profileini%, Others, WMC
+menu, options, togglecheck, Mouse Capture
+menu, tray, togglecheck, Mouse Capture
+if WMC
+SetTimer,CheckActiveWar3
+else
+SetTimer,CheckActiveWar3,off
+return
+
+
 SetItem:
 ChoosenB=%A_GuiControl%
-;Gui , 2:+Disabled
-;Gui , 2:-Minimizebox +owner2
+
+
 Gui 4:Default
 
 Gui, Add, GroupBox, w220 h50, Modifier
@@ -979,7 +1079,7 @@ gui, show, autosize center, Choose hotkey...
 
 return
 
-;==================================Hotkey Mechanism============================================
+
 HotkeyClose:
 gui, 4:destroy
 return
@@ -1040,25 +1140,25 @@ HG_HKDesc=
         HG_Hotkey:=HG_Hotkey . "^"
         HG_HKDesc:=HG_HKDesc . "Ctrl + "
         }
-    
+
     if ShiftModifier
         {
         HG_Hotkey:=HG_Hotkey . "+"
         HG_HKDesc:=HG_HKDesc . "Shift + "
         }
-    
+
     if WinModifier
         {
         HG_Hotkey:=HG_Hotkey . "#"
         HG_HKDesc:=HG_HKDesc . "Win + "
         }
-    
+
     if AltModifier
         {
         HG_Hotkey:=HG_Hotkey . "!"
         HG_HKDesc:=HG_HKDesc . "Alt + "
         }
-		
+
 	HG_Hotkey:=HG_Hotkey . HG_Key
     HG_HKDesc:=HG_HKDesc . HG_Key
 
@@ -1097,7 +1197,7 @@ return
 
 
 SwitchInv:
-;Gui,submit,nohide
+
 GuiControlGet, EnInventory
 IniWrite, %EnInventory%, %A_WorkingDir%\%profileini%, Inventory, EnInventory
 if (EnInventory=1){
@@ -1119,9 +1219,9 @@ GuiControl, Disable, b6
 return
 
 
-;=======================================END of GUI===============================
 
-;=======================================SAVE INI=================================
+
+
 EnSkills:
 skill1:
 skill2:
@@ -1183,7 +1283,7 @@ Share:
 Ignore:
 AHP:
 Garena:
-WMC:
+ReloadScr:
 Time:
 toggle:
 pause:
@@ -1229,20 +1329,38 @@ SaveMessage:
 gui, submit, nohide
 loop, 5
 {
-if mh%A_index%
 IniWrite,% mh%A_index%, %A_WorkingDir%\%profileini%, Messages, hotkey%A_index%
-if mv%A_index%
 IniWrite,% mv%A_index%, %A_WorkingDir%\%profileini%, Messages, message%A_index%
-if amh%A_index%
 IniWrite,% amh%A_index%, %A_WorkingDir%\%profileini%, Messages, ahotkey%A_index%
-if amv%A_index%
 IniWrite,% amv%A_index%, %A_WorkingDir%\%profileini%, Messages, amessage%A_index%
 }
 return
 
-;=====================================CORE CODE=================================
+SM1:
+SM2:
+SM3:
+SM4:
+SM5:
+i := SubStr(A_ThisLabel,3)
+gui, submit, nohide
+IniWrite,% mh%i%, %A_WorkingDir%\%profileini%, Messages, hotkey%i%
+IniWrite,% mv%i%, %A_WorkingDir%\%profileini%, Messages, message%i%
+return
 
-;====================================INVENTORY==================================
+SAM1:
+SAM2:
+SAM3:
+SAM4:
+SAM5:
+i := SubStr(A_ThisLabel,4)
+gui, submit, nohide
+IniWrite,% amh%i%, %A_WorkingDir%\%profileini%, Messages, ahotkey%i%
+IniWrite,% amv%i%, %A_WorkingDir%\%profileini%, Messages, amessage%i%
+return
+
+
+
+
 i1:
 send {vk67}
 return
@@ -1258,7 +1376,7 @@ i2S:
 sendplay +{vk68}
 return
 i2Shop:
- 
+
 i3:
 send {vk64}
 return
@@ -1288,7 +1406,7 @@ return
 i6S:
 sendplay +{vk62}
 return
-;===================================================CUSTOM KEYS=======================
+
 LC(xx,yy)
 {
    BlockInput, On
@@ -1354,7 +1472,7 @@ LC12:
    LC(.95,.81)
 return
 
-;==================================================AUTO CAST===================================
+
 AC1:
    BlockInput, On
    MouseGetPos, x0, y0
@@ -1429,7 +1547,7 @@ AC2:
    SendPlay, {Click %x3%,  %y%, Right}{Click %x4%,  %y%, Right}{Click %x3%,  %y2%, Right}{Click %x0%, %y0%, 0}
    BlockInput, Off
 return
-;===========================================================MESSAGES===================================
+
 RandomMessage(M)
 {
 Loop, parse, M, `|
@@ -1484,7 +1602,7 @@ Loop, parse, %A_ThisLabel%, `,
 }
 }
 return
-;==========================================INVOKER===========================================
+
 Snap:
 sendplay {vk51}{vk51}{vk51}{vk52}
 return
@@ -1550,7 +1668,7 @@ Alacrity4:
 sendplay {vk57}{vk57}{vk45}{vk52}
 sleep 250
 sendplay {vk5A}
- 
+
 BlockInput, On
 MouseGetPos, x0, y0
 if _locked
@@ -1622,7 +1740,7 @@ return
 gilist:
 send {Enter}-il{Enter}
 return
-;===============================OTHER======================================================
+
 
 disable:
 return
@@ -1708,19 +1826,12 @@ Send {Enter}
 Send {Click %x0%,  %y0%, 0}
 BlockInput, Off
 return
- 
+
 gIgnore:
 squelch:="/squelch "
 send {Enter}-hhn{Enter}
-send {Enter}%squelch% 
-if !A_IsSuspended
-{
-if ScrollIndicator
-   SetScrollLockState, Off
-if AutoDetect
-   SetTimer, checklobby, off
-Suspend, on
-}
+send {Enter}%squelch%
+
 return
 
 GetHero:
@@ -1772,28 +1883,19 @@ return
 Switch:
 Suspend
 if !A_IsSuspended{
-   Hotkey,*Enter, SendEnt,on
-   Hotkey,*NumpadEnter, SendEnt,on
-   Hotkey, ~*Esc, KEYSON,on
-   Hotkey, ~LButton, KEYSON,on
    if ScrollIndicator
    SetScrollLockState, On
-   if AutoDetect
-   SetTimer, checklobby, on
    if Sound
    soundplay, *48
+   SetTimer, CheckWarcraft, On
 }
 Else{
-   Hotkey,*Enter, SendEnt,off
-   Hotkey,*NumpadEnter, SendEnt,off
-   Hotkey, ~*Esc, KEYSON,off
-   Hotkey, ~LButton, KEYSON,off
    if ScrollIndicator
    SetScrollLockState, Off
-   if AutoDetect
-   SetTimer, checklobby, off
    if Sound
    soundplay, *64
+   SetTimer, CheckChatting, Off
+   SetTimer, CheckWarcraft, Off
 }
 return
 
@@ -1803,51 +1905,63 @@ send {vk79}{vk4D}{vk52}
 return
 
 
-_locked := 0
+CheckActiveWar3:
+	hWnd := WinActive("ahk_classWarcraft III")
+	if hWnd
+	{
+		SetTimer,CheckActiveWar3,Off
+		if GetWindowClientRect(hWnd,rect) && DllCall("ClipCursor","UInt",&rect)
+		{
+			_locked := 1
+			SetTimer,CheckInactiveWar3
+		}
+		else
+			SetTimer,CheckActiveWar3
+	}
+	Return
 
-gWMC:
-  Suspend, Permit
-  if _locked
-  {
-    DllCall("ClipCursor")
-    _locked := 0
-  }
-  else
-  {
-    ActiveHwnd := WinExist("Warcraft III")
-    VarSetCapacity(rect,16)
-    if GetWindowClientRect(ActiveHwnd,rect) && DllCall("ClipCursor","UInt",&rect)
-      _locked := 1
-  }
-  Return
+CheckInactiveWar3:
+	IfWinNotActive,ahk_id%hWnd%
+	{
+		SetTimer,CheckInactiveWar3,Off
+		if DllCall("ClipCursor")
+		{
+			_locked := 0
+			SetTimer,CheckActiveWar3
+		}
+		else
+			SetTimer,CheckInactiveWar3
+	}
+	Return
 
-GetWindowClientRect(hwnd,ByRef rect)
+GetWindowClientRect(hWnd,ByRef rect)
 {
-  if !hwnd || VarSetCapacity(rect) < 16
-    Return,0
+	if !hWnd
+		Return,0
 
-  VarSetCapacity(cRect,16)
-  if !DllCall("GetClientRect","UInt",hwnd,"UInt",&cRect)
-    Return,0
+	VarSetCapacity(cRect,16)
+	if !DllCall("GetClientRect","UInt",hWnd,"UInt",&cRect)
+		Return,0
 
-  global cWidth := NumGet(cRect,8,Int) - NumGet(cRect,0,Int)
-  global cHeight := NumGet(cRect,12,Int) - NumGet(cRect,4,Int)
-  
-  if !DllCall("GetWindowRect","UInt",hwnd,"UInt",&rect)
-    Return,0
-  
-  wWidth := NumGet(rect,8,Int) - NumGet(rect,0,Int)
-  margin := (wWidth - cWidth)//2
+	global cWidth := NumGet(cRect,8,"Int") - NumGet(cRect,0,"Int")
+	global cHeight := NumGet(cRect,12,"Int") - NumGet(cRect,4,"Int")
 
-  NumPut(NumGet(rect,8,Int) - margin,rect,8,Int)
-  NumPut(NumGet(rect,12,Int) - margin,rect,12,Int)
-  NumPut(NumGet(rect,8,Int) - cWidth,rect,0,Int)
-  NumPut(NumGet(rect,12,Int) - cHeight,rect,4,Int)
-  
-  global left := NumGet(rect,0,Int)
-  global top := NumGet(rect,4,Int)
-  
-  Return,1
+	VarSetCapacity(rect,16)
+	if !DllCall("GetWindowRect","UInt",hWnd,"UInt",&rect)
+		Return,0
+
+	wWidth := NumGet(rect,8,"Int") - NumGet(rect,0,"Int")
+	margin := (wWidth - cWidth)//2
+
+	NumPut(NumGet(rect,8,"Int") - margin,rect,8,"Int")
+	NumPut(NumGet(rect,12,"Int") - margin,rect,12,"Int")
+	NumPut(NumGet(rect,8,"Int") - cWidth,rect,0,"Int")
+	NumPut(NumGet(rect,12,"Int") - cHeight,rect,4,"Int")
+
+	global left := NumGet(rect,0,"Int")
+	global top := NumGet(rect,4,"Int")
+
+	Return,1
 }
 
 GarenaJoiner:
@@ -1874,38 +1988,7 @@ sleep, 2000
 send {space}
 return
 
-KEYSON:
-Suspend, Permit
-Suspend, Off
-if ScrollIndicator
-SetScrollLockState, On
-if AutoDetect
-SetTimer, checklobby, on
-return
 
-SendEnt:
-	Suspend, Permit
-	Send, {Blind}{Enter}
-	Suspend
-	if !A_IsSuspended
-		{
-		if ScrollIndicator
-		SetScrollLockState, On
-		if Sound
-		soundplay, *48
-		if AutoDetect
-		SetTimer, checklobby, on
-		}
-	Else {
-		if ScrollIndicator
-		SetScrollLockState, Off
-		if Sound
-		soundplay, *64
-		if AutoDetect
-		SetTimer, checklobby, off
-		}
-	return
-	
 AHPST:
 ifWinActive, ahk_class Warcraft III
 {
@@ -1928,64 +2011,29 @@ return
 
 ShowAHP:
   If AHealthBarOn
-    {
-      Send, {[ Up}
-      AHealthBarOn := 0
-    }
+      Sendplay {[ Up}
   Else
-    {
-      Send, {[ Down}
-      AHealthBarOn := 1
-    }
+      Sendplay {[ Down}
+  AHealthBarOn:=!AHealthBarOn
+
 Return
-	
+
 ShowEHP:
   If EHealthBarOn
     {
-      Send, {] Up}
-      EHealthBarOn := 0
+      Sendplay, {] Up}
+      EHealthBarOn:=0
     }
   Else
     {
-      Send, {] Down}
+      Sendplay, {] Down}
       EHealthBarOn := 1
     }
+  EHealthBarOn:=!EHealthBarOn
 Return
 
-checklobby:
-IfWinActive, Warcraft III
-{
-x:=A_ScreenWidth*0.738
-y:=A_ScreenHeight*0.019
-PixelGetColor, color1, %x%, %y%
-if color1=0x000000
-{
-   if A_IsSuspended {
-   Hotkey,*Enter, SendEnt,on
-   Hotkey,*NumpadEnter, SendEnt,on
-   Hotkey, ~*Esc, KEYSON,on
-   Hotkey, ~LButton, KEYSON,on
-   if ScrollIndicator
-   SetScrollLockState, On
-   if Sound
-   soundplay, *48
-   Suspend, Off
-   }
-}
-else{
-   if !A_IsSuspended{
-   Hotkey,*Enter, SendEnt,off
-   Hotkey,*NumpadEnter, SendEnt,off
-   Hotkey, ~*Esc, KEYSON,off
-   Hotkey, ~LButton, KEYSON,off
-   if ScrollIndicator
-   SetScrollLockState, Off
-   if Sound
-   soundplay, *64
-   Suspend, On
-   }
-   }
-  }
+ReloadScript:
+reload
 return
 
 KR1:
@@ -2036,9 +2084,124 @@ VK(K) {
 }
 
 
-EmptyMem(PID="AHT v2.0rc2"){
-    pid:=(pid="AHT v2.0rc2") ? DllCall("GetCurrentProcessId") : pid
+EmptyMem(PID="AHT v2.0rc5"){
+    pid:=(pid="AHT v2.0rc5") ? DllCall("GetCurrentProcessId") : pid
     h:=DllCall("OpenProcess", "UInt", 0x001F0FFF, "Int", 0, "Int", pid)
     DllCall("SetProcessWorkingSetSize", "UInt", h, "Int", -1, "Int", -1)
     DllCall("CloseHandle", "Int", h)
+}
+
+CheckChatting:
+	if ReadChatState(hWar3Proc, baseAddr, chatState)
+	{
+		if chatState
+			Suspend, On
+		else
+			Suspend, Off
+	}
+	else
+	{
+		SetTimer, CheckChatting, Off
+		DllCall("CloseHandle", "UInt", hWar3Proc)
+		hWar3Proc := 0
+		SetTimer, CheckWarcraft, On
+		Suspend, Off
+	}
+	Return
+
+ReadChatState(handle, baseAddr, ByRef chatState)
+{
+	if (DllCall("ReadProcessMemory", "UInt", handle, "UInt", baseAddr, "UInt*", chatState, "UInt", 4, "UInt", 0) = 0 || ErrorLevel)
+	{
+
+		Return 0
+	}
+	Return 1
+}
+
+CheckWarcraft:
+	IfWinNotActive, ahk_class Warcraft III
+		Return
+	SetTimer, CheckWarcraft, Off
+	Sleep, 5000
+	IfWinActive, ahk_class Warcraft III
+	{
+		WinGet, pid, PID
+		if hWar3Proc > 0
+			DllCall("CloseHandle", "UInt", hWar3Proc)
+
+
+
+		hWar3Proc := DllCall("OpenProcess", "UInt", 0x0010 | 0x0400, "Int", 0, "UInt", pid)
+		if (hWar3Proc = 0 || ErrorLevel)
+		{
+			MsgBox,Error: Unable to open process (%A_LastError%).
+			SetTimer, CheckWarcraft, On
+			Return
+		}
+		baseAddr := GetBaseAddr(pid)
+		if (baseAddr = 0)
+		{
+			SetTimer, CheckWarcraft, On
+			Return
+		}
+		SetTimer, CheckChatting, 100
+	}
+	else
+		SetTimer, CheckWarcraft, On
+	Return
+
+GetBaseAddr(pid)
+{
+	hSnapshot := DllCall("CreateToolhelp32Snapshot", "UInt", 0x08, "UInt", pid)
+	if (hSnapshot < 0 || ErrorLevel)
+	{
+		MsgBox,Error: Unable to take module snapshot (%A_LastError%).
+		Return 0
+	}
+
+	VarSetCapacity(me32, 548)
+	NumPut(548, me32)
+
+	if DllCall("Module32First", "UInt", hSnapshot, "UInt", &me32)
+	{
+		VarSetCapacity(szModule, 256)
+
+		Loop
+		{
+			DllCall("RtlMoveMemory", "Str", szModule, "UInt", &me32 + 32, "UInt", 256)
+
+			if (szModule = "game.dll")
+			{
+				DllCall("CloseHandle", "UInt", hSnapshot)
+				Return NumGet(me32, 20, "UInt") + 0xAD15F0
+			}
+
+			if !DllCall("Module32Next", "UInt", hSnapshot, "UInt", &me32)
+				Break
+		}
+	}
+
+	DllCall("CloseHandle", "UInt", hSnapshot)
+
+	Return 0
+}
+
+
+DebugPrivilegesEnable()
+{
+	Process, Exist
+
+	h := DllCall("OpenProcess", "UInt", 0x0400, "Int", false, "UInt", ErrorLevel)
+
+	DllCall("Advapi32.dll\OpenProcessToken", "UInt", h, "UInt", 32, "UIntP", t)
+	VarSetCapacity(ti, 16, 0)
+	NumPut(1, ti, 0)
+
+	DllCall("Advapi32.dll\LookupPrivilegeValueA", "UInt", 0, "Str", "SeDebugPrivilege", "Int64P", luid)
+	NumPut(luid, ti, 4, "int64")
+	NumPut(2, ti, 12)
+
+	DllCall("Advapi32.dll\AdjustTokenPrivileges", "UInt", t, "Int", false, "UInt", &ti, "UInt", 0, "UInt", 0, "UInt", 0)
+	DllCall("CloseHandle", "UInt", h)
 }
