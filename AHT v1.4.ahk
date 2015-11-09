@@ -2,11 +2,19 @@
 ; AutoHotkey Version: 1.x
 ; Language:       English
 ; Platform:       Win9x/NT/XP/
-; Author:         AucT <AucT@mail.ua>
+; Author:         AucT <AucT@mail.ua> + recode by yayuhhz
 ; Web-Site:		  AHT.isgreat.org
+#NoEnv
+CoordMode,Mouse,Screen
 #IfWinActive Warcraft III
 ;Inventory
+IniRead, ScrollIndicator, config.ini, Others, ScrollIndicator
+if (ScrollIndicator="on")
 SetScrollLockState, On
+
+IniRead, enItems, config.ini, Inventory, enItems
+if (enItems="on")
+{
 IniRead, i1, config.ini, Inventory, item1
 IniRead, i2, config.ini, Inventory, item2
 IniRead, i3, config.ini, Inventory, item3
@@ -32,6 +40,7 @@ Hotkey,+%i5%, i5
 if %i6%
 Hotkey,%i6%, i6
 Hotkey,+%i6%, i6
+}
 
 ;Auto-Casts
 IniRead, auto1, config.ini, Auto-Casts, auto1
@@ -45,7 +54,7 @@ if %autoa%
 Hotkey,%autoa%, ACa
 
 ;Chat Suspending
-IniRead, enchat, config.ini, Inventory, enchat
+IniRead, enchat, config.ini, Others, enchat
 if (enchat="on")
 {
 Hotkey,*Enter, SendEnt
@@ -142,6 +151,7 @@ Hotkey,%bot%, bot
 if %mid%
 Hotkey,%mid%, mid
 
+
 ;ScoreBoard
 IniRead, sb, config.ini,Others, ScoreBoard
 if %sb%
@@ -192,9 +202,9 @@ IniRead, enaqm, config.ini,All-Quick-Message, EnAQM
 	}
 
 ;Window MOUSE CAPTURER
-IniRead, enwmc, config.ini,Window-Mouse-Capturer, EnWMC
-if (enwmc="on")
-  Gosub, WMC
+IniRead, wmc, config.ini,Window-Mouse-Capturer, WMC
+if %wmc%
+Hotkey,%wmc%,WMC
 
 ;ShortKeys
 ::-u::-unlock
@@ -207,12 +217,24 @@ return
 AC1:
    BlockInput, On
    MouseGetPos, x0, y0
+   if _locked
+   {
+   x1:=left+cWidth*0.79
+   x2:=left+cWidth*0.84
+   x3:=left+cWidth*0.9
+   x4:=left+cWidth*0.95
+   y:=top+cHeight*0.95
+   y2:=top+cHeight*0.88
+   }
+   else
+   {
    x1:=A_ScreenWidth*0.79
    x2:=A_ScreenWidth*0.84
    x3:=A_ScreenWidth*0.9
    x4:=A_ScreenWidth*0.95
    y:=A_ScreenHeight*0.95
    y2:=A_ScreenHeight*0.88
+   }
    SendPlay, {Click %x1%,  %y%, Right}{Click %x2%,  %y%, Right}{Click %x2%,  %y2%, Right}{Click %x0%, %y0%, 0}
    BlockInput, Off
 return
@@ -220,12 +242,24 @@ return
 ACa:
    BlockInput, On
    MouseGetPos, x0, y0
+   if _locked
+   {
+   x1:=left+cWidth*0.79
+   x2:=left+cWidth*0.84
+   x3:=left+cWidth*0.9
+   x4:=left+cWidth*0.95
+   y:=top+cHeight*0.95
+   y2:=top+cHeight*0.88
+   }
+   else
+   {
    x1:=A_ScreenWidth*0.79
    x2:=A_ScreenWidth*0.84
    x3:=A_ScreenWidth*0.9
    x4:=A_ScreenWidth*0.95
    y:=A_ScreenHeight*0.95
    y2:=A_ScreenHeight*0.88
+   }
    SendPlay, {Click %x1%,  %y%, Right}{Click %x2%,  %y%, Right}{Click %x3%,  %y%, Right}{Click %x4%,  %y%, Right}{Click %x3%,  %y2%, Right}{Click %x0%, %y0%, 0}
    BlockInput, Off
 return
@@ -233,12 +267,24 @@ return
 AC2:
    BlockInput, On
    MouseGetPos, x0, y0
+   if _locked
+   {
+   x1:=left+cWidth*0.79
+   x2:=left+cWidth*0.84
+   x3:=left+cWidth*0.9
+   x4:=left+cWidth*0.95
+   y:=top+cHeight*0.95
+   y2:=top+cHeight*0.88
+   }
+   else
+   {
    x1:=A_ScreenWidth*0.79
    x2:=A_ScreenWidth*0.84
    x3:=A_ScreenWidth*0.9
    x4:=A_ScreenWidth*0.95
    y:=A_ScreenHeight*0.95
    y2:=A_ScreenHeight*0.88
+   }
    SendPlay, {Click %x3%,  %y%, Right}{Click %x4%,  %y%, Right}{Click %x3%,  %y2%, Right}{Click %x0%, %y0%, 0}
    BlockInput, Off
 return
@@ -255,6 +301,7 @@ if !A_IsSuspended{
    Hotkey,*NumpadEnter, SendEnt,on
    Hotkey, ~*Esc, KEYSON,on
    Hotkey, ~LButton, KEYSON,on
+   if (ScrollIndicator="on")
    SetScrollLockState, On
 }
 Else{
@@ -262,6 +309,7 @@ Else{
    Hotkey,*NumpadEnter, SendEnt,off
    Hotkey, ~*Esc, KEYSON,off
    Hotkey, ~LButton, KEYSON,off
+   if (ScrollIndicator="on")
    SetScrollLockState, Off
 }
 return
@@ -274,11 +322,19 @@ return
 SB:
    BlockInput, On
    MouseGetPos, x0, y0
-   x:=A_ScreenWidth*0.985
-   y:=A_ScreenHeight*0.0575
+   if _locked
+   {
+   x:=left+cWidth*0.985
+   y:=top+cHeight*0.058
+   }
+   else
+   {
+   x:=A_ScreenWidth*0.98
+   y:=A_ScreenHeight*0.058
+   }
    SendPlay, {Click %x%,  %y%, 0}
    Click
-   SendPlay, {Click %x0%,  %y0%, 0}
+   ;SendPlay, {Click %x0%,  %y0%, 0}
    BlockInput, Off
 return
 
@@ -304,6 +360,21 @@ return
 Share:
 BlockInput, On
 MouseGetPos, x0, y0
+if _locked
+{
+x:=left+cWidth*0.6
+y1:=top+cHeight*0.2
+y2:=top+cHeight*0.25
+y3:=top+cHeight*0.3
+y4:=top+cHeight*0.345
+y5:=top+cHeight*0.39
+y6:=top+cHeight*0.435
+y7:=top+cHeight*0.482
+y8:=top+cHeight*0.527
+y9:=top+cHeight*0.574
+}
+else
+{
 x:=A_ScreenWidth*0.6
 y1:=A_ScreenHeight*0.2
 y2:=A_ScreenHeight*0.25
@@ -314,6 +385,7 @@ y6:=A_ScreenHeight*0.435
 y7:=A_ScreenHeight*0.482
 y8:=A_ScreenHeight*0.527
 y9:=A_ScreenHeight*0.574
+}
 Send {F11}
 
 sleep, %wait%
@@ -378,8 +450,16 @@ return
 LC1:
    BlockInput, On
    MouseGetPos, x0, y0
+   if _locked
+   {
+   x:=left+cWidth*0.79
+   y:=top+cHeight*0.95
+   }
+   else
+   {
    x:=A_ScreenWidth*0.79
    y:=A_ScreenHeight*0.95
+   }
    SendPlay, {Click %x%,  %y%, Left}{Click %x0%, %y0%, 0}
    BlockInput, Off
 return
@@ -387,8 +467,16 @@ return
 LC2:
    BlockInput, On
    MouseGetPos, x0, y0
+   if _locked
+   {
+   x:=left+cWidth*0.84
+   y:=top+cHeight*0.95
+   }
+   else
+   {
    x:=A_ScreenWidth*0.84
    y:=A_ScreenHeight*0.95
+   }
    SendPlay, {Click %x%,  %y%, Left}{Click %x0%, %y0%, 0}
    BlockInput, Off
 return
@@ -396,8 +484,16 @@ return
 LC3:
    BlockInput, On
    MouseGetPos, x0, y0
+   if _locked
+   {
+   x:=left+cWidth*0.9
+   y:=top+cHeight*0.95
+   }
+   else
+   {
    x:=A_ScreenWidth*0.9
    y:=A_ScreenHeight*0.95
+   }
    SendPlay, {Click %x%,  %y%, Left}{Click %x0%, %y0%, 0}
    BlockInput, Off
 return
@@ -405,8 +501,16 @@ return
 LC4:
    BlockInput, On
    MouseGetPos, x0, y0
+   if _locked
+   {
+   x:=left+cWidth*0.95
+   y:=top+cHeight*0.95
+   }
+   else
+   {
    x:=A_ScreenWidth*0.95
    y:=A_ScreenHeight*0.95
+   }
    SendPlay, {Click %x%,  %y%, Left}{Click %x0%, %y0%, 0}
    BlockInput, Off
 return
@@ -414,8 +518,16 @@ return
 LC5:
    BlockInput, On
    MouseGetPos, x0, y0
+   if _locked
+   {
+   x:=left+cWidth*0.79
+   y:=top+cHeight*0.88
+   }
+   else
+   {
    x:=A_ScreenWidth*0.79
    y:=A_ScreenHeight*0.88
+   }
    SendPlay, {Click %x%,  %y%, Left}{Click %x0%, %y0%, 0}
    BlockInput, Off
 return
@@ -423,8 +535,16 @@ return
 LC6:
    BlockInput, On
    MouseGetPos, x0, y0
+   if _locked
+   {
+   x:=left+cWidth*0.84
+   y:=top+cHeight*0.88
+   }
+   else
+   {
    x:=A_ScreenWidth*0.84
    y:=A_ScreenHeight*0.88
+   }
    SendPlay, {Click %x%,  %y%, Left}{Click %x0%, %y0%, 0}
    BlockInput, Off
 return
@@ -432,8 +552,16 @@ return
 LC7:
    BlockInput, On
    MouseGetPos, x0, y0
+   if _locked
+   {
+   x:=left+cWidth*0.9
+   y:=top+cHeight*0.88
+   }
+   else
+   {
    x:=A_ScreenWidth*0.9
    y:=A_ScreenHeight*0.88
+   }
    SendPlay, {Click %x%,  %y%, Left}{Click %x0%, %y0%, 0}
    BlockInput, Off
 return
@@ -441,8 +569,16 @@ return
 LC8:
    BlockInput, On
    MouseGetPos, x0, y0
+   if _locked
+   {
+   x:=left+cWidth*0.95
+   y:=top+cHeight*0.88
+   }
+   else
+   {
    x:=A_ScreenWidth*0.95
    y:=A_ScreenHeight*0.88
+   }
    SendPlay, {Click %x%,  %y%, Left}{Click %x0%, %y0%, 0}
    BlockInput, Off
 return
@@ -450,8 +586,16 @@ return
 LC9:
    BlockInput, On
    MouseGetPos, x0, y0
+   if _locked
+   {
+   x:=left+cWidth*0.79
+   y:=top+cHeight*0.81
+   }
+   else
+   {
    x:=A_ScreenWidth*0.79
    y:=A_ScreenHeight*0.81
+   }
    SendPlay, {Click %x%,  %y%, Left}{Click %x0%, %y0%, 0}
    BlockInput, Off
 return
@@ -459,8 +603,16 @@ return
 LC10:
    BlockInput, On
    MouseGetPos, x0, y0
+   if _locked
+   {
+   x:=left+cWidth*0.84
+   y:=top+cHeight*0.81
+   }
+   else
+   {
    x:=A_ScreenWidth*0.84
    y:=A_ScreenHeight*0.81
+   }
    SendPlay, {Click %x%,  %y%, Left}{Click %x0%, %y0%, 0}
    BlockInput, Off
 return
@@ -468,8 +620,16 @@ return
 LC11:
    BlockInput, On
    MouseGetPos, x0, y0
+   if _locked
+   {
+   x:=left+cWidth*0.9
+   y:=top+cHeight*0.81
+   }
+   else
+   {
    x:=A_ScreenWidth*0.9
    y:=A_ScreenHeight*0.81
+   }
    SendPlay, {Click %x%,  %y%, Left}{Click %x0%, %y0%, 0}
    BlockInput, Off
 return
@@ -477,15 +637,22 @@ return
 LC12:
    BlockInput, On
    MouseGetPos, x0, y0
+   if _locked
+   {
+   x:=left+cWidth*0.95
+   y:=top+cHeight*0.81
+   }
+   else
+   {
    x:=A_ScreenWidth*0.95
    y:=A_ScreenHeight*0.81
+   }
    SendPlay, {Click %x%,  %y%, Left}{Click %x0%, %y0%, 0}
    BlockInput, Off
 return
 
 QM1:
 Send {Enter}%qmv1%{Enter}
-
 return
 QM2:
 Send {Enter}%qmv2%{Enter}
@@ -511,33 +678,37 @@ AQM4:
 Send +{+Enter}%aqmv4%{Enter}
 return
 
-_locked := false
+_locked := 0
 
 WMC:
-  if _locked {
+  if _locked
+  {
     DllCall("ClipCursor")
-    _locked := false
-  } else {
+    _locked := 0
+  }
+  else
+  {
     ActiveHwnd := WinExist("Warcraft III")
     VarSetCapacity(rect,16)
-    if GetWindowClientRect(ActiveHwnd,rect) && DllCall("ClipCursor",UInt,&rect)
-      _locked := true
+    if GetWindowClientRect(ActiveHwnd,rect) && DllCall("ClipCursor","UInt",&rect)
+      _locked := 1
   }
   Return
 
-GetWindowClientRect(hwnd,ByRef rect) {
+GetWindowClientRect(hwnd,ByRef rect)
+{
   if !hwnd || VarSetCapacity(rect) < 16
-    Return 0
+    Return,0
 
   VarSetCapacity(cRect,16)
-  if !DllCall("GetClientRect",UInt,hwnd,UInt,&cRect)
-    Return 0
+  if !DllCall("GetClientRect","UInt",hwnd,"UInt",&cRect)
+    Return,0
 
-  cWidth := NumGet(cRect,8,Int) - NumGet(cRect,0,Int)
-  cHeight := NumGet(cRect,12,Int) - NumGet(cRect,4,Int)
+  global cWidth := NumGet(cRect,8,Int) - NumGet(cRect,0,Int)
+  global cHeight := NumGet(cRect,12,Int) - NumGet(cRect,4,Int)
   
-  if !DllCall("GetWindowRect",UInt,hwnd,UInt,&rect)
-    Return 0
+  if !DllCall("GetWindowRect","UInt",hwnd,"UInt",&rect)
+    Return,0
   
   wWidth := NumGet(rect,8,Int) - NumGet(rect,0,Int)
   margin := (wWidth - cWidth)//2
@@ -547,12 +718,16 @@ GetWindowClientRect(hwnd,ByRef rect) {
   NumPut(NumGet(rect,8,Int) - cWidth,rect,0,Int)
   NumPut(NumGet(rect,12,Int) - cHeight,rect,4,Int)
   
-  Return 1
+  global left := NumGet(rect,0,Int)
+  global top := NumGet(rect,4,Int)
+  
+  Return,1
 }
 
 KEYSON:
 Suspend, Permit
 Suspend, Off
+if (ScrollIndicator="on")
 SetScrollLockState, On
 return
 
@@ -560,9 +735,12 @@ SendEnt:
 	Suspend, Permit
 	Send, {Blind}{Enter}
 	Suspend
+	if (ScrollIndicator="on")
+	{
 	if !A_IsSuspended
 		SetScrollLockState, On
 
 	Else
 		SetScrollLockState, Off
+	}
 	return
