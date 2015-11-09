@@ -151,6 +151,43 @@ Hotkey,%bot%, bot
 if %mid%
 Hotkey,%mid%, mid
 
+;Invoker
+IniRead, EnableInvoker, config.ini, Invoker, EnableInvoker
+if (EnableInvoker="on")
+{
+	IniRead, ColdSnap, config.ini, Invoker, ColdSnap
+	IniRead, GhostWalk, config.ini, Invoker, GhostWalk
+	IniRead, Tornado, config.ini, Invoker, Tornado
+	IniRead, EMP, config.ini, Invoker, EMP
+	IniRead, Alacrity, config.ini, Invoker, Alacrity
+	IniRead, ChaosMeteor, config.ini, Invoker, ChaosMeteor
+	IniRead, SunStrike, config.ini, Invoker, SunStrike
+	IniRead, ForgeSpirit, config.ini, Invoker, ForgeSpirit
+	IniRead, IceWall, config.ini, Invoker, IceWall
+	IniRead, DeafeningBlast, config.ini, Invoker, DeafeningBlast
+
+
+	if %ColdSnap%
+	Hotkey,%ColdSnap%, Snap
+	if %GhostWalk%
+	Hotkey,%GhostWalk%, Walk
+	if %Tornado%
+	Hotkey,%Tornado%, Tornado
+	if %EMP%
+	Hotkey,%EMP%, EMP
+	if %Alacrity%
+	Hotkey,%Alacrity%, Alacrity
+	if %ChaosMeteor%
+	Hotkey,%ChaosMeteor%, Meteor
+	if %SunStrike%
+	Hotkey,%SunStrike%, Strike
+	if %ForgeSpirit%
+	Hotkey,%ForgeSpirit%, Spirit
+	if %IceWall%
+	Hotkey,%IceWall%, Wall
+	if %DeafeningBlast%
+	Hotkey,%DeafeningBlast%, Blast
+}
 
 ;ScoreBoard
 IniRead, sb, config.ini,Others, ScoreBoard
@@ -334,7 +371,7 @@ SB:
    }
    SendPlay, {Click %x%,  %y%, 0}
    Click
-   ;SendPlay, {Click %x0%,  %y0%, 0}
+   SendPlay, {Click %x0%,  %y0%, 0}
    BlockInput, Off
 return
 
@@ -744,3 +781,34 @@ SendEnt:
 		SetScrollLockState, Off
 	}
 	return
+	
+Snap:
+send {vk51}{vk51}{vk51}{vk52}
+return
+Wall:
+send {vk51}{vk51}{vk45}{vk52}
+return
+Blast:
+send {vk51}{vk57}{vk45}{vk52}
+return
+Tornado:
+send {vk51}{vk57}{vk57}{vk52}
+return
+Alacrity:
+send {vk57}{vk57}{vk45}{vk52}
+return
+Meteor:
+send {vk57}{vk45}{vk45}{vk52}
+return
+Strike:
+send {vk45}{vk45}{vk45}{vk52}
+return
+Walk:
+send {vk51}{vk51}{vk57}{vk52}
+return
+Spirit:
+send {vk51}{vk45}{vk45}{vk52}
+return
+EMP:
+send {vk57}{vk57}{vk57}{vk52}
+return
