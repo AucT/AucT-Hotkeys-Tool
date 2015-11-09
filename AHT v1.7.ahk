@@ -4,15 +4,16 @@
 ; Author:         AucT <AucT.uz.ua@gmail.com> + recode by yayuhhz
 ; Web-Site:		  AHT.isgreat.org
 #NoEnv
+#SingleInstance
 setbatchlines -1
 setkeydelay -1
 CoordMode,Mouse,Screen
-#IfWinActive Warcraft III
+;#IfWinActive Warcraft III
 ;Inventory
 IniRead, ScrollIndicator, config.ini, Others, ScrollIndicator
 if (ScrollIndicator="on")
 SetScrollLockState, On
-
+Hotkey, IfWinActive, Warcraft III
 IniRead, enItems, config.ini, Inventory, enItems
 if (enItems="on")
 {
@@ -25,22 +26,22 @@ IniRead, i6, config.ini, Inventory, item6
 
 if %i1%
 Hotkey,%i1%, i1
-Hotkey,+%i1%, i1
+Hotkey,+%i1%, i1S
 if %i2%
 Hotkey,%i2%, i2
-Hotkey,+%i2%, i2
+Hotkey,+%i2%, i2S
 if %i3%
 Hotkey,%i3%, i3
-Hotkey,+%i3%, i3
+Hotkey,+%i3%, i3S
 if %i4%
 Hotkey,%i4%, i4
-Hotkey,+%i4%, i4
+Hotkey,+%i4%, i4S
 if %i5%
 Hotkey,%i5%, i5
-Hotkey,+%i5%, i5
+Hotkey,+%i5%, i5S
 if %i6%
 Hotkey,%i6%, i6
-Hotkey,+%i6%, i6
+Hotkey,+%i6%, i6S
 }
 
 
@@ -109,6 +110,7 @@ if (EnSkills="on")
 }
 ;OTHERS
 IniRead, t, config.ini,Others, time
+IniRead, GAJ, config.ini,Others, GarenaAutoJoiner
 IniRead, p, config.ini,Others, pause
 IniRead, toggle, config.ini,Others, toggle
 IniRead, share, config.ini,Others, share
@@ -128,6 +130,10 @@ IniRead, fasttp5, config.ini, Others, FastTp5
 IniRead, fasttp6, config.ini, Others, FastTp6
 if %t%
 Hotkey,%t%, TimeNow
+Hotkey, IfWinActive, Garena
+if %GAJ%
+Hotkey,%GAJ%, GarenaJoiner
+Hotkey, IfWinActive, Warcraft III
 if %toggle%
 Hotkey,%toggle%, Switch
 if %p%
@@ -147,17 +153,17 @@ Hotkey,%dis3%, Dis1
 if %dis4%
 Hotkey,%dis4%, Dis1
 if %fasttp1%
-Hotkey,%fasttp1%, FastTp01
+Hotkey,%fasttp1%, FastTp1
 if %fasttp2%
-Hotkey,%fasttp2%, FastTp02
+Hotkey,%fasttp2%, FastTp2
 if %fasttp3%
-Hotkey,%fasttp3%, FastTp03
+Hotkey,%fasttp3%, FastTp3
 if %fasttp4%
-Hotkey,%fasttp4%, FastTp04
+Hotkey,%fasttp4%, FastTp4
 if %fasttp5%
-Hotkey,%fasttp5%, FastTp05
+Hotkey,%fasttp5%, FastTp5
 if %fasttp6%
-Hotkey,%fasttp6%, FastTp06
+Hotkey,%fasttp6%, FastTp6
 
 ;MISSES
 IniRead, top, config.ini,Misses, Top
@@ -250,6 +256,9 @@ IniRead, enqm, config.ini,Allied-Quick-Message, EnQM
 		IniRead, qmv3, config.ini,Allied-Quick-Message, QMV3
 		IniRead, qmv4, config.ini,Allied-Quick-Message, QMV4
 		
+		IniRead, lmh1, config.ini, Allied-Quick-Message, LMH1
+		IniRead, lmv1, config.ini, Allied-Quick-Message, LMV1
+		
 		if %qmh1%
 			Hotkey,%qmh1%, QM1
 		if %qmh2%
@@ -258,6 +267,9 @@ IniRead, enqm, config.ini,Allied-Quick-Message, EnQM
 			Hotkey,%qmh3%, QM3
 		if %qmh4%
 			Hotkey,%qmh4%, QM4
+		
+		if %lmh1%
+			Hotkey,%lmh1%, LM1
 	}
 ;AQuick Messages
 IniRead, enaqm, config.ini,All-Quick-Message, EnAQM
@@ -271,6 +283,9 @@ IniRead, enaqm, config.ini,All-Quick-Message, EnAQM
 		IniRead, aqmv2, config.ini,All-Quick-Message, AQMV2
 		IniRead, aqmv3, config.ini,All-Quick-Message, AQMV3
 		IniRead, aqmv4, config.ini,All-Quick-Message, AQMV4
+		
+		IniRead, almh1, config.ini, All-Quick-Message, ALMH1
+		IniRead, almv1, config.ini, All-Quick-Message, ALMV1
 		if %aqmh1%
 			Hotkey,%aqmh1%, AQM1
 		if %aqmh2%
@@ -279,21 +294,34 @@ IniRead, enaqm, config.ini,All-Quick-Message, EnAQM
 			Hotkey,%aqmh3%, AQM3
 		if %aqmh4%
 			Hotkey,%aqmh4%, AQM4
+		if %almh1%
+			Hotkey,%almh1%, ALM1
 	}
 
 ;Window MOUSE CAPTURER
+
 IniRead, wmc, config.ini,Window-Mouse-Capturer, WMC
 if %wmc%
 Hotkey,%wmc%,WMC
-
-;ShortKeys
-::-u::-unlock
-::-r::-roll
-::-rr::-rickroll
-::m::Miss!
-
 return
 
+GarenaJoiner:
+gojoin:=!gojoin
+if gojoin
+{
+SetTimer, autojoin, 5001
+gosub, autojoin
+}
+else
+SetTimer, autojoin, off
+return
+
+autojoin:
+send, {click} {click}
+sleep, 2500
+send, {space}
+return
+#IfWinActive Warcraft III
 AC1:
    BlockInput, On
    MouseGetPos, x0, y0
@@ -419,22 +447,40 @@ SB:
 return
 
 i1:
-	sendplay {vk67}
+sendplay {vk67}
+return
+i1S:
+sendplay +{vk67}
 return
 i2:
-	sendplay {vk68}
+sendplay {vk68}
+return
+i2S:
+sendplay +{vk68}
 return
 i3:
-	sendplay {vk64}
+sendplay {vk64}
+return
+i3S:
+sendplay +{vk64}
 return
 i4:
-	sendplay {vk65}
+sendplay {vk65}
+return
+i4S:
+sendplay +{vk65}
 return
 i5:
-	sendplay {vk61}
+sendplay {vk61}
+return
+i5S:
+sendplay +{vk61}
 return
 i6:
-	sendplay {vk62}
+sendplay {vk62}
+return
+i6S:
+sendplay +{vk62}
 return
 
 Share:
@@ -524,57 +570,125 @@ return
 Dis1:
 return
 
-FastTpF(x,y,key)
-{
+FastTp1:
    BlockInput, On
    MouseGetPos, x0, y0
-
-   send key
-   SendPlay, {Click %x%,  %y%, Left}
+   if _locked
+   {
+   x:=left+cWidth*0.6637
+   y:=top+cHeight*0.8428
+   }
+   else
+   {
+   x:=A_ScreenWidth*0.6637
+   y:=A_ScreenHeight*0.8428
+   }
+   ;
+   SendPlay, {Click %x%,  %y%, 0}
+   sendplay {vk67}
+   ;Click
    Click
    SendPlay, {Click %x0%,  %y0%, 0}
    BlockInput, Off
-}
-FastTp01:
-if _locked
-FastTpF(left+cWidth*0.6637, top+cHeight*0.8428, vk67)
-else
-FastTpF(A_ScreenWidth*0.6637, A_ScreenHeight*0.8428, vk67)
 return
 
-FastTp02:
-if _locked
-FastTpF(left+cWidth*0.715, top+cHeight*0.8428, vk68)
-else
-FastTpF(A_ScreenWidth*0.715, A_ScreenHeight*0.8428, vk68)
+FastTp2:
+   BlockInput, On
+   MouseGetPos, x0, y0
+   if _locked
+   {
+   x:=left+cWidth*0.715
+   y:=top+cHeight*0.8428
+   }
+   else
+   {
+   x:=A_ScreenWidth*0.715
+   y:=A_ScreenHeight*0.8428
+   }
+   sendplay {vk68}
+   SendPlay, {Click %x%,  %y%, 0}
+   Click
+   SendPlay, {Click %x0%,  %y0%, 0}
+   BlockInput, Off
 return
 
-FastTp03:
-if _locked
-FastTpF(left+cWidth*0.6637, top+cHeight*0.9047, vk64)
-else
-FastTpF(A_ScreenWidth*0.6637, A_ScreenHeight*0.9047, vk64)
+FastTp3:
+   BlockInput, On
+   MouseGetPos, x0, y0
+   if _locked
+   {
+   x:=left+cWidth*0.6637
+   y:=top+cHeight*0.9047
+   }
+   else
+   {
+   x:=A_ScreenWidth*0.6637
+   y:=A_ScreenHeight*0.9047
+   }
+   sendplay {vk64}
+   SendPlay, {Click %x%,  %y%, 0}
+   Click
+   SendPlay, {Click %x0%,  %y0%, 0}
+   BlockInput, Off
 return
 
-FastTp04:
-if _locked
-FastTpF(left+cWidth*0.715, top+cHeight*0.9047, vk65)
-else
-FastTpF(A_ScreenWidth*0.715, A_ScreenHeight*0.9047, vk65)
+FastTp4:
+   BlockInput, On
+   MouseGetPos, x0, y0
+   if _locked
+   {
+   x:=left+cWidth*0.715
+   y:=top+cHeight*0.9047
+   }
+   else
+   {
+   x:=A_ScreenWidth*0.715
+   y:=A_ScreenHeight*0.9047
+   }
+   sendplay {vk65}
+   SendPlay, {Click %x%,  %y%, 0}
+   Click
+   SendPlay, {Click %x0%,  %y0%, 0}
+   BlockInput, Off
+return
+FastTp5:
+   BlockInput, On
+   MouseGetPos, x0, y0
+   if _locked
+   {
+   x:=left+cWidth*0.6637
+   y:=top+cHeight*0.967
+   }
+   else
+   {
+   x:=A_ScreenWidth*0.6637
+   y:=A_ScreenHeight*0.967
+   }
+   sendplay {vk61}
+   SendPlay, {Click %x%,  %y%, 0}
+   Click
+   SendPlay, {Click %x0%,  %y0%, 0}
+   BlockInput, Off
 return
 
-FastTp05:
-if _locked
-FastTpF(left+cWidth*0.6637, top+cHeight*0.967, vk61)
-else
-FastTpF(A_ScreenWidth*0.6637, A_ScreenHeight*0.967, vk61)
-return
-
-FastTp06:
-if _locked
-FastTpF(left+cWidth*0.715, top+cHeight*0.967, vk62)
-else
-FastTpF(A_ScreenWidth*0.715, A_ScreenHeight*0.967, vk62)
+FastTp6:
+   BlockInput, On
+   MouseGetPos, x0, y0
+   if _locked
+   {
+   x:=left+cWidth*0.715
+   y:=top+cHeight*0.967
+   }
+   else
+   {
+   x:=A_ScreenWidth*0.715
+   y:=A_ScreenHeight*0.967
+   }
+   sendplay {vk62}
+   SendPlay, {Click %x%,  %y%, 0}
+   Click
+   SendPlay, {Click %x0%,  %y0%, 0}
+   BlockInput, Off
 return
 
   
@@ -810,7 +924,13 @@ QM4:
 sendplay {Enter}{RAW}%qmv4%
 sendplay {Enter}
 return
-
+LM1:
+Loop, parse, lmv1, `,
+{
+	sendplay {enter}{Raw}%A_LoopField%
+	sendplay {enter}
+}
+return
 
 AQM1:
 sendplay +{Enter}{RAW}%aqmv1%
@@ -827,6 +947,13 @@ return
 AQM4:
 sendplay +{+Enter}{RAW}%aqmv4%
 sendplay {Enter}
+return
+ALM1:
+Loop, parse, almv1, `,
+{
+	sendplay +{enter}{Raw}%A_LoopField%
+	sendplay {enter}
+}
 return
 
 _locked := 0
@@ -938,3 +1065,4 @@ return
 ilist:
 sendplay {Enter}-il{Enter}
 return
+;#IfWinActive Garena
