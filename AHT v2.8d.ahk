@@ -4,7 +4,7 @@
 ; Author:         AucT <AucT.uz.ua@gmail.com>
 ; Code helper:    yayuhhz (thanks to him there is awesome chat-suspending system and window mode)
 ; Main Tester:    DenSiL7
-; Web-Site:		  http://dota.zzl.org/aht/
+; Web-Site:		  http://aht.is-best.net
 ;********************************************FORCE TO RUN AS ADMIN*************************
 RegRead, UAC, HKEY_LOCAL_MACHINE, SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System, EnableLUA
 if !A_IsAdmin 
@@ -40,7 +40,7 @@ GroupAdd, WC3DOTA , DOTA 2
   VK_LIST = VK41,VK42,VK43,VK44,VK45,VK46,VK47,VK48,VK49,VK4A,VK4B,VK4C,VK4D,VK4E,VK4F,VK50,VK51,VK52,VK53,VK54,VK55,VK56,VK57,VK58,VK59,VK5A,VK30,VK31,VK32,VK33,VK34,VK35,VK36,VK37,VK38,VK39,VKC0,VKDB,VKDD,VKBE,VKBF,VKBA,VKDE,VKDC
   HK_LIST = A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,0,1,2,3,4,5,6,7,8,9,``,[,],.,/,;,',\
 
-Version=AucT Hotkeys Tool v2.8c			;current verison for update
+Version=AucT Hotkeys Tool v2.8d			;current verison for update
 ;************************************************PROFILE MANAGEMENT********************************//////////////
   IniRead, profile, %A_WorkingDir%\settings.ini, Others, profile, General
 	if profile=General
@@ -162,22 +162,46 @@ gui,5:font, cwhite
 	IniRead, skill12, %A_WorkingDir%\%profileini%, CustomKeys, skill12, %A_Space%
   if %EnSkills%
   {
-	if %skill1%
-	Hotkey,% VK(skill1), LC1
-	if %skill2%
-	Hotkey,% VK(skill2), LC2
-	if %skill3%
-	Hotkey,% VK(skill3), LC3
-	if %skill4%
-	Hotkey,% VK(skill4), LC4
-	if %skill5%
-	Hotkey,% VK(skill5), LC5
-	if %skill6%
-	Hotkey,% VK(skill6), LC6
-	if %skill7%
-	Hotkey,% VK(skill7), LC7
-	if %skill8%
-	Hotkey,% VK(skill8), LC8
+	if (!Selfcast and !SmartSkills) {
+		if %skill1%
+		Hotkey,% VK(skill1), LC1L
+		if %skill2%
+		Hotkey,% VK(skill2), LC2L
+		if %skill3%
+		Hotkey,% VK(skill3), LC3L
+		if %skill4%
+		Hotkey,% VK(skill4), LC4L
+		
+		if %skill5%
+		Hotkey,% VK(skill5), LC5L
+		if %skill6%
+		Hotkey,% VK(skill6), LC6L
+		if %skill7%
+		Hotkey,% VK(skill7), LC7L
+		if %skill8%
+		Hotkey,% VK(skill8), LC8L
+	}
+	else {
+		if %skill1%
+		Hotkey,% VK(skill1), LC1
+		if %skill2%
+		Hotkey,% VK(skill2), LC2
+		if %skill3%
+		Hotkey,% VK(skill3), LC3
+		if %skill4%
+		Hotkey,% VK(skill4), LC4
+		
+		if %skill5%
+		Hotkey,% VK(skill5), LC5
+		if %skill6%
+		Hotkey,% VK(skill6), LC6
+		if %skill7%
+		Hotkey,% VK(skill7), LC7
+		if %skill8%
+		Hotkey,% VK(skill8), LC8
+	
+	}
+	
 	if %skill9%
 	Hotkey,% VK(skill9), LC9
 	if %skill10%
@@ -283,6 +307,16 @@ gui,5:font, cwhite
 	IniRead, WWW, %A_WorkingDir%\%profileini%, Invoker, WWW, %A_Space%
 	IniRead, EEE, %A_WorkingDir%\%profileini%, Invoker, EEE, %A_Space%
 	IniRead, il, %A_WorkingDir%\%profileini%, Invoker, il, l
+	
+	IniRead, Q, %A_WorkingDir%\%profileini%, Invoker, Q, Q
+	IniRead, W, %A_WorkingDir%\%profileini%, Invoker, W, W
+	IniRead, E, %A_WorkingDir%\%profileini%, Invoker, E, E
+	IniRead, R, %A_WorkingDir%\%profileini%, Invoker, R, R
+	
+	vQ:=VK(Q)
+	vW:=VK(W)
+	vE:=VK(E)
+	vR:=VK(R)
 	
 	
 	if EnInvokerA
@@ -634,16 +668,21 @@ menu, tray, check, Mouse Capture
 	
 
 Menu, HelpMenu, Add, &Check updates, UpdateCheck
-Menu, HelpMenu, Add, Getdota, getdota
 Menu, HelpMenu, Add, &Commands, Commands
-Menu, HelpMenu, Add, &Help, Help
 Menu, HelpMenu, Add, &About, About
+
+Menu, LinksMenu, Add, How to use, Help
+Menu, LinksMenu, Add, Generate CustomKeys.txt, Customkeystxt
+Menu, LinksMenu, Add, AucT Blog, auctblog
+Menu, LinksMenu, Add, Dota Resources, dotaresources
+
 
 ; Create the menu bar by attaching the sub-menus to it:
 Menu, MyMenuBar, Add, Profile, :ProfileMenu
 Menu, MyMenuBar, Add, WarCraft, :WarCraft
 Menu, MyMenuBar, Add, Options, :Options
 Menu, MyMenuBar, Add, Chat-Suspend, :Chat-Suspend
+Menu, MyMenuBar, Add, Links, :LinksMenu
 Menu, MyMenuBar, Add, Help, :HelpMenu
 
 
@@ -685,7 +724,8 @@ gui, font
 Gui, Add, CheckBox,Checked%EnSkills% vEnSkills gEnSkills x36 y55 w200 h30 , Enable Custom Keys
 Gui, Add, CheckBox,Checked%SmartSkills% vSmartSkills gSmartSkills x236 y55 w200 h30 , Smart Learning Skills*
 Gui, Add, CheckBox,Checked%SelfCast% vSelfCast gSelfCast x36 y80 w200 h30 , Selfcast on double-click
-gui, add, text, x30 y390 w410,*Smart Learning will click the right (upper) skill when learning skill. However it may not properly work
+gui, add, text, x30 y390 w410,*Smart Learning will click the right (upper) skill when learning skill.
+gui, add, text, cBlue gCustomkeystxt x30 y410 w410,AucT CustomKeys.txt Generator
 Gui, Add, Picture, x36 y110 w402 h272 , %A_temp%\Skills.jpg
 Gui, Add, Hotkey, vskill9 gskill9 x94 y142 w30 h30 , %skill9%
 Gui, Add, Hotkey, vskill10 gskill10 x194 y142 w30 h30 , %skill10%
@@ -763,9 +803,10 @@ if darkstyle
 gui, font, cwhite
 else
 gui, font
-gui, add, Checkbox, Checked%EnInvokerA% vEnInvokerA gEnInvokerA x120 y55, Add Spell
-gui, add, checkbox, Checked%EnInvokerU% vEnInvokerU gEnInvokerU x220 y55, Use Spell
-gui, add, checkbox, Checked%EnInvokerD% vEnInvokerD gEnInvokerD x320 y55, Double Click*
+gui, add, text, x30 y48, *Put customkeys in bottom right fields. only Add Spell will work with customkeys.
+gui, add, Checkbox, Checked%EnInvokerA% vEnInvokerA gEnInvokerA x120 y68, Add Spell
+gui, add, checkbox, Checked%EnInvokerU% vEnInvokerU gEnInvokerU x220 y68, Use Spell
+gui, add, checkbox, Checked%EnInvokerD% vEnInvokerD gEnInvokerD x320 y68, Double Click
 gui, add, text, x30 y90, Cold Snap
 gui, add, text, x30 y125, Ghost Walk
 gui, add, text, x30 y160, Tornado
@@ -781,16 +822,25 @@ gui, add, text, x320 y90, QQQ
 gui, add, text, x320 y125, WWW
 gui, add, text, x320 y160, EEE
 gui, add, text, x320 y195, -il
-gui, add, text, x320 y240, Self-Cast Z:
-gui, add, text, x320 y310, Invoke + Self-Cast Z:
+gui, add, text, x320 y230, Self-Cast Z:
+gui, add, text, x320 y275, Invoke + Self-Cast Z:
 
 gui, add, hotkey,vQQQ gQQQ x360 y90 w80, %QQQ%
 gui, add, hotkey,vWWW gWWW x360 y125 w80, %WWW%
 gui, add, hotkey,vEEE gEEE x360 y160 w80, %EEE%
 gui, add, hotkey,vil gil x360 y195 w80, %il%
-gui, add, hotkey,vAlacrityAS gAlacrityAS x320 y265 w120, %AlacrityAS%
-gui, add, hotkey,vAlacrityUS gAlacrityUS x320 y335 w120, %AlacrityUS%
-gui, add, text, x320 y370, *Will not block keys`n*Will not work for QQQ,`nWWW, EEE, -il
+gui, add, hotkey,vAlacrityAS gAlacrityAS x320 y250 w120, %AlacrityAS%
+gui, add, hotkey,vAlacrityUS gAlacrityUS x320 y290 w120, %AlacrityUS%
+
+gui, add, text, x320 y320, Your Customkeys*:
+gui, add, text, x320 y340, Quas
+gui, add, hotkey,vQ gQ x355 y340 w80, %Q%
+gui, add, text, x320 y360, Wex
+gui, add, hotkey,vW gW x355 y360 w80, %W%
+gui, add, text, x320 y380, Exort
+gui, add, hotkey,vE gE x355 y380 w80, %E%
+gui, add, text, x320 y400, Invoke
+gui, add, hotkey,vR gR x355 y400 w80, %R%
 
 gui, add, hotkey,vColdSnapA gColdSnapA x120 y90 w80, %ColdSnapA%
 gui, add, hotkey,vColdSnapU gColdSnapU x220 y90 w80, %ColdSnapU%
@@ -923,7 +973,6 @@ EmptyMem()
 return
 
 :*b0:/l ::
-:*b0:l ::
 suspend, permit
 Input  arguments, V I , {enter}
 
@@ -1093,7 +1142,7 @@ Commands:
 Commandlist =
 (
 Default Commands:
-/l ProfileName (or l ProfileName) - will load profile (if it exists).
+/l ProfileName - will load profile (if it exists).
 /reload (or reload) - will reload script
 /suspend (or suspend) - will pause (unpause) script
 /exit (or exit) - will exit script
@@ -1112,34 +1161,41 @@ MsgBox 64, Command List ,%Commandlist%
 return
 
 Help:
-run, http://dota.zzl.org/aht/guide.html
+run, http://aht.is-best.net/guide.html
 return
 
-getdota:
-run, http://getdota.com
+
+auctblog:
+run, https://dl.dropbox.com/u/45755423/links/auctblog.html
+return
+dotaresources:
+run, https://dl.dropbox.com/u/45755423/links/dotaresources.html
+return
+Customkeystxt:
+run, http://ack.is-great.net/
 return
 
 UpdateCheck:
-UrlDownloadToFile, http://www.dota.zzl.org/latest.html, %A_Temp%\latest.html
+UrlDownloadToFile, https://dl.dropbox.com/u/45755423/links/latest.html, %A_Temp%\latest.html
 FileReadLine, NetVer, %A_Temp%\latest.html, 1
 If (Version <> NetVer)
 {
    ;MsgBox, 4,Check for update, %NetVer% is available! `nWould you like to download new version?
    MsgBox 68, Update is available ,%NetVer% is available! `nWould you like to download new version?,5
 IfMsgBox Yes
-	run, http://dota.zzl.org/aht/download.html
+	run, http://aht.is-best.net/download.html
 }
 else
    MsgBox 64, Info ,Your AHT is up to date!,2
 return
 
 UpdateCheckS:
-UrlDownloadToFile, http://www.dota.zzl.org/latest.html, %A_Temp%\latest.html
+UrlDownloadToFile, https://dl.dropbox.com/u/45755423/links/latest.html, %A_Temp%\latest.html
 FileReadLine, NetVer, %A_Temp%\latest.html, 1
 If (Version <> NetVer){
    MsgBox, 4,Check for Update, %NetVer% is available! `nWould you like to download new version?
 IfMsgBox Yes
-	run, http://dota.zzl.org/aht/download.html
+	run, http://aht.is-best.net/download.html
 }
 return
 
@@ -1173,8 +1229,8 @@ if darkstyle
 gui, font, cwhite
 else
 gui, font
-gui, font, s10
-Gui, add, text,x140 y25,AucT
+gui, font, s10 underline
+Gui, add, text,x140 y25 gmailauct,AucT
 
 if darkstyle
 gui, font,s10 cwhite
@@ -1210,7 +1266,7 @@ gui, font, cwhite
 else
 gui, font
 gui, font, s10 underline
-Gui, add, text,x100 y205 gAHTISGREAT, http://dota.zzl.org/aht/
+Gui, add, text,x100 y205 gAHTISGREAT, http://aht.is-best.net
 if darkstyle
 gui, font, cwhite
 else
@@ -1234,9 +1290,11 @@ Gui, hide  ; Destroy the about box.
 return
 
 AHTISGREAT:
-run, http://dota.zzl.org/aht/
+run, http://aht.is-best.net
 return
-
+mailauct:
+run, mailto:AucT.uz.ua@gmail.com?Subject=AHT
+return
 
 
 ;*******************************Warcraft III Registry Fixer***********************************
@@ -1561,6 +1619,8 @@ HG_HKDesc=
 
     GUIControl ,,hotkeyshow,%HG_Hotkey%
     GUIControl ,,descshow,%HG_HKDesc%
+	if a_guievent = DoubleClick
+	gosub, Hotkey_AcceptButton
 return
 
 
@@ -1667,6 +1727,10 @@ QQQ:
 WWW:
 EEE:
 il:
+Q:
+W:
+E:
+R:
 gui, submit, nohide
 IniWrite, % %A_ThisLabel%, %A_WorkingDir%\%profileini%, Invoker, %A_ThisLabel%
 return
@@ -1823,7 +1887,9 @@ if (color1=0x000000 and color2=0x000000)
 	return 1
 return 0
 }
-
+LC1L:
+LC(.79,.95)
+return
 LC1:
 	if SelfCast {
 	if lc1
@@ -1840,6 +1906,9 @@ LC1off:
 lc1:=0
 return
 
+LC2L:
+LC(.84,.95)
+return
 LC2: 
 	if SelfCast {
 	if lc2
@@ -1854,6 +1923,10 @@ LC2:
 return
 LC2off:
 lc2:=0
+return
+
+LC3L:
+LC(.9,.95)
 return
 LC3:
 	if SelfCast {
@@ -1870,6 +1943,10 @@ return
 LC3off:
 lc3:=0
 return
+
+LC4L:
+LC(.95,.95)
+return
 LC4:
 	if SelfCast {
 	if lc4
@@ -1885,6 +1962,10 @@ return
 LC4off:
 lc4:=0
 return
+
+LC5L:
+LC(.79,.88)
+return
 LC5:
 	if SelfCast {
 	if lc5
@@ -1896,6 +1977,9 @@ LC5:
 return
 LC5off:
 lc5:=0
+return
+LC6L:
+LC(.84,.88)
 return
 LC6:
 	if SelfCast {
@@ -1909,6 +1993,10 @@ return
 LC6off:
 lc6:=0
 return
+
+LC7L:
+LC(.9,.88)
+return
 LC7:
 	if SelfCast {
 	if lc7
@@ -1920,6 +2008,10 @@ LC7:
 return
 LC7off:
 lc7:=0
+return
+
+LC8L:
+LC(.95,.88)
 return
 LC8:
 	if SelfCast {
@@ -2663,42 +2755,42 @@ dalacrity4:=0
 return
 
 Snap:
-send {vk51}{vk51}{vk51}{vk52}
+send {%vQ%}{%vQ%}{%vQ%}{%vR%}
 return
 Snap2:
-send {vk51}{vk51}{vk51}{vk52}
+send {%vQ%}{%vQ%}{%vQ%}{%vR%}
 sleep 250
 send {vk59}
 return
 Wall:
-send {vk51}{vk51}{vk45}{vk52}
+send {%vQ%}{%vQ%}{%vE%}{%vR%}
 return
 Wall2:
-send {vk51}{vk51}{vk45}{vk52}
+send {%vQ%}{%vQ%}{%vE%}{%vR%}
 sleep 250
 send {vk47}
 return
 Blast:
-send {vk51}{vk57}{vk45}{vk52}
+send {%vQ%}{%vW%}{%vE%}{%vR%}
 return
 Blast2:
-send {vk51}{vk57}{vk45}{vk52}
+send {%vQ%}{%vW%}{%vE%}{%vR%}
 sleep 250
 send {vk42}
 return
 Tornado:
-send {vk51}{vk57}{vk57}{vk52}
+send {%vQ%}{%vW%}{%vW%}{%vR%}
 return
 Tornado2:
-send {vk51}{vk57}{vk57}{vk52}
+send {%vQ%}{%vW%}{%vW%}{%vR%}
 sleep 250
 send {vk58}
 return
 Alacrity:
-send {vk57}{vk57}{vk45}{vk52}
+send {%vW%}{%vW%}{%vE%}{%vR%}
 return
 Alacrity2:
-send {vk57}{vk57}{vk45}{vk52}
+send {%vW%}{%vW%}{%vE%}{%vR%}
 sleep 250
 send {vk5A}
 return
@@ -2728,7 +2820,7 @@ y:=A_ScreenHeight*0.0806
 return
 
 Alacrity4:
-send {vk57}{vk57}{vk45}{vk52}
+send {%vW%}{%vW%}{%vE%}{%vR%}
 sleep 250
 send {vk5A}
  
@@ -2751,53 +2843,53 @@ y:=A_ScreenHeight*0.0806
    BlockInput,MouseMoveOff
 return
 Meteor:
-send {vk57}{vk45}{vk45}{vk52}
+send {%vW%}{%vE%}{%vE%}{%vR%}
 return
 Meteor2:
-send {vk57}{vk45}{vk45}{vk52}
+send {%vW%}{%vE%}{%vE%}{%vR%}
 sleep 250
 send {vk44}
 return
 Strike:
-send {vk45}{vk45}{vk45}{vk52}
+send {%vE%}{%vE%}{%vE%}{%vR%}
 return
 Strike2:
-send {vk45}{vk45}{vk45}{vk52}
+send {%vE%}{%vE%}{%vE%}{%vR%}
 sleep 250
 send {vk54}
 return
 Walk:
-send {vk51}{vk51}{vk57}{vk52}{vk57}{vk57}
+send {%vQ%}{%vQ%}{%vW%}{%vR%}{%vW%}{%vW%}
 return
 Walk2:
-send {vk51}{vk51}{vk57}{vk52}{vk57}{vk57}
+send {%vQ%}{%vQ%}{%vW%}{%vR%}{%vW%}{%vW%}
 sleep 250
 send {vk56}
 return
 Spirit:
-send {vk51}{vk45}{vk45}{vk52}
+send {%vQ%}{%vE%}{%vE%}{%vR%}
 return
 Spirit2:
-send {vk51}{vk45}{vk45}{vk52}
+send {%vQ%}{%vE%}{%vE%}{%vR%}
 sleep 250
 send {vk46}
 return
 EMP:
-send {vk57}{vk57}{vk57}{vk52}
+send {%vW%}{%vW%}{%vW%}{%vR%}
 return
 EMP2:
-send {vk57}{vk57}{vk57}{vk52}
+send {%vW%}{%vW%}{%vW%}{%vR%}
 sleep 250
 send {vk43}
 return
 gQQQ:
-send {vk51}{vk51}{vk51}
+send {%vQ%}{%vQ%}{%vQ%}
 return
 gWWW:
-send {vk57}{vk57}{vk57}
+send {%vW%}{%vW%}{%vW%}
 return
 gEEE:
-send {vk45}{vk45}{vk45}
+send {%vE%}{%vE%}{%vE%}
 return
 gilist:
 send {Enter}-il{Enter}
