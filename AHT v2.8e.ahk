@@ -4,7 +4,7 @@
 ; Author:         AucT <AucT.uz.ua@gmail.com>
 ; Code helper:    yayuhhz (thanks to him there is awesome chat-suspending system and window mode)
 ; Main Tester:    DenSiL7
-; Web-Site:		  http://aht.is-best.net
+; Web-Site:		  http://aht.auct.eu
 ;********************************************FORCE TO RUN AS ADMIN*************************
 RegRead, UAC, HKEY_LOCAL_MACHINE, SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System, EnableLUA
 if !A_IsAdmin 
@@ -25,6 +25,7 @@ FileInstall, Inventory.jpg, %A_temp%\Inventory.jpg
 FileInstall, Skills.jpg, %A_temp%\Skills.jpg
 GroupAdd, WC3DOTA , Warcraft III
 GroupAdd, WC3DOTA , DOTA 2
+GroupAdd, WC3DOTA , Dota 2
 ;********************************************INITIAL SCRIPT SETTINGS*************************
   #UseHook on                    ;forces to use it at start and not in game
   #SingleInstance force          ;makes sure second execution of the tool will stop teh first
@@ -40,7 +41,7 @@ GroupAdd, WC3DOTA , DOTA 2
   VK_LIST = VK41,VK42,VK43,VK44,VK45,VK46,VK47,VK48,VK49,VK4A,VK4B,VK4C,VK4D,VK4E,VK4F,VK50,VK51,VK52,VK53,VK54,VK55,VK56,VK57,VK58,VK59,VK5A,VK30,VK31,VK32,VK33,VK34,VK35,VK36,VK37,VK38,VK39,VKC0,VKDB,VKDD,VKBE,VKBF,VKBA,VKDE,VKDC
   HK_LIST = A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,0,1,2,3,4,5,6,7,8,9,``,[,],.,/,;,',\
 
-Version=AucT Hotkeys Tool v2.8d			;current verison for update
+Version=AucT Hotkeys Tool v2.8e			;current verison for update
 ;************************************************PROFILE MANAGEMENT********************************//////////////
   IniRead, profile, %A_WorkingDir%\settings.ini, Others, profile, General
 	if profile=General
@@ -1161,7 +1162,7 @@ MsgBox 64, Command List ,%Commandlist%
 return
 
 Help:
-run, http://aht.is-best.net/guide.html
+run, http://aht.auct.eu/guide.html
 return
 
 
@@ -1183,7 +1184,7 @@ If (Version <> NetVer)
    ;MsgBox, 4,Check for update, %NetVer% is available! `nWould you like to download new version?
    MsgBox 68, Update is available ,%NetVer% is available! `nWould you like to download new version?,5
 IfMsgBox Yes
-	run, http://aht.is-best.net/download.html
+	run, http://aht.auct.eu/download.html
 }
 else
    MsgBox 64, Info ,Your AHT is up to date!,2
@@ -1195,7 +1196,7 @@ FileReadLine, NetVer, %A_Temp%\latest.html, 1
 If (Version <> NetVer){
    MsgBox, 4,Check for Update, %NetVer% is available! `nWould you like to download new version?
 IfMsgBox Yes
-	run, http://aht.is-best.net/download.html
+	run, http://aht.auct.eu/download.html
 }
 return
 
@@ -1266,7 +1267,7 @@ gui, font, cwhite
 else
 gui, font
 gui, font, s10 underline
-Gui, add, text,x100 y205 gAHTISGREAT, http://aht.is-best.net
+Gui, add, text,x100 y205 gAHTISGREAT, http://aht.auct.eu
 if darkstyle
 gui, font, cwhite
 else
@@ -1290,7 +1291,7 @@ Gui, hide  ; Destroy the about box.
 return
 
 AHTISGREAT:
-run, http://aht.is-best.net
+run, http://aht.auct.eu
 return
 mailauct:
 run, mailto:AucT.uz.ua@gmail.com?Subject=AHT
