@@ -371,7 +371,7 @@ SB:
    }
    SendPlay, {Click %x%,  %y%, 0}
    Click
-   SendPlay, {Click %x0%,  %y0%, 0}
+   ;SendPlay, {Click %x0%,  %y0%, 0}
    BlockInput, Off
 return
 
