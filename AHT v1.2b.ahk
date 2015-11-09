@@ -6,6 +6,7 @@
 ; Web-Site:		  AHT.isgreat.org
 #IfWinActive Warcraft III
 ;Inventory
+SetScrollLockState, On
 IniRead, i1, config.ini, Inventory, item1
 IniRead, i2, config.ini, Inventory, item2
 IniRead, i3, config.ini, Inventory, item3
@@ -190,18 +191,20 @@ if !A_IsSuspended{
    Hotkey,*NumpadEnter, SendEnt,on
    Hotkey, ~*Esc, KEYSON,on
    Hotkey, ~LButton, KEYSON,on
+   SetScrollLockState, On
 }
 Else{
    Hotkey,*Enter, SendEnt,off
    Hotkey,*NumpadEnter, SendEnt,off
    Hotkey, ~*Esc, KEYSON,off
    Hotkey, ~LButton, KEYSON,off
+   SetScrollLockState, Off
 }
 return
 
 
 PauseGame:
-Send {F10}{M}{R}
+Send {vk79}{vk4D}{vk52}
 return
 
 SB:
@@ -288,7 +291,9 @@ return
 
 
 Ignore:
-Send {Enter}-hhn{Enter}{Enter}/squelch 
+Send {Enter}-hhn{Enter}{Enter}/squelch
+SetScrollLockState, Off
+Suspend, on
 return
 
 Dis1:
@@ -417,10 +422,16 @@ return
 KEYSON:
 Suspend, Permit
 Suspend, Off
+SetScrollLockState, On
 return
 
 SendEnt:
 	Suspend, Permit
 	Send, {Blind}{Enter}
 	Suspend
+	if !A_IsSuspended
+		SetScrollLockState, On
+
+	Else
+		SetScrollLockState, Off
 	return
