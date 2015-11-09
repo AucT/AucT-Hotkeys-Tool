@@ -38,7 +38,7 @@ FileInstall, Skills.jpg, %A_temp%\Skills.jpg
   VK_LIST = VK41,VK42,VK43,VK44,VK45,VK46,VK47,VK48,VK49,VK4A,VK4B,VK4C,VK4D,VK4E,VK4F,VK50,VK51,VK52,VK53,VK54,VK55,VK56,VK57,VK58,VK59,VK5A,VK30,VK31,VK32,VK33,VK34,VK35,VK36,VK37,VK38,VK39,VKC0,VKDB,VKDD,VKBE,VKBF,VKBA,VKDE,VKDC
   HK_LIST = A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,0,1,2,3,4,5,6,7,8,9,``,[,],.,/,;,',\
 
-Version=AucT Hotkeys Tool v2.7			;current verison for update
+Version=AucT Hotkeys Tool v2.7b			;current verison for update
 ;************************************************PROFILE MANAGEMENT********************************//////////////
   IniRead, profile, %A_WorkingDir%\settings.ini, Others, profile, General
 	if profile=General
@@ -68,6 +68,8 @@ gui,5:font, cwhite
   Menu, Tray, Click, 1
   Menu, tray, add, Configuration, configuration
   Menu, tray, Default, Configuration
+  Menu, tray, add
+  Menu, tray, add, Run WarCraft 3, RunWC3
   Menu, tray, add
   Menu, tray, add, About, About
   Menu, tray, add, Check update, UpdateCheck
@@ -420,16 +422,17 @@ gui,5:font, cwhite
 ;==================================================================================  
 ;=====================================GUI==========================================
 ;==================================================================================  
-if DontShowConfig or DontShowConfigTemp
-{
-EmptyMem()
-	if runprog1s
+if runprog1s
 		gosub, runprog1
 	if runprog2s
 		gosub, runprog2
 	if runprog3s
 		gosub, runprog3
-	IniWrite, 0, %A_WorkingDir%\settings.ini, Others, DontShowConfigTemp
+
+if DontShowConfig or DontShowConfigTemp
+{
+EmptyMem()
+IniWrite, 0, %A_WorkingDir%\settings.ini, Others, DontShowConfigTemp
 return
 }
 
@@ -810,15 +813,6 @@ gui, font
 Gui, Show, x209 y100 h500 w470, %Version% - %profile% profile
 }
 EmptyMem()
-	if runprog1s
-		gosub, runprog1
-	if runprog2s
-		gosub, runprog2
-	if runprog3s
-		gosub, runprog3
-		
-    if UpdateAtStart
-	gosub, UpdateCheckS
 return
 
 :*b0:/l ::
@@ -847,6 +841,7 @@ send {enter}%arguments% profile loaded successfully{enter}
 reload
 return
 
+::/reload::
 ::/reload::
 suspend, permit
 send {esc}
@@ -1041,6 +1036,19 @@ If (Version <> NetVer){
 IfMsgBox Yes
 	run, http://aht.isgreat.org/download.html
 }
+return
+
+RunWC3:
+regread, path, HKEY_CURRENT_USER, Software\Blizzard Entertainment\Warcraft III, ProgramX
+if path
+{
+if WMC
+run %path% -windowed
+else
+run %path%
+}
+else
+gosub, WarRegFix
 return
 
 About:
@@ -2685,8 +2693,8 @@ VK(Param)
 		}
 }
 
-EmptyMem(PID="AHT v2.7"){
-    pid:=(pid="AHT v2.7") ? DllCall("GetCurrentProcessId") : pid
+EmptyMem(PID="AHT v2.7b"){
+    pid:=(pid="AHT v2.7b") ? DllCall("GetCurrentProcessId") : pid
     h:=DllCall("OpenProcess", "UInt", 0x001F0FFF, "Int", 0, "Int", pid)
     DllCall("SetProcessWorkingSetSize", "UInt", h, "Int", -1, "Int", -1)
     DllCall("CloseHandle", "Int", h)
