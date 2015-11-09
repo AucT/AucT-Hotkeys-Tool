@@ -36,10 +36,13 @@ Hotkey,+%i6%, i6
 ;Auto-Casts
 IniRead, auto1, config.ini, Auto-Casts, auto1
 IniRead, auto2, config.ini, Auto-Casts, auto2
+IniRead, autoa, config.ini, Auto-Casts, autoALL
 if %auto1%
 Hotkey,%auto1%, AC1
 if %auto2%
 Hotkey,%auto2%, AC2
+if %autoa%
+Hotkey,%autoa%, ACa
 
 ;Chat Suspending
 IniRead, enchat, config.ini, Inventory, enchat
@@ -141,9 +144,61 @@ Hotkey,%mid%, mid
 
 ;ScoreBoard
 IniRead, sb, config.ini,Others, ScoreBoard
-IniRead, sba, config.ini,Others, ScoreBoardActive
 if %sb%
 Hotkey,%sb%, SB
+
+;Quick Messages
+IniRead, enqm, config.ini,Allied-Quick-Message, EnQM
+	if (enqm="on") 
+	{
+		IniRead, qmh1, config.ini,Allied-Quick-Message, QMH1
+		IniRead, qmh2, config.ini,Allied-Quick-Message, QMH2
+		IniRead, qmh3, config.ini,Allied-Quick-Message, QMH3
+		IniRead, qmh4, config.ini,Allied-Quick-Message, QMH4
+		IniRead, qmv1, config.ini,Allied-Quick-Message, QMV1
+		IniRead, qmv2, config.ini,Allied-Quick-Message, QMV2
+		IniRead, qmv3, config.ini,Allied-Quick-Message, QMV3
+		IniRead, qmv4, config.ini,Allied-Quick-Message, QMV4
+		
+		if %qmh1%
+			Hotkey,%qmh1%, QM1
+		if %qmh2%
+			Hotkey,%qmh2%, QM2
+		if %qmh3%
+			Hotkey,%qmh3%, QM3
+		if %qmh4%
+			Hotkey,%qmh4%, QM4
+	}
+;AQuick Messages
+IniRead, enaqm, config.ini,All-Quick-Message, EnAQM
+	if (enaqm="on") 
+	{   
+		IniRead, aqmh1, config.ini,All-Quick-Message, AQMH1
+		IniRead, aqmh2, config.ini,All-Quick-Message, AQMH2
+		IniRead, aqmh3, config.ini,All-Quick-Message, AQMH3
+		IniRead, aqmh4, config.ini,All-Quick-Message, AQMH4
+		IniRead, aqmv1, config.ini,All-Quick-Message, AQMV1
+		IniRead, aqmv2, config.ini,All-Quick-Message, AQMV2
+		IniRead, aqmv3, config.ini,All-Quick-Message, AQMV3
+		IniRead, aqmv4, config.ini,All-Quick-Message, AQMV4
+		if %aqmh1%
+			Hotkey,%aqmh1%, AQM1
+		if %aqmh2%
+			Hotkey,%aqmh2%, AQM2
+		if %aqmh3%
+			Hotkey,%aqmh3%, AQM3
+		if %aqmh4%
+			Hotkey,%aqmh4%, AQM4
+	}
+
+;Window MOUSE CAPTURER
+IniRead, enwmc, config.ini,Window-Mouse-Capturer, EnWMC
+if (enwmc=on) {
+  WinGetPos, VarX, VarY, Width, Height, A
+  VarX2 := VarX + Width
+  VarY2 := VarY + Height
+  ClipCursor( True, VarX, VarY, VarX2, VarY2)
+}
 
 ;ShortKeys
 ::-u::-unlock
@@ -163,6 +218,19 @@ AC1:
    y:=A_ScreenHeight*0.95
    y2:=A_ScreenHeight*0.88
    SendPlay, {Click %x1%,  %y%, Right}{Click %x2%,  %y%, Right}{Click %x2%,  %y2%, Right}{Click %x0%, %y0%, 0}
+   BlockInput, Off
+return
+
+ACa:
+   BlockInput, On
+   MouseGetPos, x0, y0
+   x1:=A_ScreenWidth*0.79
+   x2:=A_ScreenWidth*0.84
+   x3:=A_ScreenWidth*0.9
+   x4:=A_ScreenWidth*0.95
+   y:=A_ScreenHeight*0.95
+   y2:=A_ScreenHeight*0.88
+   SendPlay, {Click %x1%,  %y%, Right}{Click %x2%,  %y%, Right}{Click %x3%,  %y%, Right}{Click %x4%,  %y%, Right}{Click %x3%,  %y2%, Right}{Click %x0%, %y0%, 0}
    BlockInput, Off
 return
 
@@ -418,6 +486,39 @@ LC12:
    SendPlay, {Click %x%,  %y%, Left}{Click %x0%, %y0%, 0}
    BlockInput, Off
 return
+
+QM1:
+Send {Enter}%qmv1%{Enter}
+
+return
+QM2:
+Send {Enter}%qmv2%{Enter}
+return
+QM3:
+Send {Enter}%qmv3%{Enter}
+return
+QM4:
+Send {Enter}%qmv4%{Enter}
+return
+
+
+AQM1:
+Send +{Enter}%aqmv1%{Enter}
+return
+AQM2:
+Send +{Enter}%aqmv2%{Enter}
+return
+AQM3:
+Send +{Enter}%aqmv3%{Enter}
+return
+AQM4:
+Send +{+Enter}%aqmv4%{Enter}
+return
+
+ClipCursor( Confine=True, x1=0 , y1=0, x2=1, y2=1 ) {
+ VarSetCapacity(R,16,0),  NumPut(x1,&R+0),NumPut(y1,&R+4),NumPut(x2,&R+8),NumPut(y2,&R+12)
+Return Confine ? DllCall( "ClipCursor", UInt,&R ) : DllCall( "ClipCursor" )
+}
 
 KEYSON:
 Suspend, Permit
