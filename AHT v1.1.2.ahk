@@ -15,16 +15,22 @@ IniRead, i6, config.ini, Inventory, item6
 
 if %i1%
 Hotkey,%i1%, i1
+Hotkey,+%i1%, i1
 if %i2%
 Hotkey,%i2%, i2
+Hotkey,+%i2%, i2
 if %i3%
 Hotkey,%i3%, i3
+Hotkey,+%i3%, i3
 if %i4%
 Hotkey,%i4%, i4
+Hotkey,+%i4%, i4
 if %i5%
 Hotkey,%i5%, i5
+Hotkey,+%i5%, i5
 if %i6%
 Hotkey,%i6%, i6
+Hotkey,+%i6%, i6
 
 ;Auto-Casts
 IniRead, auto1, config.ini, Auto-Casts, auto1
