@@ -23,6 +23,8 @@ FileInstall, pink.gif, %A_temp%\pink.gif
 FileInstall, AutoCast.jpg, %A_temp%\AutoCast.jpg
 FileInstall, Inventory.jpg, %A_temp%\Inventory.jpg
 FileInstall, Skills.jpg, %A_temp%\Skills.jpg
+GroupAdd, WC3DOTA , Warcraft III
+GroupAdd, WC3DOTA , DOTA 2
 ;********************************************INITIAL SCRIPT SETTINGS*************************
   #UseHook on                    ;forces to use it at start and not in game
   #SingleInstance force          ;makes sure second execution of the tool will stop teh first
@@ -34,11 +36,11 @@ FileInstall, Skills.jpg, %A_temp%\Skills.jpg
   SetBatchLines, -1
   SetKeyDelay , -1, -1
   SetDefaultMouseSpeed, 0
-  #ifWinActive, ahk_class Warcraft III
+  #ifWinActive, ahk_group WC3DOTA
   VK_LIST = VK41,VK42,VK43,VK44,VK45,VK46,VK47,VK48,VK49,VK4A,VK4B,VK4C,VK4D,VK4E,VK4F,VK50,VK51,VK52,VK53,VK54,VK55,VK56,VK57,VK58,VK59,VK5A,VK30,VK31,VK32,VK33,VK34,VK35,VK36,VK37,VK38,VK39,VKC0,VKDB,VKDD,VKBE,VKBF,VKBA,VKDE,VKDC
   HK_LIST = A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,0,1,2,3,4,5,6,7,8,9,``,[,],.,/,;,',\
 
-Version=AucT Hotkeys Tool v2.8			;current verison for update
+Version=AucT Hotkeys Tool v2.8b			;current verison for update
 ;************************************************PROFILE MANAGEMENT********************************//////////////
   IniRead, profile, %A_WorkingDir%\settings.ini, Others, profile, General
 	if profile=General
@@ -90,7 +92,7 @@ gui,5:font, cwhite
   IniRead, ReloadScr, %A_WorkingDir%\%profileini%,Others, ReloadScr, %A_Space%
 	if ReloadScr
 	Hotkey,% VK(ReloadScr), ReloadScript
-  Hotkey, IfWinActive, Warcraft III
+  Hotkey, IfWinActive, ahk_group WC3DOTA
   IniRead, WMC, %A_WorkingDir%\%profileini%,Others, WMC, 0
   IniRead, WMChotkey, %A_WorkingDir%\%profileini%,Others, WMChotkey, %A_Space%
   if WMC
@@ -145,6 +147,7 @@ gui,5:font, cwhite
 
 	IniRead, EnSkills, %A_WorkingDir%\%profileini%, CustomKeys, EnSkills, 0
 	IniRead, SmartSkills, %A_WorkingDir%\%profileini%, CustomKeys, SmartSkills, 0
+	IniRead, SelfCast, %A_WorkingDir%\%profileini%, CustomKeys, SelfCast, 0
 	IniRead, skill1, %A_WorkingDir%\%profileini%, CustomKeys, skill1, Q
 	IniRead, skill2, %A_WorkingDir%\%profileini%, CustomKeys, skill2, W
 	IniRead, skill3, %A_WorkingDir%\%profileini%, CustomKeys, skill3, E
@@ -466,7 +469,7 @@ gui,5:font, cwhite
 	Hotkey, IfWinActive, Garena
 	if %Garena%
 	Hotkey,% VK(Garena), GarenaJoiner
-	Hotkey, IfWinActive, ahk_class Warcraft III
+	Hotkey, IfWinActive, ahk_group WC3DOTA
 	
 	IniRead, Time, %A_WorkingDir%\%profileini%,Others, time, %A_Space%
 	if %Time%
@@ -679,10 +682,11 @@ if darkstyle
 gui, font, cwhite
 else
 gui, font
-Gui, Add, CheckBox,Checked%EnSkills% vEnSkills gEnSkills x36 y62 w200 h30 , Enable Custom Keys
-Gui, Add, CheckBox,Checked%SmartSkills% vSmartSkills gSmartSkills x236 y62 w200 h30 , Smart Learning Skills*
+Gui, Add, CheckBox,Checked%EnSkills% vEnSkills gEnSkills x36 y55 w200 h30 , Enable Custom Keys
+Gui, Add, CheckBox,Checked%SmartSkills% vSmartSkills gSmartSkills x236 y55 w200 h30 , Smart Learning Skills*
+Gui, Add, CheckBox,Checked%SelfCast% vSelfCast gSelfCast x36 y80 w200 h30 , Selfcast on double-click
 gui, add, text, x30 y390 w410,*Smart Learning will click the right (upper) skill when learning skill. However it may not properly work
-Gui, Add, Picture, x36 y92 w402 h272 , %A_temp%\Skills.jpg
+Gui, Add, Picture, x36 y110 w402 h272 , %A_temp%\Skills.jpg
 Gui, Add, Hotkey, vskill9 gskill9 x94 y142 w30 h30 , %skill9%
 Gui, Add, Hotkey, vskill10 gskill10 x194 y142 w30 h30 , %skill10%
 Gui, Add, Hotkey, vskill11 gskill11 x294 y142 w30 h30 , %skill11%
@@ -708,7 +712,7 @@ gui, font, cwhite
 else
 gui, font
 Gui, Add, CheckBox,Checked%EnAutoCast% vEnAutoCast gEnAutoCast x36 y62 w200 h30 , Enable AutoCast Keys
-Gui, Add, CheckBox,Checked%DoubleAutoCast% vDoubleAutoCast gSmartSkills x236 y62 w200 h30 ,Autocast on double click*
+Gui, Add, CheckBox,Checked%DoubleAutoCast% vDoubleAutoCast gDoubleAutoCast x236 y62 w200 h30 ,Autocast on double click*
 gui, add, text, x30 y370 w410,*If double click is checked the autocast key isn't blocked
 Gui, Add, Picture, x36 y392 w30 h30 , %A_temp%\blue.gif
 Gui, Add, Picture, x170 y392 w30 h30 , %A_temp%\pink.gif
@@ -992,6 +996,11 @@ return
 ::-ra::
 suspend, permit
 send -random{enter}
+return
+
+::-c::
+suspend, permit
+send -clear{enter}
 return
 
 ::-re::
@@ -1612,6 +1621,7 @@ return
 ;=======================================SAVE INI=================================
 EnSkills:
 SmartSkills:
+SelfCast:
 skill1:
 skill2:
 skill3:
@@ -1814,51 +1824,115 @@ if (color1=0x000000 and color2=0x000000)
 return 0
 }
 
-
 LC1:
+	if SelfCast {
+	if lc1
+	LC(0.02381, 0.0806)
+	lc1:=!lc1
+	SetTimer, lc1off, -1000
+	}
 	if IsLearning()
 		LC(.79,.81)
 	else 
 		LC(.79,.95)
 return
+LC1off:
+lc1:=0
+return
 
 LC2: 
+	if SelfCast {
+	if lc2
+	LC(0.02381, 0.0806)
+	lc2:=!lc2
+	SetTimer, lc2off, -1000
+	}
 	if IsLearning()
 		LC(.84,.81)
 	else
 		LC(.84,.95)
 return
-
+LC2off:
+lc2:=0
+return
 LC3:
+	if SelfCast {
+	if lc3
+	LC(0.02381, 0.0806)
+	lc3:=!lc3
+	SetTimer, lc3off, -1000
+	}
 	if IsLearning()
 		LC(.9,.81)
 	else
 		LC(.9,.95)
 return
-
+LC3off:
+lc3:=0
+return
 LC4:
+	if SelfCast {
+	if lc4
+	LC(0.02381, 0.0806)
+	lc4:=!lc4
+	SetTimer, lc4off, -1000
+	}
 	if IsLearning()
 		LC(.95,.81)
 	else
 		LC(.95,.95)
 return
-
+LC4off:
+lc4:=0
+return
 LC5:
+	if SelfCast {
+	if lc5
+	LC(0.02381, 0.0806)
+	lc5:=!lc5
+	SetTimer, lc5off, -1000
+	}
    LC(.79,.88)
 return
-
+LC5off:
+lc5:=0
+return
 LC6:
+	if SelfCast {
+	if lc6
+	LC(0.02381, 0.0806)
+	lc6:=!lc6
+	SetTimer, lc6off, -1000
+	}
    LC(.84,.88)
 return
-
+LC6off:
+lc6:=0
+return
 LC7:
+	if SelfCast {
+	if lc7
+	LC(0.02381, 0.0806)
+	lc7:=!lc7
+	SetTimer, lc7off, -1000
+	}
    LC(.9,.88)
 return
-
+LC7off:
+lc7:=0
+return
 LC8:
+	if SelfCast {
+	if lc8
+	LC(0.02381, 0.0806)
+	lc8:=!lc8
+	SetTimer, lc8off, -1000
+	}
    LC(.95,.88)
 return
-
+LC8off:
+lc8:=0
+return
 LC9:
    LC(.79,.81)
 return
@@ -3127,8 +3201,8 @@ VK(Param)
 		}
 }
 
-EmptyMem(PID="AHT v2.8"){
-    pid:=(pid="AHT v2.8") ? DllCall("GetCurrentProcessId") : pid
+EmptyMem(PID="AHT v2.8b"){
+    pid:=(pid="AHT v2.8b") ? DllCall("GetCurrentProcessId") : pid
     h:=DllCall("OpenProcess", "UInt", 0x001F0FFF, "Int", 0, "Int", pid)
     DllCall("SetProcessWorkingSetSize", "UInt", h, "Int", -1, "Int", -1)
     DllCall("CloseHandle", "Int", h)
