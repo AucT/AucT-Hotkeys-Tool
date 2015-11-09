@@ -27,7 +27,7 @@ RunAsAdmin()
   VK_LIST = VK41,VK42,VK43,VK44,VK45,VK46,VK47,VK48,VK49,VK4A,VK4B,VK4C,VK4D,VK4E,VK4F,VK50,VK51,VK52,VK53,VK54,VK55,VK56,VK57,VK58,VK59,VK5A,VK30,VK31,VK32,VK33,VK34,VK35,VK36,VK37,VK38,VK39,VKC0,VKDB,VKDD,VKBE,VKBF,VKBA,VKDE
   HK_LIST = A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,0,1,2,3,4,5,6,7,8,9,``,[,],.,/,;,'
 
-Version=AucT Hotkeys Tool v2.1b 				;current verison for update
+Version=AucT Hotkeys Tool v2.2 				;current verison for update
 ;************************************************PROFILE MANAGEMENT********************************//////////////
   IniRead, profile, %A_WorkingDir%\settings.ini, Others, profile, General
 	if profile=General
@@ -63,7 +63,7 @@ gui,5:font, cwhite
   Menu, tray, add
   Menu, tray, add, Mouse Capture, SetWMC
   Menu, tray, add, Exit
-  ;Menu, Tray, Icon, %A_ScriptDir%\%A_ScriptName%,1,1
+  Menu, Tray, Icon, %A_ScriptDir%\%A_ScriptName%,1,1
 
   CoordMode,Mouse,Screen
   
@@ -77,9 +77,10 @@ gui,5:font, cwhite
 	Hotkey,% VK(ReloadScr), ReloadScript
   Hotkey, IfWinActive, Warcraft III
   IniRead, WMC, %A_WorkingDir%\%profileini%,Others, WMC, 0
-  if WMC
+  if WMC {
   SetTimer,CheckActiveWar3
-  
+  IniWrite,0, %A_WorkingDir%\%profileini%, Others, AutoDetect
+  }
 ;************************************************INVENTORY*************************************
   
   IniRead, EnInventory, %A_WorkingDir%\%profileini%, Inventory, EnInventory, 1
@@ -826,7 +827,7 @@ IniWrite, %prog3%, %profileini%, Others, prog3
 return
 
 RunProg1:
-Run, %Prog1%,, UseErrorLevel
+Run, %Prog1%
 return
 RunProg2:
 Run, %Prog2%,, UseErrorLevel
@@ -948,7 +949,7 @@ if darkstyle
 gui, font,s10 cwhite
 else
 gui, font,s10 cblue
-Gui, Add, GroupBox, x10 w330 R1 ,Window mode, chat-suspend
+Gui, Add, GroupBox, x10 w330 R1 ,Window mode
 if darkstyle
 gui, font, cwhite
 else
@@ -1137,6 +1138,10 @@ return
 SetWMC:
 WMC:=!WMC
 IniWrite, %WMC%, %A_WorkingDir%\%profileini%, Others, WMC
+if autodetect {
+IniWrite,0, %A_WorkingDir%\%profileini%, Others, AutoDetect
+reload
+}
 menu, options, togglecheck, Mouse Capture
 menu, tray, togglecheck, Mouse Capture
 if WMC
@@ -1331,7 +1336,7 @@ GuiEscape:
 GuiClose:
 ButtonHide:
 Gui, Hide
-TrayTip,AHT,I'm here, 5,1
+TrayTip,AHT,I'm here, 3,1
 return
 
 ButtonExit:
@@ -1503,7 +1508,12 @@ send {RShift down}{vk62}{RShift up}
 return
 ;===================================================CUSTOM KEYS=======================
 LC(xx,yy)
-{
+{	
+   global _locked
+   global left
+   global top
+   global cWidth
+   global cHeight
    if _locked
    {
    x:=left+cWidth*xx
@@ -1530,6 +1540,7 @@ LC(xx,yy)
 }
 
 LC1:
+   if _locked
    LC(.79,.95)
 return
 
@@ -2506,8 +2517,8 @@ VK(Param)
 		}
 }
 
-EmptyMem(PID="AHT v2.1b"){
-    pid:=(pid="AHT v2.1b") ? DllCall("GetCurrentProcessId") : pid
+EmptyMem(PID="AHT v2.2"){
+    pid:=(pid="AHT v2.2") ? DllCall("GetCurrentProcessId") : pid
     h:=DllCall("OpenProcess", "UInt", 0x001F0FFF, "Int", 0, "Int", pid)
     DllCall("SetProcessWorkingSetSize", "UInt", h, "Int", -1, "Int", -1)
     DllCall("CloseHandle", "Int", h)
