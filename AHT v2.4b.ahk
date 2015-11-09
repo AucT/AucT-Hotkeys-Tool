@@ -35,7 +35,7 @@ DebugPrivilegesEnable()
   VK_LIST = VK41,VK42,VK43,VK44,VK45,VK46,VK47,VK48,VK49,VK4A,VK4B,VK4C,VK4D,VK4E,VK4F,VK50,VK51,VK52,VK53,VK54,VK55,VK56,VK57,VK58,VK59,VK5A,VK30,VK31,VK32,VK33,VK34,VK35,VK36,VK37,VK38,VK39,VKC0,VKDB,VKDD,VKBE,VKBF,VKBA,VKDE
   HK_LIST = A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,0,1,2,3,4,5,6,7,8,9,``,[,],.,/,;,'
 
-Version=AucT Hotkeys Tool v2.4
+Version=AucT Hotkeys Tool v2.4b
 
   IniRead, profile, %A_WorkingDir%\settings.ini, Others, profile, General
 	if profile=General
@@ -213,11 +213,12 @@ gui,5:font, cwhite
 	}
 
   loop, 36 {
-	IniRead, mh, %A_WorkingDir%\%profileini%,Messages, hotkey%A_Index%, %A_Space%
-	IniRead, mv, %A_WorkingDir%\%profileini%,Messages, message%A_Index%, %A_Space%
-	if mh {
-	vmh:=VK(mh)
-	Hotkey, % vmh, mv%A_Index%
+	IniRead, mh%A_Index%, %A_WorkingDir%\%profileini%,Messages, hotkey%A_Index%, %A_Space%
+	IniRead, mv%A_Index%, %A_WorkingDir%\%profileini%,Messages, message%A_Index%, %A_Space%
+	if mh%A_Index% {
+
+	vmh%A_Index%:=VK(mh%A_Index%)
+	Hotkey, % vmh%A_Index%, mv%A_Index%
 	}
 	}
 
@@ -512,8 +513,6 @@ Menu, Options, Add, Color Style, :Submenu1
 
 if chat
 menu, Chat-Suspend, check, Chat-free in game
-if autodetect
-menu, Chat-Suspend, check, Chat-free in lobby
 if ScrollIndicator
 menu, Options, check, Scroll Indicator
 if sound
@@ -1841,6 +1840,7 @@ loop, parse, m, `n
 }
 return
 
+
 Mes_KeyUpdate:
   Mes_KeyList=
   loop, 35 {
@@ -2538,8 +2538,8 @@ VK(Param)
 		}
 }
 
-EmptyMem(PID="AHT v2.4"){
-    pid:=(pid="AHT v2.4") ? DllCall("GetCurrentProcessId") : pid
+EmptyMem(PID="AHT v2.4b"){
+    pid:=(pid="AHT v2.4b") ? DllCall("GetCurrentProcessId") : pid
     h:=DllCall("OpenProcess", "UInt", 0x001F0FFF, "Int", 0, "Int", pid)
     DllCall("SetProcessWorkingSetSize", "UInt", h, "Int", -1, "Int", -1)
     DllCall("CloseHandle", "Int", h)
