@@ -35,7 +35,7 @@ DebugPrivilegesEnable()
   VK_LIST = VK41,VK42,VK43,VK44,VK45,VK46,VK47,VK48,VK49,VK4A,VK4B,VK4C,VK4D,VK4E,VK4F,VK50,VK51,VK52,VK53,VK54,VK55,VK56,VK57,VK58,VK59,VK5A,VK30,VK31,VK32,VK33,VK34,VK35,VK36,VK37,VK38,VK39,VKC0,VKDB,VKDD,VKBE,VKBF,VKBA,VKDE
   HK_LIST = A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,0,1,2,3,4,5,6,7,8,9,``,[,],.,/,;,'
 
-Version=AucT Hotkeys Tool v2.4b
+Version=AucT Hotkeys Tool v2.5
 
   IniRead, profile, %A_WorkingDir%\settings.ini, Others, profile, General
 	if profile=General
@@ -69,6 +69,8 @@ gui,5:font, cwhite
   Menu, tray, add, About, About
   Menu, tray, add, Check update, UpdateCheck
   Menu, tray, add
+  Menu, tray, add, Reload, ButtonReload
+  Menu, tray, add
   Menu, tray, add, Mouse Capture, SetWMC
   Menu, tray, add, Exit
   Menu, Tray, Icon, %A_ScriptDir%\%A_ScriptName%,1,1
@@ -85,10 +87,11 @@ gui,5:font, cwhite
 	Hotkey,% VK(ReloadScr), ReloadScript
   Hotkey, IfWinActive, Warcraft III
   IniRead, WMC, %A_WorkingDir%\%profileini%,Others, WMC, 0
-  if WMC {
+  IniRead, WMChotkey, %A_WorkingDir%\%profileini%,Others, WMChotkey, %A_Space%
+  if WMC
   SetTimer,CheckActiveWar3
-  IniWrite,0, %A_WorkingDir%\%profileini%, Others, AutoDetect
-  }
+  if WMChotkey
+  Hotkey,% VK(WMChotkey), SetWMC
 
 
   IniRead, EnInventory, %A_WorkingDir%\%profileini%, Inventory, EnInventory, 1
@@ -533,6 +536,7 @@ menu, tray, check, Mouse Capture
 
 Menu, HelpMenu, Add, &Check updates, UpdateCheck
 Menu, HelpMenu, Add, Getdota, getdota
+Menu, HelpMenu, Add, &Commands, Commands
 Menu, HelpMenu, Add, &Help, Help
 Menu, HelpMenu, Add, &About, About
 
@@ -748,6 +752,8 @@ Gui, Add, Hotkey, vGarena gGarena x26 y200 w80, %Garena%
 Gui, Add, Text, x116 y200, Garena AutoJoin
 Gui, Add, Hotkey, vReloadScr gReloadScr x26 y235 w80, %ReloadScr%
 Gui, Add, Text, x116 y235, Reload Script
+Gui, Add, Hotkey, vWMChotkey gWMChotkey x26 y270 w80, %WMChotkey%
+Gui, Add, Text, x116 y270, Window Mouse Capture
 
 Gui, Add, Hotkey, vTime gTime x250 y60 w80, %Time%
 Gui, Add, Text, x340 y60, Get Time
@@ -821,6 +827,8 @@ return
 
 :*b0:/l ::
 suspend, permit
+IfWinActive, Warcraft III
+{
 
 Input  arguments, V I , {enter}
 
@@ -828,7 +836,10 @@ if arguments!=general
 {
 IfNotExist %arguments%.ini
 {
-MsgBox 16, Error ,Profile doesn't exist!,3
+
+soundplay *-1
+sleep 1000
+send {enter}Profile doesn't exist{enter}
 return
 }
 }
@@ -838,10 +849,81 @@ IniWrite, 1, %A_WorkingDir%\%profileini%, Others, DontShowConfigTemp
 IniWrite, 1, %A_WorkingDir%\%profileini%, Others, DontShowConfig
 }
 IniWrite, %arguments%, %A_WorkingDir%\settings.ini, Others, profile
-MsgBox 64, Info ,Loaded successfully!,2
+
+soundplay *64
+sleep 1000
+send {enter}%arguments% profile loaded successfully{enter}
 reload
+}
 return
 
+::/reload::
+suspend, permit
+IfWinActive, Warcraft III
+{
+send {enter}
+if !DontShowConfig {
+IniWrite, 1, %A_WorkingDir%\%profileini%, Others, DontShowConfigTemp
+IniWrite, 1, %A_WorkingDir%\%profileini%, Others, DontShowConfig
+}
+reload
+}
+return
+
+
+::/exit::
+suspend, permit
+send {enter}
+ExitApp
+return
+
+::/suspend::
+suspend, permit
+send {enter}
+sleep, 150
+gosub, switch
+return
+
+
+:*:btw::
+suspend, permit
+send by the way
+return
+
+:*:-u::
+suspend, permit
+send -unlock
+return
+
+:*:-ro::
+suspend, permit
+send -roll
+return
+
+:*:-wa::
+suspend, permit
+send -water
+return
+
+:*:-we::
+suspend, permit
+send -weather
+return
+
+:*:-ra::
+suspend, permit
+send -random
+return
+
+:*:-re::
+suspend, permit
+send -repick
+return
+
+:*:-1x1::
+suspend, permit
+send -apshomnp
+return
 
 BrowseProg1:
 FileSelectFile, prog1, , , Select your prog, Anything (*.*)
@@ -917,6 +999,29 @@ IniWrite, %A_ThisMenuItem%, %A_WorkingDir%\settings.ini, Others, profile
 reload
 return
 
+
+
+Commands:
+Commandlist =
+(
+Default Commands:
+/l ProfileName - will load profile (if it exists).
+/reload - will reload script
+/suspend - will pause (unpause) script
+/exit - will exit script
+
+Default Hotstrings:
+btw - by the way
+-u - -unlock
+-wa - -water
+-we - -weather
+-re - -repick
+-ra - -random
+)
+
+MsgBox 64, Command List ,%Commandlist%
+return
+
 Help:
 run, http://aht.isgreat.org/guide.html
 return
@@ -929,12 +1034,13 @@ UpdateCheck:
 UrlDownloadToFile, http://www.dota.zzl.org/latest.html, %A_Temp%\latest.html
 FileReadLine, NetVer, %A_Temp%\latest.html, 1
 If (Version <> NetVer){
-   MsgBox, 4,Check for update, %NetVer% is available! `nWould you like to download new version?
+
+   MsgBox 68, Update is available ,%NetVer% is available! `nWould you like to download new version?,5
 IfMsgBox Yes
 	run, http://aht.isgreat.org/download.html
 }
 else
-   msgbox, Your AHT is up to date!
+   MsgBox 64, Info ,Your AHT is up to date!,2
 return
 
 UpdateCheckS:
@@ -1172,18 +1278,12 @@ return
 SetWMC:
 WMC:=!WMC
 IniWrite, %WMC%, %A_WorkingDir%\%profileini%, Others, WMC
-if autodetect {
-IniWrite,0, %A_WorkingDir%\%profileini%, Others, AutoDetect
-reload
-}
 menu, options, togglecheck, Mouse Capture
 menu, tray, togglecheck, Mouse Capture
 if WMC
 SetTimer,CheckActiveWar3
 else
 SetTimer,CheckActiveWar3,off
-return
-ColorStyle:
 return
 styledefault:
 IniWrite, %A_Space%, %A_WorkingDir%\%profileini%, Others, stylecolor
@@ -1231,6 +1331,7 @@ ChoosenB=%A_GuiControl%
 
 
 Gui 4:Default
+gui, destroy
 Gui, Color, %stylecolor%
 if darkstyle
 gui, font, cwhite
@@ -1472,6 +1573,7 @@ Ignore:
 AHP:
 Garena:
 ReloadScr:
+WMChotkey:
 Time:
 toggle:
 pause:
@@ -2321,14 +2423,19 @@ send {enter}The current time is %TimeString%.{enter}
 return
 
 Switch:
-Suspend
-if !A_IsSuspended{
+suspend
+ManualSuspend:=!ManualSuspend
+if !A_IsSuspended
+{
+   SetTimer, CheckWarcraft, on
    if ScrollIndicator
    SetScrollLockState, On
    if Sound
    soundplay, *48
 }
-Else{
+Else
+{
+   SetTimer, CheckWarcraft, off
    if ScrollIndicator
    SetScrollLockState, Off
    if Sound
@@ -2448,24 +2555,17 @@ return
 
 ShowAHP:
   If AHealthBarOn
-      Send {[ Up}
+      Send {VKDB Up}
   Else
-      Send {[ Down}
+      Send {VKDB Down}
   AHealthBarOn:=!AHealthBarOn
-
 Return
 
 ShowEHP:
   If EHealthBarOn
-    {
-      Send, {] Up}
-      EHealthBarOn:=0
-    }
+      Send, {VKDD Up}
   Else
-    {
-      Send, {] Down}
-      EHealthBarOn := 1
-    }
+      Send, {VKDD Down}
   EHealthBarOn:=!EHealthBarOn
 Return
 
@@ -2538,8 +2638,8 @@ VK(Param)
 		}
 }
 
-EmptyMem(PID="AHT v2.4b"){
-    pid:=(pid="AHT v2.4b") ? DllCall("GetCurrentProcessId") : pid
+EmptyMem(PID="AHT v2.5"){
+    pid:=(pid="AHT v2.5") ? DllCall("GetCurrentProcessId") : pid
     h:=DllCall("OpenProcess", "UInt", 0x001F0FFF, "Int", 0, "Int", pid)
     DllCall("SetProcessWorkingSetSize", "UInt", h, "Int", -1, "Int", -1)
     DllCall("CloseHandle", "Int", h)
@@ -2639,6 +2739,8 @@ GetChatAddr(pid)
 }
 
 CheckChatting:
+	if ManualSuspend
+		return
 	if ReadChatState(hWar3Proc, chatAddr, chatState)
 	{
 		if chatState
@@ -2694,3 +2796,4 @@ DebugPrivilegesEnable()
 		Log("AdjustTokenPrivileges succeeded with code: " . A_LastError)
 	DllCall("CloseHandle", "UInt", h)
 }
+
