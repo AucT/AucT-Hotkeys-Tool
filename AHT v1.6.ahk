@@ -1,10 +1,11 @@
-;
 ; AutoHotkey Version: 1.x
 ; Language:       English
 ; Platform:       Win9x/NT/XP/
-; Author:         AucT <AucT@mail.ua> + recode by yayuhhz
+; Author:         AucT <AucT.uz.ua@gmail.com> + recode by yayuhhz
 ; Web-Site:		  AHT.isgreat.org
 #NoEnv
+setbatchlines -1
+setkeydelay -1
 CoordMode,Mouse,Screen
 #IfWinActive Warcraft III
 ;Inventory
@@ -119,7 +120,12 @@ IniRead, dis2, config.ini,Disable, dis2
 IniRead, dis3, config.ini,Disable, dis3
 IniRead, dis4, config.ini,Disable, dis4
 ;Fast TP
-IniRead, fasttp, config.ini, Others, FastTp
+IniRead, fasttp1, config.ini, Others, FastTp1
+IniRead, fasttp2, config.ini, Others, FastTp2
+IniRead, fasttp3, config.ini, Others, FastTp3
+IniRead, fasttp4, config.ini, Others, FastTp4
+IniRead, fasttp5, config.ini, Others, FastTp5
+IniRead, fasttp6, config.ini, Others, FastTp6
 if %t%
 Hotkey,%t%, TimeNow
 if %toggle%
@@ -140,8 +146,18 @@ if %dis3%
 Hotkey,%dis3%, Dis1
 if %dis4%
 Hotkey,%dis4%, Dis1
-if %fasttp%
-Hotkey,%fasttp%, FastTp
+if %fasttp1%
+Hotkey,%fasttp1%, FastTp01
+if %fasttp2%
+Hotkey,%fasttp2%, FastTp02
+if %fasttp3%
+Hotkey,%fasttp3%, FastTp03
+if %fasttp4%
+Hotkey,%fasttp4%, FastTp04
+if %fasttp5%
+Hotkey,%fasttp5%, FastTp05
+if %fasttp6%
+Hotkey,%fasttp6%, FastTp06
 
 ;MISSES
 IniRead, top, config.ini,Misses, Top
@@ -181,7 +197,10 @@ if (EnableInvoker="on")
 	IniRead, ForgeSpirit, config.ini, Invoker, ForgeSpirit
 	IniRead, IceWall, config.ini, Invoker, IceWall
 	IniRead, DeafeningBlast, config.ini, Invoker, DeafeningBlast
-
+	IniRead, QQQ, config.ini, Invoker, QQQ
+	IniRead, WWW, config.ini, Invoker, WWW
+	IniRead, EEE, config.ini, Invoker, EEE
+	IniRead, il, config.ini, Invoker, il
 
 	if %ColdSnap%
 	Hotkey,%ColdSnap%, Snap
@@ -203,6 +222,14 @@ if (EnableInvoker="on")
 	Hotkey,%IceWall%, Wall
 	if %DeafeningBlast%
 	Hotkey,%DeafeningBlast%, Blast
+	if %QQQ%
+	Hotkey,%QQQ%, QQQ
+	if %WWW%
+	Hotkey,%WWW%, WWW
+	if %EEE%
+	Hotkey,%EEE%, EEE
+	if %il%
+	Hotkey,%il%, ilist
 }
 
 ;ScoreBoard
@@ -344,7 +371,7 @@ return
 
 TimeNow:
 FormatTime, TimeString,, Time
-send {enter}The current time is %TimeString%.{enter}
+sendplay {enter}The current time is %TimeString%.{enter}
 return
 
 Switch:
@@ -369,7 +396,7 @@ return
 
 
 PauseGame:
-Send {vk79}{vk4D}{vk52}
+sendplay {vk79}{vk4D}{vk52}
 return
 
 SB:
@@ -392,22 +419,22 @@ SB:
 return
 
 i1:
-	send {vk67}
+	sendplay {vk67}
 return
 i2:
-	send {vk68}
+	sendplay {vk68}
 return
 i3:
-	send {vk64}
+	sendplay {vk64}
 return
 i4:
-	send {vk65}
+	sendplay {vk65}
 return
 i5:
-	send {vk61}
+	sendplay {vk61}
 return
 i6:
-	send {vk62}
+	sendplay {vk62}
 return
 
 Share:
@@ -439,7 +466,7 @@ y7:=A_ScreenHeight*0.482
 y8:=A_ScreenHeight*0.527
 y9:=A_ScreenHeight*0.574
 }
-Send {F11}
+sendplay {vk7A}
 
 sleep, %wait%
 SendPlay, {Click %x%,  %y1%, 0}
@@ -469,27 +496,27 @@ Click
 SendPlay, {Click %x%,  %y9%, 0}
 sleep, %wait%
 Click
-Send {Enter}
+sendplay {Enter}
 SendPlay, {Click %x0%,  %y0%, 0}
 BlockInput, Off
 return
   
 Hero:
-Send {F1}{F1}
+sendplay {vk70}{vk70}
 return
 
 RemapKey1:
-send %RKsendkey1%
+sendplay %RKsendkey1%
 return
 RemapKey2:
-send %RKsendkey2%
+sendplay %RKsendkey2%
 return
 RemapKey3:
-send %RKsendkey3%
+sendplay %RKsendkey3%
 return
 
 Ignore:
-Send {Enter}-hhn{Enter}{Enter}/squelch
+sendplay {Enter}-hhn{Enter}{Enter}/squelch
 SetScrollLockState, Off
 Suspend, on
 return
@@ -497,35 +524,69 @@ return
 Dis1:
 return
 
-FastTp:
+FastTpF(x,y,key)
+{
    BlockInput, On
    MouseGetPos, x0, y0
-   if _locked
-   {
-   x:=left+cWidth*0.985
-   y:=top+cHeight*0.058
-   }
-   else
-   {
-   x:=A_ScreenWidth*0.715
-   y:=A_ScreenHeight*0.967
-   }
-   Send {vk62}
-   SendPlay, {Click %x%,  %y%, 0}
+
+   send key
+   SendPlay, {Click %x%,  %y%, Left}
    Click
    SendPlay, {Click %x0%,  %y0%, 0}
    BlockInput, Off
+}
+FastTp01:
+if _locked
+FastTpF(left+cWidth*0.6637, top+cHeight*0.8428, vk67)
+else
+FastTpF(A_ScreenWidth*0.6637, A_ScreenHeight*0.8428, vk67)
 return
+
+FastTp02:
+if _locked
+FastTpF(left+cWidth*0.715, top+cHeight*0.8428, vk68)
+else
+FastTpF(A_ScreenWidth*0.715, A_ScreenHeight*0.8428, vk68)
+return
+
+FastTp03:
+if _locked
+FastTpF(left+cWidth*0.6637, top+cHeight*0.9047, vk64)
+else
+FastTpF(A_ScreenWidth*0.6637, A_ScreenHeight*0.9047, vk64)
+return
+
+FastTp04:
+if _locked
+FastTpF(left+cWidth*0.715, top+cHeight*0.9047, vk65)
+else
+FastTpF(A_ScreenWidth*0.715, A_ScreenHeight*0.9047, vk65)
+return
+
+FastTp05:
+if _locked
+FastTpF(left+cWidth*0.6637, top+cHeight*0.967, vk61)
+else
+FastTpF(A_ScreenWidth*0.6637, A_ScreenHeight*0.967, vk61)
+return
+
+FastTp06:
+if _locked
+FastTpF(left+cWidth*0.715, top+cHeight*0.967, vk62)
+else
+FastTpF(A_ScreenWidth*0.715, A_ScreenHeight*0.967, vk62)
+return
+
   
  ;Misses
 top:
-	send {enter}MISS TOP!{enter}
+	sendplay {enter}MISS TOP!{enter}
 return
 bot:
-	send {enter}MISS BOTTOM!{enter}
+	sendplay {enter}MISS BOTTOM!{enter}
 return
 mid:
-	send {enter}MISS MID!{enter}
+	sendplay {enter}MISS MID!{enter}
 return
 
 
@@ -734,30 +795,38 @@ LC12:
 return
 
 QM1:
-Send {Enter}%qmv1%{Enter}
+sendplay {Enter}{RAW}%qmv1%
+sendplay {Enter}
 return
 QM2:
-Send {Enter}%qmv2%{Enter}
+sendplay {Enter}{RAW}%qmv2%
+sendplay {Enter}
 return
 QM3:
-Send {Enter}%qmv3%{Enter}
+sendplay {Enter}{RAW}%qmv3%
+sendplay {Enter}
 return
 QM4:
-Send {Enter}%qmv4%{Enter}
+sendplay {Enter}{RAW}%qmv4%
+sendplay {Enter}
 return
 
 
 AQM1:
-Send +{Enter}%aqmv1%{Enter}
+sendplay +{Enter}{RAW}%aqmv1%
+sendplay {Enter}
 return
 AQM2:
-Send +{Enter}%aqmv2%{Enter}
+sendplay +{Enter}{RAW}%aqmv2%
+sendplay {Enter}
 return
 AQM3:
-Send +{Enter}%aqmv3%{Enter}
+sendplay +{Enter}{RAW}%aqmv3%
+sendplay {Enter}
 return
 AQM4:
-Send +{+Enter}%aqmv4%{Enter}
+sendplay +{+Enter}{RAW}%aqmv4%
+sendplay {Enter}
 return
 
 _locked := 0
@@ -828,32 +897,44 @@ SendEnt:
 	return
 	
 Snap:
-send {vk51}{vk51}{vk51}{vk52}
+sendplay {vk51}{vk51}{vk51}{vk52}
 return
 Wall:
-send {vk51}{vk51}{vk45}{vk52}
+sendplay {vk51}{vk51}{vk45}{vk52}
 return
 Blast:
-send {vk51}{vk57}{vk45}{vk52}
+sendplay {vk51}{vk57}{vk45}{vk52}
 return
 Tornado:
-send {vk51}{vk57}{vk57}{vk52}
+sendplay {vk51}{vk57}{vk57}{vk52}
 return
 Alacrity:
-send {vk57}{vk57}{vk45}{vk52}
+sendplay {vk57}{vk57}{vk45}{vk52}
 return
 Meteor:
-send {vk57}{vk45}{vk45}{vk52}
+sendplay {vk57}{vk45}{vk45}{vk52}
 return
 Strike:
-send {vk45}{vk45}{vk45}{vk52}
+sendplay {vk45}{vk45}{vk45}{vk52}
 return
 Walk:
-send {vk51}{vk51}{vk57}{vk52}
+sendplay {vk51}{vk51}{vk57}{vk52}
 return
 Spirit:
-send {vk51}{vk45}{vk45}{vk52}
+sendplay {vk51}{vk45}{vk45}{vk52}
 return
 EMP:
-send {vk57}{vk57}{vk57}{vk52}
+sendplay {vk57}{vk57}{vk57}{vk52}
+return
+QQQ:
+sendplay {vk51}{vk51}{vk51}
+return
+WWW:
+sendplay {vk57}{vk57}{vk57}
+return
+EEE:
+sendplay {vk45}{vk45}{vk45}
+return
+ilist:
+sendplay {Enter}-il{Enter}
 return
