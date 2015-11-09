@@ -338,9 +338,9 @@ gui,5:font, cwhite
 	IniRead, Scoreboard, %A_WorkingDir%\%profileini%,Others, Scoreboard, ``
 	if Scoreboard
 	if UAC
-	Hotkey,%Scoreboard%, SBUAC
+	Hotkey,% VK(Scoreboard), SBUAC
 	else
-	Hotkey,%Scoreboard%, SB
+	Hotkey,% VK(Scoreboard), SB
 	
 	IniRead, share, %A_WorkingDir%\%profileini%,Others, share, F6
 	if %share%
@@ -1540,7 +1540,6 @@ LC(xx,yy)
 }
 
 LC1:
-   if _locked
    LC(.79,.95)
 return
 
@@ -1799,7 +1798,7 @@ else {
 StringReplace, m, m,\n,`n, All
 loop, parse, m, `n
 {
-	send %typemes% {Raw}%A_LoopField%
+	send %typemes%{Raw}%A_LoopField%
 	send {vk0D}
 	sleep, 1
 }
