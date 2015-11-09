@@ -4,7 +4,7 @@
 ; Author:         AucT <AucT.uz.ua@gmail.com>
 ; Code helper:    yayuhhz (thanks to him there is awesome chat-suspending system and window mode)
 ; Main Tester:    DenSiL7
-; Web-Site:		  AHT.isgreat.org
+; Web-Site:		  http://dota.zzl.org/aht/
 ;********************************************FORCE TO RUN AS ADMIN*************************
 RegRead, UAC, HKEY_LOCAL_MACHINE, SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System, EnableLUA
 if !A_IsAdmin 
@@ -40,7 +40,7 @@ GroupAdd, WC3DOTA , DOTA 2
   VK_LIST = VK41,VK42,VK43,VK44,VK45,VK46,VK47,VK48,VK49,VK4A,VK4B,VK4C,VK4D,VK4E,VK4F,VK50,VK51,VK52,VK53,VK54,VK55,VK56,VK57,VK58,VK59,VK5A,VK30,VK31,VK32,VK33,VK34,VK35,VK36,VK37,VK38,VK39,VKC0,VKDB,VKDD,VKBE,VKBF,VKBA,VKDE,VKDC
   HK_LIST = A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,0,1,2,3,4,5,6,7,8,9,``,[,],.,/,;,',\
 
-Version=AucT Hotkeys Tool v2.8b			;current verison for update
+Version=AucT Hotkeys Tool v2.8c			;current verison for update
 ;************************************************PROFILE MANAGEMENT********************************//////////////
   IniRead, profile, %A_WorkingDir%\settings.ini, Others, profile, General
 	if profile=General
@@ -1112,7 +1112,7 @@ MsgBox 64, Command List ,%Commandlist%
 return
 
 Help:
-run, http://aht.isgreat.org/guide.html
+run, http://dota.zzl.org/aht/guide.html
 return
 
 getdota:
@@ -1127,7 +1127,7 @@ If (Version <> NetVer)
    ;MsgBox, 4,Check for update, %NetVer% is available! `nWould you like to download new version?
    MsgBox 68, Update is available ,%NetVer% is available! `nWould you like to download new version?,5
 IfMsgBox Yes
-	run, http://aht.isgreat.org/download.html
+	run, http://dota.zzl.org/aht/download.html
 }
 else
    MsgBox 64, Info ,Your AHT is up to date!,2
@@ -1139,7 +1139,7 @@ FileReadLine, NetVer, %A_Temp%\latest.html, 1
 If (Version <> NetVer){
    MsgBox, 4,Check for Update, %NetVer% is available! `nWould you like to download new version?
 IfMsgBox Yes
-	run, http://aht.isgreat.org/download.html
+	run, http://dota.zzl.org/aht/download.html
 }
 return
 
@@ -1210,7 +1210,7 @@ gui, font, cwhite
 else
 gui, font
 gui, font, s10 underline
-Gui, add, text,x100 y205 gAHTISGREAT, AHT.ISGREAT.ORG
+Gui, add, text,x100 y205 gAHTISGREAT, http://dota.zzl.org/aht/
 if darkstyle
 gui, font, cwhite
 else
@@ -1234,7 +1234,7 @@ Gui, hide  ; Destroy the about box.
 return
 
 AHTISGREAT:
-run, http://aht.isgreat.org/
+run, http://dota.zzl.org/aht/
 return
 
 
@@ -1513,7 +1513,7 @@ Gui 4:Default
 Gui, Submit, Nohide
 GUIControl -Redraw,HG_Key
 if (RadioKey = 1)
-GuiControl,, HG_Key, |A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z|1|2|3|4|5|6|7|8|9|0|``|-|=|\|[|]|;|''|,|.|/|Space|Tab|Enter|Escape|Delete|ScrollLock|CapsLock|NumLock|PrintScreen|BackSpace|CtrlBreak|Pause|Break|Up|Down|Left|Right|Home|End|Insert|Page Up|Page Down
+GuiControl,, HG_Key, |A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z|1|2|3|4|5|6|7|8|9|0|``|-|=|\|[|]|;|'|,|.|/|Space|Tab|Enter|Escape|Delete|ScrollLock|CapsLock|NumLock|PrintScreen|BackSpace|CtrlBreak|Pause|Break|Up|Down|Left|Right|Home|End|Insert|Page Up|Page Down
 if (RadioKey = 2)
 GuiControl,, HG_Key, |F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12|LWin|RWin|LControl|RControl|LShift|RShift|LAlt|RAlt
 if (RadioKey = 3)
@@ -3187,7 +3187,13 @@ VK(Param)
 	if InStr(Param,"]")
 	return % RegExReplace(Param, "\]$", "VKDD")
 	if InStr(Param,"\")
-	return % RegExReplace(Param, "\]$", "VKDC")
+	return % RegExReplace(Param, "\\$", "VKDC")
+	if InStr(Param,",")
+	return % RegExReplace(Param, "\,$", "VKBC")
+	if InStr(Param,".")
+	return % RegExReplace(Param, "\.$", "VKBE")
+	if InStr(Param,"/")
+	return % RegExReplace(Param, "\/$", "VKBF")
 	Hotkey:=RegExReplace(Param, "[\^\!\+\#]+(.*)", "$1")
 	If StrLen(Hotkey) > 1
 		return Param
@@ -3201,8 +3207,8 @@ VK(Param)
 		}
 }
 
-EmptyMem(PID="AHT v2.8b"){
-    pid:=(pid="AHT v2.8b") ? DllCall("GetCurrentProcessId") : pid
+EmptyMem(PID="AHT v2.8c"){
+    pid:=(pid="AHT v2.8c") ? DllCall("GetCurrentProcessId") : pid
     h:=DllCall("OpenProcess", "UInt", 0x001F0FFF, "Int", 0, "Int", pid)
     DllCall("SetProcessWorkingSetSize", "UInt", h, "Int", -1, "Int", -1)
     DllCall("CloseHandle", "Int", h)
