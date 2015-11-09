@@ -5,7 +5,6 @@
 ; Code helper:    yayuhhz (thanks to him there is awesome chat-suspending system and window mode)
 ; Main Tester:    DenSiL7
 ; Web-Site:		  AHT.isgreat.org
-
 ;********************************************FORCE TO RUN AS ADMIN*************************
 RegRead, UAC, HKEY_LOCAL_MACHINE, SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System, EnableLUA
 if !A_IsAdmin 
@@ -18,7 +17,12 @@ if !A_IsAdmin
     ExitApp
 }
 DebugPrivilegesEnable()
-
+FileInstall, all.gif, %A_temp%\all.gif
+FileInstall, blue.gif, %A_temp%\blue.gif
+FileInstall, pink.gif, %A_temp%\pink.gif
+FileInstall, AutoCast.jpg, %A_temp%\AutoCast.jpg
+FileInstall, Inventory.jpg, %A_temp%\Inventory.jpg
+FileInstall, Skills.jpg, %A_temp%\Skills.jpg
 ;********************************************INITIAL SCRIPT SETTINGS*************************
   #UseHook on                    ;forces to use it at start and not in game
   #SingleInstance force          ;makes sure second execution of the tool will stop teh first
@@ -31,10 +35,10 @@ DebugPrivilegesEnable()
   SetKeyDelay , -1, -1
   SetDefaultMouseSpeed, 0
   #ifWinActive, ahk_class Warcraft III
-  VK_LIST = VK41,VK42,VK43,VK44,VK45,VK46,VK47,VK48,VK49,VK4A,VK4B,VK4C,VK4D,VK4E,VK4F,VK50,VK51,VK52,VK53,VK54,VK55,VK56,VK57,VK58,VK59,VK5A,VK30,VK31,VK32,VK33,VK34,VK35,VK36,VK37,VK38,VK39,VKC0,VKDB,VKDD,VKBE,VKBF,VKBA,VKDE
-  HK_LIST = A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,0,1,2,3,4,5,6,7,8,9,``,[,],.,/,;,'
+  VK_LIST = VK41,VK42,VK43,VK44,VK45,VK46,VK47,VK48,VK49,VK4A,VK4B,VK4C,VK4D,VK4E,VK4F,VK50,VK51,VK52,VK53,VK54,VK55,VK56,VK57,VK58,VK59,VK5A,VK30,VK31,VK32,VK33,VK34,VK35,VK36,VK37,VK38,VK39,VKC0,VKDB,VKDD,VKBE,VKBF,VKBA,VKDE,VKDC
+  HK_LIST = A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,0,1,2,3,4,5,6,7,8,9,``,[,],.,/,;,',\
 
-Version=AucT Hotkeys Tool v2.6b			;current verison for update
+Version=AucT Hotkeys Tool v2.7			;current verison for update
 ;************************************************PROFILE MANAGEMENT********************************//////////////
   IniRead, profile, %A_WorkingDir%\settings.ini, Others, profile, General
 	if profile=General
@@ -531,11 +535,11 @@ Menu, HelpMenu, Add, &Help, Help
 Menu, HelpMenu, Add, &About, About
 
 ; Create the menu bar by attaching the sub-menus to it:
-Menu, MyMenuBar, Add, &Profile, :ProfileMenu
-Menu, MyMenuBar, Add, &WarCraft, :WarCraft
-Menu, MyMenuBar, Add, &Options, :Options
-Menu, MyMenuBar, Add, &Chat-Suspend, :Chat-Suspend
-Menu, MyMenuBar, Add, &Help, :HelpMenu
+Menu, MyMenuBar, Add, Profile, :ProfileMenu
+Menu, MyMenuBar, Add, WarCraft, :WarCraft
+Menu, MyMenuBar, Add, Options, :Options
+Menu, MyMenuBar, Add, Chat-Suspend, :Chat-Suspend
+Menu, MyMenuBar, Add, Help, :HelpMenu
 
 
 Gui, Menu, MyMenuBar
@@ -551,7 +555,7 @@ if darkstyle
 gui, font, cwhite
 else
 gui, font
-Gui, Add, Picture, x115 y92 w200 h300 , images\Inventory.jpg
+Gui, Add, Picture, x115 y92 w200 h300 , %A_temp%\Inventory.jpg
 Gui, Add, Checkbox, Checked%EnInventory% vEnInventory gSwitchInv x115 y62 , Enable Keys
 Gui, Add, button, vb1 gSetItem x120 y150 w85 h30,%h1%
 Gui, Add, button, vb2 gSetItem x225 y150 w85 h30,%h2%
@@ -576,7 +580,7 @@ gui, font
 Gui, Add, CheckBox,Checked%EnSkills% vEnSkills gEnSkills x36 y62 w200 h30 , Enable Custom Keys
 Gui, Add, CheckBox,Checked%SmartSkills% vSmartSkills gSmartSkills x236 y62 w200 h30 , Smart Learning Skills*
 gui, add, text, x30 y390 w410,*Smart Learning will click the right (upper) skill when learning skill. However it may not properly work
-Gui, Add, Picture, x36 y92 w402 h272 , images\Skills.jpg
+Gui, Add, Picture, x36 y92 w402 h272 , %A_temp%\Skills.jpg
 Gui, Add, Hotkey, vskill9 gskill9 x94 y142 w30 h30 , %skill9%
 Gui, Add, Hotkey, vskill10 gskill10 x194 y142 w30 h30 , %skill10%
 Gui, Add, Hotkey, vskill11 gskill11 x294 y142 w30 h30 , %skill11%
@@ -591,7 +595,7 @@ Gui, Add, Hotkey, vskill3 gskill3 x294 y322 w30 h30 , %skill3%
 Gui, Add, Hotkey, vskill4 gskill4 x394 y322 w30 h30 , %skill4%
 
 Gui, Tab, Autocast
-Gui, Add, Picture, x36 y92 w402 h272 , images\AutoCast.jpg
+Gui, Add, Picture, x36 y92 w402 h272 , %A_temp%\AutoCast.jpg
 if darkstyle
 gui, font, cwhite
 else
@@ -602,9 +606,9 @@ gui, font, cwhite
 else
 gui, font
 Gui, Add, CheckBox,Checked%EnAutoCast% vEnAutoCast gEnAutoCast x36 y62 w300 h30 , Enable AutoCast Keys
-Gui, Add, Picture, x36 y392 w30 h30 , images\blue.gif
-Gui, Add, Picture, x170 y392 w30 h30 , images\pink.gif
-Gui, Add, Picture, x314 y392 w30 h30 , images\all.gif
+Gui, Add, Picture, x36 y392 w30 h30 , %A_temp%\blue.gif
+Gui, Add, Picture, x170 y392 w30 h30 , %A_temp%\pink.gif
+Gui, Add, Picture, x314 y392 w30 h30 , %A_temp%\all.gif
 Gui, Add, Hotkey, vauto1 gauto1 x76 y392 w80 h30 , %auto1%
 Gui, Add, Hotkey, vauto2 gauto2 x215 y392 w80 h30 , %auto2%
 Gui, Add, Hotkey, vautoall gautoall x354 y392 w80 h30 , %autoall%
@@ -796,9 +800,9 @@ if darkstyle
 gui, font, cwhite
 gui, add, checkbox,Checked%DontShowConfig% vDontShowConfig gDontShowConfig x16 y457, Don't show it later
 gui, font, bold
-Gui, Add, Button, x155 y450 w90 h30,&Hide
-Gui, Add, Button, gButtonReload x250 y450 w110 h30,&Reload
-Gui, Add, Button, x365 y450 w90 h30,E&xit
+Gui, Add, Button, x155 y450 w90 h30,Hide
+Gui, Add, Button, gButtonReload x250 y450 w110 h30,Reload
+Gui, Add, Button, x365 y450 w90 h30,Exit
 if darkstyle
 gui, font, cwhite
 else
@@ -851,7 +855,9 @@ sleep 150
 send {enter}Script reloaded successfully{enter}
 reload
 return
-
+K::
+msgbox %A_ScreenWidth% %A_ScreenHeight% 
+return
 
 ::/exit::
 suspend, permit
@@ -2664,6 +2670,8 @@ VK(Param)
 	return % RegExReplace(Param, "\[$", "VKDB")
 	if InStr(Param,"]")
 	return % RegExReplace(Param, "\]$", "VKDD")
+	if InStr(Param,"\")
+	return % RegExReplace(Param, "\]$", "VKDC")
 	Hotkey:=RegExReplace(Param, "[\^\!\+\#]+(.*)", "$1")
 	If StrLen(Hotkey) > 1
 		return Param
@@ -2677,8 +2685,8 @@ VK(Param)
 		}
 }
 
-EmptyMem(PID="AHT v2.6b"){
-    pid:=(pid="AHT v2.6b") ? DllCall("GetCurrentProcessId") : pid
+EmptyMem(PID="AHT v2.7"){
+    pid:=(pid="AHT v2.7") ? DllCall("GetCurrentProcessId") : pid
     h:=DllCall("OpenProcess", "UInt", 0x001F0FFF, "Int", 0, "Int", pid)
     DllCall("SetProcessWorkingSetSize", "UInt", h, "Int", -1, "Int", -1)
     DllCall("CloseHandle", "Int", h)
@@ -2835,4 +2843,3 @@ DebugPrivilegesEnable()
 		Log("AdjustTokenPrivileges succeeded with code: " . A_LastError)
 	DllCall("CloseHandle", "UInt", h)  ; close this process handle to save memory
 }
-
