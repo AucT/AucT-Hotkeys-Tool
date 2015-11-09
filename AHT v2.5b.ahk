@@ -31,11 +31,11 @@ DebugPrivilegesEnable()
   SetBatchLines, -1
   SetKeyDelay , -1, -1
   SetDefaultMouseSpeed, 0
-
+  #ifWinActive, ahk_class Warcraft III
   VK_LIST = VK41,VK42,VK43,VK44,VK45,VK46,VK47,VK48,VK49,VK4A,VK4B,VK4C,VK4D,VK4E,VK4F,VK50,VK51,VK52,VK53,VK54,VK55,VK56,VK57,VK58,VK59,VK5A,VK30,VK31,VK32,VK33,VK34,VK35,VK36,VK37,VK38,VK39,VKC0,VKDB,VKDD,VKBE,VKBF,VKBA,VKDE
   HK_LIST = A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,0,1,2,3,4,5,6,7,8,9,``,[,],.,/,;,'
 
-Version=AucT Hotkeys Tool v2.5
+Version=AucT Hotkeys Tool v2.5b
 
   IniRead, profile, %A_WorkingDir%\settings.ini, Others, profile, General
 	if profile=General
@@ -357,15 +357,11 @@ gui,5:font, cwhite
 	if %ignore%
 	Hotkey,% VK(ignore), gIgnore
 
-
-
 	IniRead, Garena, %A_WorkingDir%\%profileini%,Others, Garena, !J
 	Hotkey, IfWinActive, Garena
 	if %Garena%
 	Hotkey,% VK(Garena), GarenaJoiner
-	Hotkey, IfWinActive, Warcraft III
-
-
+	Hotkey, IfWinActive, ahk_class Warcraft III
 
 	IniRead, Time, %A_WorkingDir%\%profileini%,Others, time, %A_Space%
 	if %Time%
@@ -415,9 +411,8 @@ gui,5:font, cwhite
 	Hotkey,% VK(krh%A_Index%), krv%A_Index%
 	}
 
-	IniRead, DontShowConfigTemp, %A_WorkingDir%\%profileini%,Others, DontShowConfigTemp, 0
-
-	IniRead, DontShowConfig, %A_WorkingDir%\%profileini%,Others, DontShowConfig, 0
+	IniRead, DontShowConfigTemp, %A_WorkingDir%\settings.ini,Others, DontShowConfigTemp, 0
+	IniRead, DontShowConfig, %A_WorkingDir%\settings.ini,Others, DontShowConfig, 0
 
 
 
@@ -430,16 +425,11 @@ EmptyMem()
 		gosub, runprog2
 	if runprog3s
 		gosub, runprog3
-	if DontShowConfigTemp {
-		IniWrite, 0, %A_WorkingDir%\%profileini%, Others, DontShowConfigTemp
-		IniWrite, 0, %A_WorkingDir%\%profileini%, Others, DontShowConfig
-	}
+	IniWrite, 0, %A_WorkingDir%\settings.ini, Others, DontShowConfigTemp
 return
 }
 
 configuration:
-IniRead, DontShowConfigTemp, %A_WorkingDir%\%profileini%,Others, DontShowConfigTemp, 0
-IniRead, DontShowConfig, %A_WorkingDir%\%profileini%,Others, DontShowConfig, 0
 if ConfigCreated
 {
 gui, show, autosize center, %Version% - %profile% profile
@@ -827,9 +817,6 @@ return
 
 :*b0:/l ::
 suspend, permit
-IfWinActive, Warcraft III
-{
-
 Input  arguments, V I , {enter}
 
 if arguments!=general
@@ -844,36 +831,28 @@ return
 }
 }
 
-if !DontShowConfig {
-IniWrite, 1, %A_WorkingDir%\%profileini%, Others, DontShowConfigTemp
-IniWrite, 1, %A_WorkingDir%\%profileini%, Others, DontShowConfig
-}
+IniWrite, 1, %A_WorkingDir%\settings.ini, Others, DontShowConfigTemp
+
 IniWrite, %arguments%, %A_WorkingDir%\settings.ini, Others, profile
 
 soundplay *64
 sleep 1000
 send {enter}%arguments% profile loaded successfully{enter}
 reload
-}
 return
 
 ::/reload::
 suspend, permit
-IfWinActive, Warcraft III
-{
-send {enter}
-if !DontShowConfig {
-IniWrite, 1, %A_WorkingDir%\%profileini%, Others, DontShowConfigTemp
-IniWrite, 1, %A_WorkingDir%\%profileini%, Others, DontShowConfig
-}
+send {esc}
+IniWrite, 1, %A_WorkingDir%\settings.ini, Others, DontShowConfigTemp
+sleep 150
+send {enter}Script reloaded successfully{enter}
 reload
-}
 return
 
 
 ::/exit::
 suspend, permit
-send {enter}
 ExitApp
 return
 
@@ -885,44 +864,44 @@ gosub, switch
 return
 
 
-:*:btw::
+::btw::
 suspend, permit
 send by the way
 return
 
-:*:-u::
+::-u::
 suspend, permit
-send -unlock
+send -unlock{enter}
 return
 
-:*:-ro::
+::-ro::
 suspend, permit
-send -roll
+send -roll{enter}
 return
 
-:*:-wa::
+::-wa::
 suspend, permit
-send -water
+send -water{space}
 return
 
-:*:-we::
+::-we::
 suspend, permit
-send -weather
+send -weather{space}
 return
 
-:*:-ra::
+::-ra::
 suspend, permit
-send -random
+send -random{enter}
 return
 
-:*:-re::
+::-re::
 suspend, permit
-send -repick
+send -repick{enter}
 return
 
-:*:-1x1::
+::-1x1::
 suspend, permit
-send -apshomnp
+send -apshomnp{enter}
 return
 
 BrowseProg1:
@@ -2638,8 +2617,8 @@ VK(Param)
 		}
 }
 
-EmptyMem(PID="AHT v2.5"){
-    pid:=(pid="AHT v2.5") ? DllCall("GetCurrentProcessId") : pid
+EmptyMem(PID="AHT v2.5b"){
+    pid:=(pid="AHT v2.5b") ? DllCall("GetCurrentProcessId") : pid
     h:=DllCall("OpenProcess", "UInt", 0x001F0FFF, "Int", 0, "Int", pid)
     DllCall("SetProcessWorkingSetSize", "UInt", h, "Int", -1, "Int", -1)
     DllCall("CloseHandle", "Int", h)
