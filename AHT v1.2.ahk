@@ -41,8 +41,8 @@ if %auto2%
 Hotkey,%auto2%, AC2
 
 ;Chat Suspending
-IniRead, ChatSuspending, config.ini, Others, ChatSuspending
-if (ChatSuspending="on")
+IniRead, enchat, config.ini, Inventory, enchat
+if (enchat="on")
 {
 Hotkey,*Enter, SendEnt
 Hotkey,*NumpadEnter, SendEnt
@@ -51,8 +51,8 @@ Hotkey, ~LButton, KEYSON
 }
 
 ;CustomKeys
-IniRead, EnableCK, config.ini, CustomKeys, Enable
-if (EnableCK="on")
+IniRead, EnSkills, config.ini, CustomKeys, EnSkills
+if (EnSkills="on")
 {
 	IniRead, skill1, config.ini, CustomKeys, skill1
 	IniRead, skill2, config.ini, CustomKeys, skill2
@@ -104,7 +104,6 @@ IniRead, dis1, config.ini,Disable, dis1
 IniRead, dis2, config.ini,Disable, dis2
 IniRead, dis3, config.ini,Disable, dis3
 IniRead, dis4, config.ini,Disable, dis4
-;IniRead, dis5, config.ini,Disable, dis5
 if %t%
 Hotkey,%t%, TimeNow
 if %toggle%
@@ -143,12 +142,7 @@ Hotkey,%mid%, mid
 IniRead, sb, config.ini,Others, ScoreBoard
 IniRead, sba, config.ini,Others, ScoreBoardActive
 if %sb%
-	{
-	 if %sba% 
-		Hotkey,~%sb%, SB
-	 else
-		Hotkey,%sb%, SB
-	}
+Hotkey,%sb%, SB
 
 ;ShortKeys
 ::-u::-unlock
@@ -167,7 +161,7 @@ AC1:
    x4:=A_ScreenWidth*0.95
    y:=A_ScreenHeight*0.95
    y2:=A_ScreenHeight*0.88
-   SendPlay, {Click %x1%,  %y%, Right}{Click %x2%,  %y%, Right}{Click %x3%,  %y%, Right}{Click %x4%,  %y%, Right}{Click %x2%,  %y2%, Right}{Click %x0%, %y0%, 0}
+   SendPlay, {Click %x1%,  %y%, Right}{Click %x2%,  %y%, Right}{Click %x2%,  %y2%, Right}{Click %x0%, %y0%, 0}
    BlockInput, Off
 return
 
@@ -180,7 +174,7 @@ AC2:
    x4:=A_ScreenWidth*0.95
    y:=A_ScreenHeight*0.95
    y2:=A_ScreenHeight*0.88
-   SendPlay, {Click %x1%,  %y%, Right}{Click %x2%,  %y%, Right}{Click %x3%,  %y%, Right}{Click %x4%,  %y%, Right}{Click %x3%,  %y2%, Right}{Click %x0%, %y0%, 0}
+   SendPlay, {Click %x3%,  %y%, Right}{Click %x4%,  %y%, Right}{Click %x3%,  %y2%, Right}{Click %x0%, %y0%, 0}
    BlockInput, Off
 return
 
@@ -191,7 +185,20 @@ return
 
 Switch:
 Suspend
+if !A_IsSuspended{
+   Hotkey,*Enter, SendEnt,on
+   Hotkey,*NumpadEnter, SendEnt,on
+   Hotkey, ~*Esc, KEYSON,on
+   Hotkey, ~LButton, KEYSON,on
+}
+Else{
+   Hotkey,*Enter, SendEnt,off
+   Hotkey,*NumpadEnter, SendEnt,off
+   Hotkey, ~*Esc, KEYSON,off
+   Hotkey, ~LButton, KEYSON,off
+}
 return
+
 
 PauseGame:
 Send {F10}{M}{R}
@@ -202,13 +209,10 @@ SB:
    MouseGetPos, x0, y0
    x:=A_ScreenWidth*0.985
    y:=A_ScreenHeight*0.0575
-   ;MouseMove, %x%, %y%
    SendPlay, {Click %x%,  %y%, 0}
    Click
-
    SendPlay, {Click %x0%,  %y0%, 0}
    BlockInput, Off
-   
 return
 
 i1:
@@ -231,9 +235,9 @@ i6:
 return
 
 Share:
-   BlockInput, On
-   MouseGetPos, x0, y0
-   x:=A_ScreenWidth*0.6
+BlockInput, On
+MouseGetPos, x0, y0
+x:=A_ScreenWidth*0.6
 y1:=A_ScreenHeight*0.2
 y2:=A_ScreenHeight*0.25
 y3:=A_ScreenHeight*0.3
@@ -244,37 +248,39 @@ y7:=A_ScreenHeight*0.482
 y8:=A_ScreenHeight*0.527
 y9:=A_ScreenHeight*0.574
 Send {F11}
-MouseMove, %x%,  %y1%
-sleep, %wait%
-Click, Left
 
-MouseMove, %x%,  %y2%
 sleep, %wait%
-Click, Left
-MouseMove, %x%,  %y3%
+SendPlay, {Click %x%,  %y1%, 0}
 sleep, %wait%
-Click, Left
-MouseMove, %x%,  %y4%
+Click
+SendPlay, {Click %x%,  %y2%, 0}
 sleep, %wait%
-Click, Left
-MouseMove, %x%,  %y5%
+Click
+SendPlay, {Click %x%,  %y3%, 0}
 sleep, %wait%
-Click, Left
-MouseMove, %x%,  %y6%
+Click
+SendPlay, {Click %x%,  %y4%, 0}
 sleep, %wait%
-Click, Left
-MouseMove, %x%,  %y7%
+Click
+SendPlay, {Click %x%,  %y5%, 0}
 sleep, %wait%
-Click, Left
-MouseMove, %x%,  %y8%
+Click
+SendPlay, {Click %x%,  %y6%, 0}
 sleep, %wait%
-Click, Left
-MouseMove, %x%,  %y9%
+Click
+SendPlay, {Click %x%,  %y7%, 0}
 sleep, %wait%
-Click, Left
+Click
+SendPlay, {Click %x%,  %y8%, 0}
+sleep, %wait%
+Click
+SendPlay, {Click %x%,  %y9%, 0}
+sleep, %wait%
+Click
 Send {Enter}
-   BlockInput, Off
-  return
+SendPlay, {Click %x0%,  %y0%, 0}
+BlockInput, Off
+return
   
 Hero:
 Send {F1}{F1}
@@ -298,7 +304,6 @@ return
 mid:
 	send {enter}MISS MID!{enter}
 return
-
 
 
 LC1:
