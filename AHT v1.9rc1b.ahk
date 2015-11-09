@@ -5,6 +5,7 @@
 ; Web-Site:		  AHT.isgreat.org
 #NoEnv
 #SingleInstance
+#UseHook
 setbatchlines -1
 setkeydelay -1
 CoordMode,Mouse,Screen
@@ -87,7 +88,7 @@ Hotkey,*NumpadEnter, SendEnt
 Hotkey, ~*Esc, KEYSON
 Hotkey, ~LButton, KEYSON
 if (AutoDetect="on")
-SetTimer, checklobby, 2000
+SetTimer, checklobby, 1000
 }
 
 ;CustomKeys
@@ -281,6 +282,10 @@ IniRead, enqm, config.ini,Allied-Quick-Message, EnQM
 		
 		IniRead, lmh1, config.ini, Allied-Quick-Message, LMH1
 		IniRead, lmv1, config.ini, Allied-Quick-Message, LMV1
+		IniRead, lmh2, config.ini, Allied-Quick-Message, LMH2
+		IniRead, lmv2, config.ini, Allied-Quick-Message, LMV2
+		IniRead, lmh3, config.ini, Allied-Quick-Message, LMH3
+		IniRead, lmv3, config.ini, Allied-Quick-Message, LMV3
 		
 		if %qmh1%
 			Hotkey,%qmh1%, QM1
@@ -293,6 +298,10 @@ IniRead, enqm, config.ini,Allied-Quick-Message, EnQM
 		
 		if %lmh1%
 			Hotkey,%lmh1%, LM1
+		if %lmh2%
+			Hotkey,%lmh2%, LM2
+		if %lmh3%
+			Hotkey,%lmh3%, LM3
 	}
 ;AQuick Messages
 IniRead, enaqm, config.ini,All-Quick-Message, EnAQM
@@ -309,6 +318,10 @@ IniRead, enaqm, config.ini,All-Quick-Message, EnAQM
 		
 		IniRead, almh1, config.ini, All-Quick-Message, ALMH1
 		IniRead, almv1, config.ini, All-Quick-Message, ALMV1
+		IniRead, almh2, config.ini, All-Quick-Message, ALMH2
+		IniRead, almv2, config.ini, All-Quick-Message, ALMV2
+		IniRead, almh3, config.ini, All-Quick-Message, ALMH3
+		IniRead, almv3, config.ini, All-Quick-Message, ALMV3
 		if %aqmh1%
 			Hotkey,%aqmh1%, AQM1
 		if %aqmh2%
@@ -319,6 +332,10 @@ IniRead, enaqm, config.ini,All-Quick-Message, EnAQM
 			Hotkey,%aqmh4%, AQM4
 		if %almh1%
 			Hotkey,%almh1%, ALM1
+		if %almh2%
+			Hotkey,%almh2%, ALM2
+		if %almh3%
+			Hotkey,%almh3%, ALM3
 	}
 
 ;Window MOUSE CAPTURER
@@ -341,25 +358,22 @@ return
 
 autojoin:
 send, {click} {click}
-sleep, 2500
+sleep, 1700
 IfWinExist, ahk_class SkinDialog, Sorry
 send, {space}
-else
+else {
 SetTimer, autojoin, off
+soundplay,*48
+}
 return
 
 checklobby:
 IfWinActive, Warcraft III
 {
-x1:=A_ScreenWidth*0.622
-x2:=A_ScreenWidth*0.738
-x3:=A_ScreenWidth*0.8333
+x:=A_ScreenWidth*0.738
 y:=A_ScreenHeight*0.019
-
-PixelGetColor, color1, %x1%, %y%
-PixelGetColor, color2, %x2%, %y%
-PixelGetColor, color3, %x3%, %y%
-if (color1=0x000000 and color2=0x000000 and color3=0x000000)
+PixelGetColor, color1, %x%, %y%
+if color1=0x000000
 {
    if A_IsSuspended {
    Hotkey,*Enter, SendEnt,on
@@ -1029,6 +1043,20 @@ Loop, parse, lmv1, `,
 	send {enter}
 }
 return
+LM2:
+Loop, parse, lmv2, `,
+{
+	send {enter}{Raw}%A_LoopField%
+	send {enter}
+}
+return
+LM3:
+Loop, parse, lmv3, `,
+{
+	send {enter}{Raw}%A_LoopField%
+	send {enter}
+}
+return
 
 AQM1:
 send +{Enter}{RAW}%aqmv1%
@@ -1048,6 +1076,20 @@ send {Enter}
 return
 ALM1:
 Loop, parse, almv1, `,
+{
+	send +{enter}{Raw}%A_LoopField%
+	send {enter}
+}
+return
+ALM2:
+Loop, parse, almv2, `,
+{
+	send +{enter}{Raw}%A_LoopField%
+	send {enter}
+}
+return
+ALM3:
+Loop, parse, almv3, `,
 {
 	send +{enter}{Raw}%A_LoopField%
 	send {enter}
