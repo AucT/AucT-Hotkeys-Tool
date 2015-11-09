@@ -42,6 +42,7 @@ Hotkey,%i6%, i6
 Hotkey,+%i6%, i6
 }
 
+
 ;Auto-Casts
 IniRead, auto1, config.ini, Auto-Casts, auto1
 IniRead, auto2, config.ini, Auto-Casts, auto2
@@ -117,6 +118,8 @@ IniRead, dis1, config.ini,Disable, dis1
 IniRead, dis2, config.ini,Disable, dis2
 IniRead, dis3, config.ini,Disable, dis3
 IniRead, dis4, config.ini,Disable, dis4
+;Fast TP
+IniRead, fasttp, config.ini, Others, FastTp
 if %t%
 Hotkey,%t%, TimeNow
 if %toggle%
@@ -137,8 +140,8 @@ if %dis3%
 Hotkey,%dis3%, Dis1
 if %dis4%
 Hotkey,%dis4%, Dis1
-;if %dis5%
-;Hotkey,%dis5%, Dis1
+if %fasttp%
+Hotkey,%fasttp%, FastTp
 
 ;MISSES
 IniRead, top, config.ini,Misses, Top
@@ -151,6 +154,19 @@ Hotkey,%bot%, bot
 if %mid%
 Hotkey,%mid%, mid
 
+;RemapKeys
+IniRead, RKhotkey1, config.ini, RemapKeys, hotkey1
+IniRead, RKhotkey2, config.ini, RemapKeys, hotkey2
+IniRead, RKhotkey3, config.ini, RemapKeys, hotkey3
+IniRead, RKsendkey1, config.ini, RemapKeys, sendkey1
+IniRead, RKsendkey2, config.ini, RemapKeys, sendkey2
+IniRead, RKsendkey3, config.ini, RemapKeys, sendkey3
+if %RKhotkey1%
+Hotkey, %RKhotkey1%, RemapKey1
+if %RKhotkey2%
+Hotkey, %RKhotkey2%, RemapKey2
+if %RKhotkey3%
+Hotkey, %RKhotkey3%, RemapKey3
 ;Invoker
 IniRead, EnableInvoker, config.ini, Invoker, EnableInvoker
 if (EnableInvoker="on")
@@ -371,27 +387,27 @@ SB:
    }
    SendPlay, {Click %x%,  %y%, 0}
    Click
-   ;SendPlay, {Click %x0%,  %y0%, 0}
+   SendPlay, {Click %x0%,  %y0%, 0}
    BlockInput, Off
 return
 
 i1:
-	send {Numpad7}
+	send {vk67}
 return
 i2:
-	send {Numpad8}
+	send {vk68}
 return
 i3:
-	send {Numpad4}
+	send {vk64}
 return
 i4:
-	send {Numpad5}
+	send {vk65}
 return
 i5:
-	send {Numpad1}
+	send {vk61}
 return
 i6:
-	send {Numpad2}
+	send {vk62}
 return
 
 Share:
@@ -462,6 +478,15 @@ Hero:
 Send {F1}{F1}
 return
 
+RemapKey1:
+send %RKsendkey1%
+return
+RemapKey2:
+send %RKsendkey2%
+return
+RemapKey3:
+send %RKsendkey3%
+return
 
 Ignore:
 Send {Enter}-hhn{Enter}{Enter}/squelch
@@ -470,6 +495,26 @@ Suspend, on
 return
 
 Dis1:
+return
+
+FastTp:
+   BlockInput, On
+   MouseGetPos, x0, y0
+   if _locked
+   {
+   x:=left+cWidth*0.985
+   y:=top+cHeight*0.058
+   }
+   else
+   {
+   x:=A_ScreenWidth*0.715
+   y:=A_ScreenHeight*0.967
+   }
+   Send {vk62}
+   SendPlay, {Click %x%,  %y%, 0}
+   Click
+   SendPlay, {Click %x0%,  %y0%, 0}
+   BlockInput, Off
 return
   
  ;Misses
