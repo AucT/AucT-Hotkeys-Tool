@@ -77,11 +77,11 @@ gui,5:font, cwhite
   Menu, tray, add, About, About
   Menu, tray, add, Check update, UpdateCheck
   Menu, tray, add
-  Menu, tray, add, Save, ButtonReload
+  Menu, tray, add, Reload, ButtonReload
   Menu, tray, add
   Menu, tray, add, Mouse Capture, SetWMC
   Menu, tray, add, Exit
-  ;Menu, Tray, Icon, %A_ScriptDir%\%A_ScriptName%,1,1
+  Menu, Tray, Icon, %A_ScriptDir%\%A_ScriptName%,1,1
 
   CoordMode,Mouse,Screen
   
@@ -962,7 +962,7 @@ gui, font, cwhite
 gui, add, checkbox,Checked%DontShowConfig% vDontShowConfig gDontShowConfig x16 y457, Don't show it later
 gui, font, bold
 Gui, Add, Button, x155 y450 w90 h30,Hide
-Gui, Add, Button, gButtonReload x250 y450 w110 h30,Reload
+Gui, Add, Button, gButtonReload x250 y450 w110 h30,Save
 Gui, Add, Button, x365 y450 w90 h30,Exit
 if darkstyle
 gui, font, cwhite
