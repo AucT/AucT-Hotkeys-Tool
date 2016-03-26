@@ -1,7 +1,7 @@
 ; AutoHotkey Version: 1.x
 ; Language:       English
 ; Platform:       Win9x/NT/XP/Vista/7
-; Author:         AucT <AucT.uz.ua@gmail.com>
+; Author:         AucT <AucT.eu@gmail.com>
 ; Code helper:    yayuhhz (thanks to him there is awesome chat-suspending system and window mode)
 ; Main Tester:    DenSiL7
 ; Web-Site:		  http://aht.auct.eu
@@ -41,7 +41,7 @@ GroupAdd, WC3DOTA , Dota 2
   VK_LIST = VK41,VK42,VK43,VK44,VK45,VK46,VK47,VK48,VK49,VK4A,VK4B,VK4C,VK4D,VK4E,VK4F,VK50,VK51,VK52,VK53,VK54,VK55,VK56,VK57,VK58,VK59,VK5A,VK30,VK31,VK32,VK33,VK34,VK35,VK36,VK37,VK38,VK39,VKC0,VKDB,VKDD,VKBE,VKBF,VKBA,VKDE,VKDC
   HK_LIST = A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,0,1,2,3,4,5,6,7,8,9,``,[,],.,/,;,',\
 
-Version=AucT Hotkeys Tool v2.8e			;current verison for update
+Version=AucT Hotkeys Tool v2.9			;current verison for update
 ;************************************************PROFILE MANAGEMENT********************************//////////////
   IniRead, profile, %A_WorkingDir%\settings.ini, Others, profile, General
 	if profile=General
@@ -77,11 +77,11 @@ gui,5:font, cwhite
   Menu, tray, add, About, About
   Menu, tray, add, Check update, UpdateCheck
   Menu, tray, add
-  Menu, tray, add, Reload, ButtonReload
+  Menu, tray, add, Save, ButtonReload
   Menu, tray, add
   Menu, tray, add, Mouse Capture, SetWMC
   Menu, tray, add, Exit
-  Menu, Tray, Icon, %A_ScriptDir%\%A_ScriptName%,1,1
+  ;Menu, Tray, Icon, %A_ScriptDir%\%A_ScriptName%,1,1
 
   CoordMode,Mouse,Screen
   
@@ -1167,17 +1167,17 @@ return
 
 
 auctblog:
-run, https://dl.dropbox.com/u/45755423/links/auctblog.html
+run, http://auct.eu
 return
 dotaresources:
-run, https://dl.dropbox.com/u/45755423/links/dotaresources.html
+run, https://yadi.sk/d/arn3UVKVHxdSk
 return
 Customkeystxt:
-run, http://ack.is-great.net/
+run, http://dotacustomkeys.appspot.com/
 return
 
 UpdateCheck:
-UrlDownloadToFile, https://dl.dropbox.com/u/45755423/links/latest.html, %A_Temp%\latest.html
+UrlDownloadToFile, https://auct.eu/latestaht.html, %A_Temp%\latest.html
 FileReadLine, NetVer, %A_Temp%\latest.html, 1
 If (Version <> NetVer)
 {
@@ -1191,7 +1191,7 @@ else
 return
 
 UpdateCheckS:
-UrlDownloadToFile, https://dl.dropbox.com/u/45755423/links/latest.html, %A_Temp%\latest.html
+UrlDownloadToFile, https://auct.eu/latestaht.html, %A_Temp%\latest.html
 FileReadLine, NetVer, %A_Temp%\latest.html, 1
 If (Version <> NetVer){
    MsgBox, 4,Check for Update, %NetVer% is available! `nWould you like to download new version?
@@ -1294,7 +1294,7 @@ AHTISGREAT:
 run, http://aht.auct.eu
 return
 mailauct:
-run, mailto:AucT.uz.ua@gmail.com?Subject=AHT
+run, mailto:AucT.eu@gmail.com?Subject=AHT
 return
 
 
@@ -3300,8 +3300,8 @@ VK(Param)
 		}
 }
 
-EmptyMem(PID="AHT v2.8c"){
-    pid:=(pid="AHT v2.8c") ? DllCall("GetCurrentProcessId") : pid
+EmptyMem(PID="AHT v2.9"){
+    pid:=(pid="AHT v2.9") ? DllCall("GetCurrentProcessId") : pid
     h:=DllCall("OpenProcess", "UInt", 0x001F0FFF, "Int", 0, "Int", pid)
     DllCall("SetProcessWorkingSetSize", "UInt", h, "Int", -1, "Int", -1)
     DllCall("CloseHandle", "Int", h)
@@ -3381,12 +3381,14 @@ GetChatAddr(pid)
 					offset := 0xAE8450
 				else if (version = "1.26.0.6401")
 					offset := 0xAD15F0
+				;else if (version = "1.27.0.52240")// dont wanna do exac match if new patch will be and offset will be the same
+				else if (InStr(version, "1.27."))
+					offset := 0xBDAA14
 				else
 				{
 					Log("Warcraft III version: " . version . " is not supported")
 					Return -2
 				}
-				
 				Return NumGet(me32, 20, "UInt") + offset
 			}
 			
