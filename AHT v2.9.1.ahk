@@ -17,12 +17,12 @@ if !A_IsAdmin
     ExitApp
 }
 DebugPrivilegesEnable()
-FileInstall, all.gif, %A_temp%\all.gif
-FileInstall, blue.gif, %A_temp%\blue.gif
-FileInstall, pink.gif, %A_temp%\pink.gif
-FileInstall, AutoCast.jpg, %A_temp%\AutoCast.jpg
-FileInstall, Inventory.jpg, %A_temp%\Inventory.jpg
-FileInstall, Skills.jpg, %A_temp%\Skills.jpg
+FileInstall, images\all.gif, %A_temp%\all.gif
+FileInstall, images\blue.gif, %A_temp%\blue.gif
+FileInstall, images\pink.gif, %A_temp%\pink.gif
+FileInstall, images\AutoCast.jpg, %A_temp%\AutoCast.jpg
+FileInstall, images\Inventory.jpg, %A_temp%\Inventory.jpg
+FileInstall, images\Skills.jpg, %A_temp%\Skills.jpg
 GroupAdd, WC3DOTA , Warcraft III
 GroupAdd, WC3DOTA , DOTA 2
 GroupAdd, WC3DOTA , Dota 2
@@ -41,7 +41,7 @@ GroupAdd, WC3DOTA , Dota 2
   VK_LIST = VK41,VK42,VK43,VK44,VK45,VK46,VK47,VK48,VK49,VK4A,VK4B,VK4C,VK4D,VK4E,VK4F,VK50,VK51,VK52,VK53,VK54,VK55,VK56,VK57,VK58,VK59,VK5A,VK30,VK31,VK32,VK33,VK34,VK35,VK36,VK37,VK38,VK39,VKC0,VKDB,VKDD,VKBE,VKBF,VKBA,VKDE,VKDC
   HK_LIST = A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,0,1,2,3,4,5,6,7,8,9,``,[,],.,/,;,',\
 
-Version=AucT Hotkeys Tool v2.9			;current verison for update
+Version=AucT Hotkeys Tool v2.9.1			;current verison for update
 ;************************************************PROFILE MANAGEMENT********************************//////////////
   IniRead, profile, %A_WorkingDir%\settings.ini, Others, profile, General
 	if profile=General
@@ -3300,8 +3300,8 @@ VK(Param)
 		}
 }
 
-EmptyMem(PID="AHT v2.9"){
-    pid:=(pid="AHT v2.9") ? DllCall("GetCurrentProcessId") : pid
+EmptyMem(PID="AHT v2.9.1"){
+    pid:=(pid="AHT v2.9.1") ? DllCall("GetCurrentProcessId") : pid
     h:=DllCall("OpenProcess", "UInt", 0x001F0FFF, "Int", 0, "Int", pid)
     DllCall("SetProcessWorkingSetSize", "UInt", h, "Int", -1, "Int", -1)
     DllCall("CloseHandle", "Int", h)
@@ -3381,6 +3381,8 @@ GetChatAddr(pid)
 					offset := 0xAE8450
 				else if (version = "1.26.0.6401")
 					offset := 0xAD15F0
+				else if (InStr(version, "1.27.1"))
+					offset := 0xD3D3EC
 				;else if (version = "1.27.0.52240")// dont wanna do exac match if new patch will be and offset will be the same
 				else if (InStr(version, "1.27."))
 					offset := 0xBDAA14
