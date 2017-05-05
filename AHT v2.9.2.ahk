@@ -81,7 +81,7 @@ gui,5:font, cwhite
   Menu, tray, add
   Menu, tray, add, Mouse Capture, SetWMC
   Menu, tray, add, Exit
-  ;Menu, Tray, Icon, %A_ScriptDir%\%A_ScriptName%,1,1
+  Menu, Tray, Icon, %A_ScriptDir%\%A_ScriptName%,1,1
 
   CoordMode,Mouse,Screen
   
