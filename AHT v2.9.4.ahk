@@ -41,7 +41,7 @@ GroupAdd, WC3DOTA , Dota 2
   VK_LIST = VK41,VK42,VK43,VK44,VK45,VK46,VK47,VK48,VK49,VK4A,VK4B,VK4C,VK4D,VK4E,VK4F,VK50,VK51,VK52,VK53,VK54,VK55,VK56,VK57,VK58,VK59,VK5A,VK30,VK31,VK32,VK33,VK34,VK35,VK36,VK37,VK38,VK39,VKC0,VKDB,VKDD,VKBE,VKBF,VKBA,VKDE,VKDC
   HK_LIST = A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,0,1,2,3,4,5,6,7,8,9,``,[,],.,/,;,',\
 
-Version=AucT Hotkeys Tool v2.9.3			;current verison for update
+Version=AucT Hotkeys Tool v2.9.4			;current verison for update
 ;************************************************PROFILE MANAGEMENT********************************//////////////
   IniRead, profile, %A_WorkingDir%\settings.ini, Others, profile, General
 	if profile=General
@@ -3300,8 +3300,8 @@ VK(Param)
 		}
 }
 
-EmptyMem(PID="AHT v2.9.3"){
-    pid:=(pid="AHT v2.9.3") ? DllCall("GetCurrentProcessId") : pid
+EmptyMem(PID="AHT v2.9.4"){
+    pid:=(pid="AHT v2.9.4") ? DllCall("GetCurrentProcessId") : pid
     h:=DllCall("OpenProcess", "UInt", 0x001F0FFF, "Int", 0, "Int", pid)
     DllCall("SetProcessWorkingSetSize", "UInt", h, "Int", -1, "Int", -1)
     DllCall("CloseHandle", "Int", h)
@@ -3387,6 +3387,8 @@ GetChatAddr(pid)
 					offset := 0xD4CB54
 				else if (InStr(version, "1.28.4"))
 					offset := 0xD03BEC
+				else if (InStr(version, "1.28.5"))
+					offset := 0xD04FEC
 				;else if (version = "1.27.0.52240")// dont wanna do exac match if new patch will be and offset will be the same
 				else if (InStr(version, "1.27."))
 					offset := 0xBDAA14
