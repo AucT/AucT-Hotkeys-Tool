@@ -1,6 +1,8 @@
 # AucT-Hotkeys-Tool
 All-in-one autohotkey based program that enables you to customize your keys, which is usefull for inventory, messages, customkeys and other needed stuff in WarCraft III and Dota.
 
+For compiling use old autohotkey https://autohotkey.com/board/topic/86134-autohotkey-10-classic-and-basic-versions/
+
 ### Features:
 
 1. Profile orginizing
