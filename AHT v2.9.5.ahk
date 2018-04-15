@@ -4,7 +4,7 @@
 ; Author:         AucT <AucT.eu@gmail.com>
 ; Code helper:    yayuhhz (thanks to him there is awesome chat-suspending system and window mode)
 ; Main Tester:    DenSiL7
-; Web-Site:		  http://aht.auct.eu
+; Web-Site:		  https://aht.auct.eu
 ;********************************************FORCE TO RUN AS ADMIN*************************
 RegRead, UAC, HKEY_LOCAL_MACHINE, SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System, EnableLUA
 if !A_IsAdmin 
@@ -41,7 +41,7 @@ GroupAdd, WC3DOTA , Dota 2
   VK_LIST = VK41,VK42,VK43,VK44,VK45,VK46,VK47,VK48,VK49,VK4A,VK4B,VK4C,VK4D,VK4E,VK4F,VK50,VK51,VK52,VK53,VK54,VK55,VK56,VK57,VK58,VK59,VK5A,VK30,VK31,VK32,VK33,VK34,VK35,VK36,VK37,VK38,VK39,VKC0,VKDB,VKDD,VKBE,VKBF,VKBA,VKDE,VKDC
   HK_LIST = A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,0,1,2,3,4,5,6,7,8,9,``,[,],.,/,;,',\
 
-Version=AucT Hotkeys Tool v2.9.4			;current verison for update
+Version=AucT Hotkeys Tool v2.9.5			;current verison for update
 ;************************************************PROFILE MANAGEMENT********************************//////////////
   IniRead, profile, %A_WorkingDir%\settings.ini, Others, profile, General
 	if profile=General
@@ -146,6 +146,29 @@ gui,5:font, cwhite
 } 
 ;************************************************CUSTOMKEYS**********************************************
 
+	IniRead, NewWarCraft, %A_WorkingDir%\%profileini%, CustomKeys, NewWarCraft, 0
+
+
+	RelativeCoordinatesXS1 := .79
+	RelativeCoordinatesXS2 := .84
+	RelativeCoordinatesXS3 := .9
+	RelativeCoordinatesXS4 := .9595
+
+	RelativeCoordinatesXScoreboard := 189/192
+	RelativeCoordinatesXSharecontrol := .6
+	
+	if %NewWarCraft%
+	{
+		RelativeCoordinatesXScoreboard := 166/192
+		RelativeCoordinatesXS1 := .72
+		RelativeCoordinatesXS2 := .763
+		RelativeCoordinatesXS3 := .804
+		RelativeCoordinatesXS4 := .844
+		RelativeCoordinatesXSharecontrol := .575
+	}
+
+
+	
 	IniRead, EnSkills, %A_WorkingDir%\%profileini%, CustomKeys, EnSkills, 0
 	IniRead, SmartSkills, %A_WorkingDir%\%profileini%, CustomKeys, SmartSkills, 0
 	IniRead, SelfCast, %A_WorkingDir%\%profileini%, CustomKeys, SelfCast, 0
@@ -722,9 +745,10 @@ if darkstyle
 gui, font, cwhite
 else
 gui, font
-Gui, Add, CheckBox,Checked%EnSkills% vEnSkills gEnSkills x36 y55 w200 h30 , Enable Custom Keys
-Gui, Add, CheckBox,Checked%SmartSkills% vSmartSkills gSmartSkills x236 y55 w200 h30 , Smart Learning Skills*
-Gui, Add, CheckBox,Checked%SelfCast% vSelfCast gSelfCast x36 y80 w200 h30 , Selfcast on double-click
+Gui, Add, CheckBox,Checked%EnSkills% vEnSkills gEnSkills x36 y80 w200 h30, Enable Custom Keys
+Gui, Add, CheckBox,Checked%NewWarCraft% vNewWarCraft gNewWarCraft x36 y55 w200 h30, New WarCraft UI (1.29+)
+Gui, Add, CheckBox,Checked%SmartSkills% vSmartSkills gSmartSkills x236 y55 w200 h30, Smart Learning Skills*
+Gui, Add, CheckBox,Checked%SelfCast% vSelfCast gSelfCast x236 y80 w200 h30, Selfcast on double-click
 gui, add, text, x30 y390 w410,*Smart Learning will click the right (upper) skill when learning skill.
 gui, add, text, cBlue gCustomkeystxt x30 y410 w410,AucT CustomKeys.txt Generator
 Gui, Add, Picture, x36 y110 w402 h272 , %A_temp%\Skills.jpg
@@ -1162,18 +1186,18 @@ MsgBox 64, Command List ,%Commandlist%
 return
 
 Help:
-run, http://aht.auct.eu/guide.html
+run, https://aht.auct.eu/guide.html
 return
 
 
 auctblog:
-run, http://auct.eu
+run, https://auct.eu
 return
 dotaresources:
 run, https://yadi.sk/d/arn3UVKVHxdSk
 return
 Customkeystxt:
-run, http://dotacustomkeys.appspot.com/
+run, https://dotacustomkeys.appspot.com/
 return
 
 UpdateCheck:
@@ -1184,7 +1208,7 @@ If (Version <> NetVer)
    ;MsgBox, 4,Check for update, %NetVer% is available! `nWould you like to download new version?
    MsgBox 68, Update is available ,%NetVer% is available! `nWould you like to download new version?,5
 IfMsgBox Yes
-	run, http://aht.auct.eu/download.html
+	run, https://aht.auct.eu/download.html
 }
 else
    MsgBox 64, Info ,Your AHT is up to date!,2
@@ -1196,7 +1220,7 @@ FileReadLine, NetVer, %A_Temp%\latest.html, 1
 If (Version <> NetVer){
    MsgBox, 4,Check for Update, %NetVer% is available! `nWould you like to download new version?
 IfMsgBox Yes
-	run, http://aht.auct.eu/download.html
+	run, https://aht.auct.eu/download.html
 }
 return
 
@@ -1267,7 +1291,7 @@ gui, font, cwhite
 else
 gui, font
 gui, font, s10 underline
-Gui, add, text,x100 y205 gAHTISGREAT, http://aht.auct.eu
+Gui, add, text,x100 y205 gAHTISGREAT, https://aht.auct.eu
 if darkstyle
 gui, font, cwhite
 else
@@ -1291,7 +1315,7 @@ Gui, hide  ; Destroy the about box.
 return
 
 AHTISGREAT:
-run, http://aht.auct.eu
+run, https://aht.auct.eu
 return
 mailauct:
 run, mailto:AucT.eu@gmail.com?Subject=AHT
@@ -1681,6 +1705,7 @@ return
 
 ;=======================================SAVE INI=================================
 EnSkills:
+NewWarCraft:
 SmartSkills:
 SelfCast:
 skill1:
@@ -1821,6 +1846,7 @@ i6S:
 sendplay +{vk62}
 return
 ;===================================================CUSTOM KEYS=======================
+;newxx - new x coordinates if user has new Warcraft 3 UI (warcraft 1.29+)
 LC(xx,yy)
 {	
    global _locked
@@ -1859,6 +1885,9 @@ LC(xx,yy)
 IsLearning()
 {
    global SmartSkills
+   global NewWarCraft
+   global RelativeCoordinatesXS1
+   global RelativeCoordinatesXS4
    if !SmartSkills
 	 return 0
    global _locked
@@ -1868,16 +1897,16 @@ IsLearning()
    global cHeight
    if _locked
    {
-   x:=left+cWidth*0.9595
+   x:=left+cWidth*RelativeCoordinatesXS4
    y:=top+cHeight*0.878
-   x2:=left+cWidth*0.79
+   x2:=left+cWidth*RelativeCoordinatesXS1
    y2:=top+cHeight*0.95
    }
    else
    {
-   x:=A_ScreenWidth*0.9595
+   x:=A_ScreenWidth*RelativeCoordinatesXS4
    y:=A_ScreenHeight*0.878
-   x2:=A_ScreenWidth*0.79
+   x2:=A_ScreenWidth*RelativeCoordinatesXS1
    y2:=A_ScreenHeight*0.95
    }
   
@@ -1889,171 +1918,171 @@ if (color1=0x000000 and color2=0x000000)
 return 0
 }
 LC1L:
-LC(.79,.95)
+LC(RelativeCoordinatesXS1,.95)
 return
 LC1:
 	if SelfCast {
 	if lc1
-	LC(0.02381, 0.0806)
+	LC(0.02381,0.0806)
 	lc1:=!lc1
 	SetTimer, lc1off, -1000
 	}
 	if IsLearning()
-		LC(.79,.81)
+		LC(RelativeCoordinatesXS1,.81)
 	else 
-		LC(.79,.95)
+		LC(RelativeCoordinatesXS1,.95)
 return
 LC1off:
 lc1:=0
 return
 
 LC2L:
-LC(.84,.95)
+LC(RelativeCoordinatesXS2,.95)
 return
 LC2: 
 	if SelfCast {
 	if lc2
-	LC(0.02381, 0.0806)
+	LC(0.02381,0.0806)
 	lc2:=!lc2
 	SetTimer, lc2off, -1000
 	}
 	if IsLearning()
-		LC(.84,.81)
+		LC(RelativeCoordinatesXS2,.81)
 	else
-		LC(.84,.95)
+		LC(RelativeCoordinatesXS2,.95)
 return
 LC2off:
 lc2:=0
 return
 
 LC3L:
-LC(.9,.95)
+LC(RelativeCoordinatesXS3,.95)
 return
 LC3:
 	if SelfCast {
 	if lc3
-	LC(0.02381, 0.0806)
+	LC(0.02381,0.0806)
 	lc3:=!lc3
 	SetTimer, lc3off, -1000
 	}
 	if IsLearning()
-		LC(.9,.81)
+		LC(RelativeCoordinatesXS3,.81)
 	else
-		LC(.9,.95)
+		LC(RelativeCoordinatesXS3,.95)
 return
 LC3off:
 lc3:=0
 return
 
 LC4L:
-LC(.95,.95)
+LC(RelativeCoordinatesXS4,.95)
 return
 LC4:
 	if SelfCast {
 	if lc4
-	LC(0.02381, 0.0806)
+	LC(0.02381,0.0806)
 	lc4:=!lc4
 	SetTimer, lc4off, -1000
 	}
 	if IsLearning()
-		LC(.95,.81)
+		LC(RelativeCoordinatesXS4,.81)
 	else
-		LC(.95,.95)
+		LC(RelativeCoordinatesXS4,.95)
 return
 LC4off:
 lc4:=0
 return
 
 LC5L:
-LC(.79,.88)
+LC(RelativeCoordinatesXS1,.88)
 return
 LC5:
 	if SelfCast {
 	if lc5
-	LC(0.02381, 0.0806)
+	LC(0.02381,0.0806)
 	lc5:=!lc5
 	SetTimer, lc5off, -1000
 	}
-   LC(.79,.88)
+   LC(RelativeCoordinatesXS1,.88)
 return
 LC5off:
 lc5:=0
 return
 LC6L:
-LC(.84,.88)
+LC(RelativeCoordinatesXS2,.88)
 return
 LC6:
 	if SelfCast {
 	if lc6
-	LC(0.02381, 0.0806)
+	LC(.02381,.0806)
 	lc6:=!lc6
 	SetTimer, lc6off, -1000
 	}
-   LC(.84,.88)
+   LC(RelativeCoordinatesXS2,.88)
 return
 LC6off:
 lc6:=0
 return
 
 LC7L:
-LC(.9,.88)
+LC(RelativeCoordinatesXS3,.88)
 return
 LC7:
 	if SelfCast {
 	if lc7
-	LC(0.02381, 0.0806)
+	LC(.02381,.0806)
 	lc7:=!lc7
 	SetTimer, lc7off, -1000
 	}
-   LC(.9,.88)
+   LC(RelativeCoordinatesXS3,.88)
 return
 LC7off:
 lc7:=0
 return
 
 LC8L:
-LC(.95,.88)
+LC(RelativeCoordinatesXS4,.88)
 return
 LC8:
 	if SelfCast {
 	if lc8
-	LC(0.02381, 0.0806)
+	LC(.02381,.0806)
 	lc8:=!lc8
 	SetTimer, lc8off, -1000
 	}
-   LC(.95,.88)
+   LC(RelativeCoordinatesXS4,.88)
 return
 LC8off:
 lc8:=0
 return
 LC9:
-   LC(.79,.81)
+   LC(RelativeCoordinatesXS1,.81)
 return
 
 LC10:
-   LC(.84,.81)
+   LC(RelativeCoordinatesXS2,.81)
 return
 
 LC11:
-   LC(.9,.81)
+   LC(RelativeCoordinatesXS3,.81)
 return
 
 LC12:
-   LC(.95,.81)
+   LC(RelativeCoordinatesXS4,.81)
 return
 ;==================================================AUTO CAST===================================
 AC1:
    if _locked
    {
-   x1:=left+cWidth*0.79
-   x2:=left+cWidth*0.84
+   x1:=left+cWidth*RelativeCoordinatesXS1
+   x2:=left+cWidth*RelativeCoordinatesXS2
    y:=top+cHeight*0.95
    y2:=top+cHeight*0.88
    }
    else
    {
-   x1:=A_ScreenWidth*0.79
-   x2:=A_ScreenWidth*0.84
+   x1:=A_ScreenWidth*RelativeCoordinatesXS1
+   x2:=A_ScreenWidth*RelativeCoordinatesXS2
    y:=A_ScreenHeight*0.95
    y2:=A_ScreenHeight*0.88
    }
@@ -2114,15 +2143,15 @@ return
 AC1UAC:
    if _locked
    {
-   x1:=left+cWidth*0.79
-   x2:=left+cWidth*0.84
+   x1:=left+cWidth*RelativeCoordinatesXS1
+   x2:=left+cWidth*RelativeCoordinatesXS2
    y:=top+cHeight*0.95
    y2:=top+cHeight*0.88
    }
    else
    {
-   x1:=A_ScreenWidth*0.79
-   x2:=A_ScreenWidth*0.84
+   x1:=A_ScreenWidth*RelativeCoordinatesXS1
+   x2:=A_ScreenWidth*RelativeCoordinatesXS2
    y:=A_ScreenHeight*0.95
    y2:=A_ScreenHeight*0.88
    }
@@ -2138,18 +2167,18 @@ return
 
 ACaUAC:
    if _locked {
-   x1:=left+cWidth*0.79
-   x2:=left+cWidth*0.84
-   x3:=left+cWidth*0.9
-   x4:=left+cWidth*0.95
+   x1:=left+cWidth*RelativeCoordinatesXS1
+   x2:=left+cWidth*RelativeCoordinatesXS2
+   x3:=left+cWidth*RelativeCoordinatesXS3
+   x4:=left+cWidth*RelativeCoordinatesXS4
    y:=top+cHeight*0.95
    y2:=top+cHeight*0.88
    }
    else {
-   x1:=A_ScreenWidth*0.79
-   x2:=A_ScreenWidth*0.84
-   x3:=A_ScreenWidth*0.9
-   x4:=A_ScreenWidth*0.95
+   x1:=A_ScreenWidth*RelativeCoordinatesXS1
+   x2:=A_ScreenWidth*RelativeCoordinatesXS2
+   x3:=A_ScreenWidth*RelativeCoordinatesXS3
+   x4:=A_ScreenWidth*RelativeCoordinatesXS4
    y:=A_ScreenHeight*0.95
    y2:=A_ScreenHeight*0.88
    }
@@ -2167,18 +2196,18 @@ return
 
 ACa:
    if _locked {
-   x1:=left+cWidth*0.79
-   x2:=left+cWidth*0.84
-   x3:=left+cWidth*0.9
-   x4:=left+cWidth*0.95
+   x1:=left+cWidth*RelativeCoordinatesXS1
+   x2:=left+cWidth*RelativeCoordinatesXS2
+   x3:=left+cWidth*RelativeCoordinatesXS3
+   x4:=left+cWidth*RelativeCoordinatesXS4
    y:=top+cHeight*0.95
    y2:=top+cHeight*0.88
    }
    else {
-   x1:=A_ScreenWidth*0.79
-   x2:=A_ScreenWidth*0.84
-   x3:=A_ScreenWidth*0.9
-   x4:=A_ScreenWidth*0.95
+   x1:=A_ScreenWidth*RelativeCoordinatesXS1
+   x2:=A_ScreenWidth*RelativeCoordinatesXS2
+   x3:=A_ScreenWidth*RelativeCoordinatesXS3
+   x4:=A_ScreenWidth*RelativeCoordinatesXS4
    y:=A_ScreenHeight*0.95
    y2:=A_ScreenHeight*0.88
    }
@@ -2191,15 +2220,15 @@ return
 AC2:
    if _locked
    {
-   x3:=left+cWidth*0.9
-   x4:=left+cWidth*0.95
+   x3:=left+cWidth*RelativeCoordinatesXS3
+   x4:=left+cWidth*RelativeCoordinatesXS4
    y:=top+cHeight*0.95
    y2:=top+cHeight*0.88
    }
    else
    {
-   x3:=A_ScreenWidth*0.9
-   x4:=A_ScreenWidth*0.95
+   x3:=A_ScreenWidth*RelativeCoordinatesXS3
+   x4:=A_ScreenWidth*RelativeCoordinatesXS4
    y:=A_ScreenHeight*0.95
    y2:=A_ScreenHeight*0.88
    }
@@ -2212,15 +2241,15 @@ return
 AC2UAC:
    if _locked
    {
-   x3:=left+cWidth*0.9
-   x4:=left+cWidth*0.95
+   x3:=left+cWidth*RelativeCoordinatesXS3
+   x4:=left+cWidth*RelativeCoordinatesXS4
    y:=top+cHeight*0.95
    y2:=top+cHeight*0.88
    }
    else
    {
-   x3:=A_ScreenWidth*0.9
-   x4:=A_ScreenWidth*0.95
+   x3:=A_ScreenWidth*RelativeCoordinatesXS3
+   x4:=A_ScreenWidth*RelativeCoordinatesXS4
    y:=A_ScreenHeight*0.95
    y2:=A_ScreenHeight*0.88
    }
@@ -2902,11 +2931,11 @@ return
 
 SBUAC:
    if _locked {
-   x:=left+cWidth*189/192
+   x:=left+cWidth*RelativeCoordinatesXScoreboard
    y:=top+cHeight*7/120
    }
    else {
-   x:=A_ScreenWidth*189/192
+   x:=A_ScreenWidth*RelativeCoordinatesXScoreboard
    y:=A_ScreenHeight*7/120
    }
    BlockInput,MouseMove
@@ -2919,11 +2948,11 @@ SBUAC:
 return
 SB:
    if _locked {
-   x:=left+cWidth*1651/1680
+   x:=left+cWidth*RelativeCoordinatesXScoreboard
    y:=top+cHeight*0.06
    }
    else {
-   x:=A_ScreenWidth*1651/1680
+   x:=A_ScreenWidth*RelativeCoordinatesXScoreboard
    y:=A_ScreenHeight*0.06
    }
    BlockInput,MouseMove
@@ -2939,7 +2968,7 @@ BlockInput, On
 MouseGetPos, x0, y0
 if _locked
 {
-xShare:=left+cWidth*0.6
+xShare:=left+cWidth*RelativeCoordinatesXSharecontrol
 y1Share:=top+cHeight*0.2
 y2Share:=top+cHeight*0.25
 y3Share:=top+cHeight*0.3
@@ -2952,7 +2981,7 @@ y9Share:=top+cHeight*0.574
 }
 else
 {
-xShare:=A_ScreenWidth*0.6
+xShare:=A_ScreenWidth*RelativeCoordinatesXSharecontrol
 y1Share:=A_ScreenHeight*0.2
 y2Share:=A_ScreenHeight*0.25
 y3Share:=A_ScreenHeight*0.3
@@ -3300,8 +3329,8 @@ VK(Param)
 		}
 }
 
-EmptyMem(PID="AHT v2.9.4"){
-    pid:=(pid="AHT v2.9.4") ? DllCall("GetCurrentProcessId") : pid
+EmptyMem(PID="AHT v2.9.5"){
+    pid:=(pid="AHT v2.9.5") ? DllCall("GetCurrentProcessId") : pid
     h:=DllCall("OpenProcess", "UInt", 0x001F0FFF, "Int", 0, "Int", pid)
     DllCall("SetProcessWorkingSetSize", "UInt", h, "Int", -1, "Int", -1)
     DllCall("CloseHandle", "Int", h)
@@ -3368,7 +3397,10 @@ GetChatAddr(pid)
 		{
 			DllCall("RtlMoveMemory", "Str", szModule, "UInt", &me32 + 32, "UInt", 256)
 			Log("Found module: " . szModule)
-			if (szModule = "Game.dll")
+
+			;MsgBox, 32, %szModule%
+			;if (szModule = "Game.dll") in new 1.29 patch this will not run. Need to do some manipulations
+			if ((szModule = "Game.dll" and !NewWarCraft) or (szModule = "Warcraft III.exe" and NewWarCraft))
 			{
 				DllCall("CloseHandle", "UInt", hSnapshot)
 				
@@ -3389,6 +3421,8 @@ GetChatAddr(pid)
 					offset := 0xD03BEC
 				else if (InStr(version, "1.28.5"))
 					offset := 0xD04FEC
+				else if (InStr(version, "1.29."))
+					offset := 0xD3EED0
 				;else if (version = "1.27.0.52240")// dont wanna do exac match if new patch will be and offset will be the same
 				else if (InStr(version, "1.27."))
 					offset := 0xBDAA14
