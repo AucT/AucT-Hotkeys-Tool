@@ -154,17 +154,27 @@ gui,5:font, cwhite
 	RelativeCoordinatesXS3 := .9
 	RelativeCoordinatesXS4 := .9595
 
-	RelativeCoordinatesXScoreboard := 189/192
+	RelativeCoordinatesXScoreboard := .984
 	RelativeCoordinatesXSharecontrol := .6
 	
+
+	IniRead, NewRelativeCoordinatesXS1, %A_WorkingDir%\%profileini%, CustomKeys, NewRelativeCoordinatesXS1, 0.72
+	IniRead, NewRelativeCoordinatesXS2, %A_WorkingDir%\%profileini%, CustomKeys, NewRelativeCoordinatesXS2, 0.763
+	IniRead, NewRelativeCoordinatesXS3, %A_WorkingDir%\%profileini%, CustomKeys, NewRelativeCoordinatesXS3, 0.804
+	IniRead, NewRelativeCoordinatesXS4, %A_WorkingDir%\%profileini%, CustomKeys, NewRelativeCoordinatesXS4, 0.844
+	IniRead, NewRelativeCoordinatesXSharecontrol, %A_WorkingDir%\%profileini%, CustomKeys, NewRelativeCoordinatesXSharecontrol, 0.575
+	IniRead, NewRelativeCoordinatesXScoreboard, %A_WorkingDir%\%profileini%, CustomKeys, NewRelativeCoordinatesXScoreboard, 0.864
+
+
+
 	if %NewWarCraft%
 	{
-		RelativeCoordinatesXScoreboard := 166/192
-		RelativeCoordinatesXS1 := .72
-		RelativeCoordinatesXS2 := .763
-		RelativeCoordinatesXS3 := .804
-		RelativeCoordinatesXS4 := .844
-		RelativeCoordinatesXSharecontrol := .575
+		RelativeCoordinatesXS1 := NewRelativeCoordinatesXS1
+		RelativeCoordinatesXS2 := NewRelativeCoordinatesXS2
+		RelativeCoordinatesXS3 := NewRelativeCoordinatesXS3
+		RelativeCoordinatesXS4 := NewRelativeCoordinatesXS4
+		RelativeCoordinatesXScoreboard := NewRelativeCoordinatesXScoreboard
+		RelativeCoordinatesXSharecontrol := NewRelativeCoordinatesXSharecontrol
 	}
 
 
@@ -745,25 +755,26 @@ if darkstyle
 gui, font, cwhite
 else
 gui, font
-Gui, Add, CheckBox,Checked%EnSkills% vEnSkills gEnSkills x36 y80 w200 h30, Enable Custom Keys
-Gui, Add, CheckBox,Checked%NewWarCraft% vNewWarCraft gNewWarCraft x36 y55 w200 h30, New WarCraft UI (1.29+)
-Gui, Add, CheckBox,Checked%SmartSkills% vSmartSkills gSmartSkills x236 y55 w200 h30, Smart Learning Skills*
-Gui, Add, CheckBox,Checked%SelfCast% vSelfCast gSelfCast x236 y80 w200 h30, Selfcast on double-click
-gui, add, text, x30 y390 w410,*Smart Learning will click the right (upper) skill when learning skill.
-gui, add, text, cBlue gCustomkeystxt x30 y410 w410,AucT CustomKeys.txt Generator
-Gui, Add, Picture, x36 y110 w402 h272 , %A_temp%\Skills.jpg
-Gui, Add, Hotkey, vskill9 gskill9 x94 y142 w30 h30 , %skill9%
-Gui, Add, Hotkey, vskill10 gskill10 x194 y142 w30 h30 , %skill10%
-Gui, Add, Hotkey, vskill11 gskill11 x294 y142 w30 h30 , %skill11%
-Gui, Add, Hotkey, vskill12 gskill12 x394 y142 w30 h30 , %skill12%
-Gui, Add, Hotkey, vskill8 gskill8 x394 y232 w30 h30 , %skill8%
-Gui, Add, Hotkey, vskill7 gskill7 x294 y232 w30 h30 , %skill7%
-Gui, Add, Hotkey, vskill6 gskill6 x194 y232 w30 h30 , %skill6%
-Gui, Add, Hotkey, vskill5 gskill5 x94 y232 w30 h30 , %skill5%
-Gui, Add, Hotkey, vskill1 gskill1 x94 y322 w30 h30 , %skill1%
-Gui, Add, Hotkey, vskill2 gskill2 x194 y322 w30 h30 , %skill2%
-Gui, Add, Hotkey, vskill3 gskill3 x294 y322 w30 h30 , %skill3%
-Gui, Add, Hotkey, vskill4 gskill4 x394 y322 w30 h30 , %skill4%
+Gui, Add, CheckBox,Checked%EnSkills% vEnSkills gEnSkills x36 y70 w200 h30, Enable Custom Keys
+Gui, Add, CheckBox,Checked%NewWarCraft% vNewWarCraft gNewWarCraft x36 y45 w200 h30, New WarCraft UI (1.29+)*
+Gui, Add, CheckBox,Checked%SmartSkills% vSmartSkills gSmartSkills x236 y45 w200 h30, Smart Learning Skills**
+Gui, Add, CheckBox,Checked%SelfCast% vSelfCast gSelfCast x236 y70 w200 h30, Selfcast on double-click
+gui, add, text, cBlue gHelp129 x30 y375 w410,*WarCraft 1.29 skill hotkeys are missing skill position?
+gui, add, text, x30 y390 w410,**Smart Learning will click the right (upper) skill when learning skill.
+gui, add, text, cBlue gCustomkeystxt x30 y405 w410,AucT CustomKeys.txt Generator
+Gui, Add, Picture, x36 y100 w402 h272 , %A_temp%\Skills.jpg
+Gui, Add, Hotkey, vskill9 gskill9 x94 y132 w30 h30 , %skill9%
+Gui, Add, Hotkey, vskill10 gskill10 x194 y132 w30 h30 , %skill10%
+Gui, Add, Hotkey, vskill11 gskill11 x294 y132 w30 h30 , %skill11%
+Gui, Add, Hotkey, vskill12 gskill12 x394 y132 w30 h30 , %skill12%
+Gui, Add, Hotkey, vskill8 gskill8 x394 y222 w30 h30 , %skill8%
+Gui, Add, Hotkey, vskill7 gskill7 x294 y222 w30 h30 , %skill7%
+Gui, Add, Hotkey, vskill6 gskill6 x194 y222 w30 h30 , %skill6%
+Gui, Add, Hotkey, vskill5 gskill5 x94 y222 w30 h30 , %skill5%
+Gui, Add, Hotkey, vskill1 gskill1 x94 y312 w30 h30 , %skill1%
+Gui, Add, Hotkey, vskill2 gskill2 x194 y312 w30 h30 , %skill2%
+Gui, Add, Hotkey, vskill3 gskill3 x294 y312 w30 h30 , %skill3%
+Gui, Add, Hotkey, vskill4 gskill4 x394 y312 w30 h30 , %skill4%
 
 Gui, Tab, Autocast
 Gui, Add, Picture, x36 y92 w402 h272 , %A_temp%\AutoCast.jpg
@@ -1188,6 +1199,11 @@ return
 Help:
 run, https://aht.auct.eu/guide.html
 return
+
+Help129:
+run, https://aht.auct.eu/guide.html#warcraft129-custom
+return
+
 
 
 auctblog:
