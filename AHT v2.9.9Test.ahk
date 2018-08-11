@@ -1,8 +1,8 @@
 ; AutoHotkey Version: 1.x
 ; Language:       English
-; Platform:       Win9x/NT/XP/Vista/7
+; Platform:       Win9x/NT/XP/Vista/7/10
 ; Author:         AucT <AucT.eu@gmail.com>
-; Code helper:    yayuhhz (thanks to him there is awesome chat-suspending system and window mode)
+; Code helper:    yayuhhz (thanks to him there is window mode)
 ; Main Tester:    DenSiL7
 ; Web-Site:		  https://aht.auct.eu
 ;********************************************FORCE TO RUN AS ADMIN*************************
@@ -41,7 +41,7 @@ GroupAdd, WC3DOTA , Dota 2
   VK_LIST = VK41,VK42,VK43,VK44,VK45,VK46,VK47,VK48,VK49,VK4A,VK4B,VK4C,VK4D,VK4E,VK4F,VK50,VK51,VK52,VK53,VK54,VK55,VK56,VK57,VK58,VK59,VK5A,VK30,VK31,VK32,VK33,VK34,VK35,VK36,VK37,VK38,VK39,VKC0,VKDB,VKDD,VKBE,VKBF,VKBA,VKDE,VKDC
   HK_LIST = A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,0,1,2,3,4,5,6,7,8,9,``,[,],.,/,;,',\
 
-Version=AucT Hotkeys Tool v2.9.8			;current verison for update
+Version=AucT Hotkeys Tool v2.9.9Test			;current verison for update
 ;************************************************PROFILE MANAGEMENT********************************//////////////
   IniRead, profile, %A_WorkingDir%\settings.ini, Others, profile, General
 	if profile=General
@@ -288,13 +288,17 @@ gui,5:font, cwhite
   }
   }
   ;***************************
-  	;Chat Suspending
+ 	;Chat Suspending
 	IniRead, chat, %A_WorkingDir%\%profileini%, Others, chat, 1
-	;IniRead, AutoDetect, %A_WorkingDir%\%profileini%, Others, AutoDetect, 1
+	IniRead, AutoDetect, %A_WorkingDir%\%profileini%, Others, AutoDetect, 1
 	if chat
 	{
-	SetTimer, CheckWarcraft, 1000
-	
+	Hotkey,*Enter, SendEnt
+	Hotkey,*NumpadEnter, SendEnt
+	Hotkey, ~*Esc, KEYSON
+	Hotkey, ~LButton, KEYSON
+	if AutoDetect
+	SetTimer, checklobby, 400
 	}
 ;************************************************MESSAGES***********************************************
   loop, 36 {
@@ -666,7 +670,8 @@ Menu, Options, Add
 Menu, Options, Add, Mouse Capture, SetWMC
 
 Menu, Chat-Suspend, Add, Chat-free in game, Setchat
-;Menu, Chat-Suspend, Add, Chat-free in lobby, Setautodetect
+Menu, Chat-Suspend, Add, Chat-free in lobby, Setautodetect
+Menu, Chat-Suspend, Add, Chat-free Info, ChatFreeInfo
 
 Menu, Submenu1, Add, default, styledefault
 Menu, Submenu1, Add
@@ -683,6 +688,8 @@ Menu, Options, Add, Color Style, :Submenu1
 
 if chat
 menu, Chat-Suspend, check, Chat-free in game
+if AutoDetect
+menu, Chat-Suspend, check, Chat-free in lobby
 if ScrollIndicator
 menu, Options, check, Scroll Indicator
 if sound
@@ -1196,6 +1203,23 @@ Default Hotstrings:
 MsgBox 64, Command List ,%Commandlist%
 return
 
+
+
+ChatFreeInfo:
+info =
+(
+This chat-free detecting system is my old from v2.1b.
+It will check pixel color in the top wc3 bar and so it will not work for window mode or dota2 game.
+
+In the lobby chat-free is rarely working. Recommended to manually off/on script.
+You can use in options menu indicator to know if it is working as expected.
+
+The benefit of this - it will work in any patch but is not as stable as reading wc3 memory. Have fun!
+)
+
+MsgBox 64, Command List ,%info%
+return
+
 Help:
 run, https://aht.auct.eu/guide.html
 return
@@ -1460,8 +1484,8 @@ menu, Chat-Suspend, togglecheck, Chat-free in game
 return
 
 SetAutodetect:
-autodetect:=!autodetect
-IniWrite, %autodetect%, %A_WorkingDir%\%profileini%, Others, autodetect
+AutoDetect:=!AutoDetect
+IniWrite, %AutoDetect%, %A_WorkingDir%\%profileini%, Others, AutoDetect
 menu, Chat-Suspend, togglecheck, Chat-free in lobby
 return
 
@@ -1488,9 +1512,6 @@ SetTimer,CheckActiveWar3
 else
 {
 SetTimer,CheckActiveWar3,off
-SetTimer,CheckInactiveWar3,Off
-DllCall("ClipCursor", UInt, 0)
-_locked:=0
 }
 return
 styledefault:
@@ -1778,7 +1799,7 @@ IniWrite, % %A_ThisLabel%, %A_WorkingDir%\%profileini%, Invoker, %A_ThisLabel%
 return
 
 chat:
-autodetect:
+AutoDetect:
 ScrollIndicator:
 sound:
 Shield:
@@ -3084,6 +3105,9 @@ if !A_IsSuspended
 {
 if ScrollIndicator
    SetScrollLockState, Off
+if AutoDetect
+   SetTimer, checklobby, off
+Suspend, on
 }
 return
 
@@ -3122,25 +3146,65 @@ send {enter}The current time is %TimeString%.{enter}
 return
 
 Switch:
-suspend
-ManualSuspend:=!ManualSuspend
-if !A_IsSuspended
-{
-   SetTimer, CheckWarcraft, on
+Suspend
+if !A_IsSuspended{
+   Hotkey,*Enter, SendEnt,on
+   Hotkey,*NumpadEnter, SendEnt,on
+   Hotkey, ~*Esc, KEYSON,on
+   Hotkey, ~LButton, KEYSON,on
    if ScrollIndicator
    SetScrollLockState, On
+   if AutoDetect
+   SetTimer, checklobby, on
    if Sound
    soundplay, *48
 }
-Else
-{
-   SetTimer, CheckWarcraft, off
+Else{
+   Hotkey,*Enter, SendEnt,off
+   Hotkey,*NumpadEnter, SendEnt,off
+   Hotkey, ~*Esc, KEYSON,off
+   Hotkey, ~LButton, KEYSON,off
    if ScrollIndicator
    SetScrollLockState, Off
+   if AutoDetect
+   SetTimer, checklobby, off
    if Sound
    soundplay, *64
 }
 return
+
+KEYSON:
+Suspend, Permit
+Suspend, Off
+if ScrollIndicator
+SetScrollLockState, On
+if AutoDetect
+SetTimer, checklobby, on
+return
+
+SendEnt:
+	Suspend, Permit
+	Send, {Blind}{Enter}
+	Suspend
+	if !A_IsSuspended
+		{
+		if ScrollIndicator
+		SetScrollLockState, On
+		if Sound
+		soundplay, *48
+		if AutoDetect
+		SetTimer, checklobby, on
+		}
+	Else {
+		if ScrollIndicator
+		SetScrollLockState, Off
+		if Sound
+		soundplay, *64
+		if AutoDetect
+		SetTimer, checklobby, off
+		}
+	return
+
 
 
 PauseGame:
@@ -3345,155 +3409,50 @@ VK(Param)
 		}
 }
 
-EmptyMem(PID="AHT v2.9.8"){
-    pid:=(pid="AHT v2.9.8") ? DllCall("GetCurrentProcessId") : pid
+EmptyMem(PID="AHT v2.9.9Test"){
+    pid:=(pid="AHT v2.9.9Test") ? DllCall("GetCurrentProcessId") : pid
     h:=DllCall("OpenProcess", "UInt", 0x001F0FFF, "Int", 0, "Int", pid)
     DllCall("SetProcessWorkingSetSize", "UInt", h, "Int", -1, "Int", -1)
     DllCall("CloseHandle", "Int", h)
 }
 
 
-
-
-CheckWarcraft:
-	Log("Checking Warcraft III")
-	IfWinNotExist, ahk_class Warcraft III
-		Return
-	SetTimer, CheckWarcraft, Off
-	Log("Warcraft III found. Waiting 5 seconds...")
-	Sleep, 5000
-	IfWinExist, ahk_class Warcraft III
-	{
-		WinGet, pid, PID
-		Log("Warcraft III still found")
-		if hWar3Proc > 0
-			DllCall("CloseHandle", "UInt", hWar3Proc)
-		hWar3Proc := DllCall("OpenProcess", "UInt", 0x0010 | 0x0400, "Int", 0, "UInt", pid)
-		if (hWar3Proc = 0 || ErrorLevel)
-		{
-			Log("Failed to open war3 process with code: " . A_LastError)
-			SetTimer, CheckWarcraft, On
-			Return
-		}
-		chatAddr := GetChatAddr(pid)
-		if (chatAddr < 0)
-		{
-			Log("Failed to get chat address")
-			if (chatAddr = -1)
-				SetTimer, CheckWarcraft, On
-			Return
-		}
-		Log("Got chat address: " . chatAddr)
-		SetTimer, CheckChatting, 100
-	}
-	else
-	{
-		Log("Warcraft III no longer found")
-		SetTimer, CheckWarcraft, On
-	}
-	Return
-
-GetChatAddr(pid)
+checklobby:
+IfWinActive, Warcraft III
 {
-	global NewWarCraft
-	hSnapshot := DllCall("CreateToolhelp32Snapshot", "UInt", 0x08, "UInt", pid)
-	if (hSnapshot < 0 || ErrorLevel)
-	{
-		Log("Failed to take module snapshot with code: " . A_LastError)
-		Return -2
-	}
-	
-	VarSetCapacity(me32, 548)
-	NumPut(548, me32)
-	
-	if DllCall("Module32First", "UInt", hSnapshot, "UInt", &me32)
-	{
-		VarSetCapacity(szModule, 256)
-		
-		Loop
-		{
-			DllCall("RtlMoveMemory", "Str", szModule, "UInt", &me32 + 32, "UInt", 256)
-			Log("Found module: " . szModule)
-
-			;MsgBox, 32, %szModule%
-			;if (szModule = "Game.dll") in new 1.29 patch this will not run. Need to do some manipulations
-			if ((szModule = "Warcraft III.exe" and NewWarCraft) or (szModule = "Game.dll" and !NewWarCraft))
-			{
-				DllCall("CloseHandle", "UInt", hSnapshot)
-				
-				VarSetCapacity(szExePath, 260)
-				DllCall("RtlMoveMemory", "Str", szExePath, "UInt", &me32 + 288, "UInt", 260)
-				Log("Path of game.dll: " . szExePath)
-				
-				FileGetVersion,version,%szExePath%
-				if (InStr(version, "1.24."))
-					offset := 0xAE8450
-				else if (version = "1.26.0.6401")
-					offset := 0xAD15F0
-				else if (InStr(version, "1.27.1"))
-					offset := 0xD3D3EC
-				else if (InStr(version, "1.28.1"))
-					offset := 0xD4CB54
-				else if (InStr(version, "1.28.4"))
-					offset := 0xD03BEC
-				else if (InStr(version, "1.28.5"))
-					offset := 0xD04FEC
-				else if (InStr(version, "1.29.2"))
-					offset := 0xD41ED0
-				else if (InStr(version, "1.29."))
-					offset := 0xD3EED0
-				;else if (version = "1.27.0.52240")// dont wanna do exac match if new patch will be and offset will be the same
-				else if (InStr(version, "1.27."))
-					offset := 0xBDAA14
-				else
-				{
-					Log("Warcraft III version: " . version . " is not supported")
-					Return -2
-				}
-				Return NumGet(me32, 20, "UInt") + offset
-			}
-			
-			if !DllCall("Module32Next", "UInt", hSnapshot, "UInt", &me32)
-				Break
-		}
-	}
-	
-	DllCall("CloseHandle", "UInt", hSnapshot)
-	Log("game.dll was not found")
-	Return -1
-}
-
-CheckChatting:
-	if ManualSuspend
-		return
-	if ReadChatState(hWar3Proc, chatAddr, chatState)
-	{
-		if chatState
-			Suspend, On
-		else
-			Suspend, Off
-	}
-	else
-	{
-		SetTimer, CheckChatting, Off
-		DllCall("CloseHandle", "UInt", hWar3Proc)
-		hWar3Proc := 0
-		SetTimer, CheckWarcraft, On
-		Suspend, Off
-	}
-	Return
-
-ReadChatState(handle, chatAddr, ByRef chatState)
+x:=A_ScreenWidth*0.738
+y:=A_ScreenHeight*0.019
+PixelGetColor, color1, %x%, %y%
+if color1=0x000000
 {
-	if (DllCall("ReadProcessMemory", "UInt", handle, "UInt", chatAddr, "UInt*", chatState, "UInt", 4, "UInt", 0) = 0 || ErrorLevel)
-	{
-		Log("Can not read memory location: " . chatAddr . ". Last chat state: " . chatState)
-		Return 0
-	}
-	Return 1
+   if A_IsSuspended {
+   Hotkey,*Enter, SendEnt,on
+   Hotkey,*NumpadEnter, SendEnt,on
+   Hotkey, ~*Esc, KEYSON,on
+   Hotkey, ~LButton, KEYSON,on
+   if ScrollIndicator
+   SetScrollLockState, On
+   if Sound
+   soundplay, *48
+   Suspend, Off
+   }
 }
+else{
+   if !A_IsSuspended{
+   Hotkey,*Enter, SendEnt,off
+   Hotkey,*NumpadEnter, SendEnt,off
+   Hotkey, ~*Esc, KEYSON,off
+   Hotkey, ~LButton, KEYSON,off
+   if ScrollIndicator
+   SetScrollLockState, Off
+   if Sound
+   soundplay, *64
+   Suspend, On
+   }
+   }
+  }
 
-DebugPrivilegesEnable()
+  DebugPrivilegesEnable()
 {
 	Log("In DebugPrivilegesEnable")
 	Process, Exist  ; sets ErrorLevel to the PID of this running script
