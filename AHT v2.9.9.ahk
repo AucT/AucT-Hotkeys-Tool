@@ -41,7 +41,7 @@ GroupAdd, WC3DOTA , Dota 2
   VK_LIST = VK41,VK42,VK43,VK44,VK45,VK46,VK47,VK48,VK49,VK4A,VK4B,VK4C,VK4D,VK4E,VK4F,VK50,VK51,VK52,VK53,VK54,VK55,VK56,VK57,VK58,VK59,VK5A,VK30,VK31,VK32,VK33,VK34,VK35,VK36,VK37,VK38,VK39,VKC0,VKDB,VKDD,VKBE,VKBF,VKBA,VKDE,VKDC
   HK_LIST = A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,0,1,2,3,4,5,6,7,8,9,``,[,],.,/,;,',\
 
-Version=AucT Hotkeys Tool v2.9.9Test			;current verison for update
+Version=AucT Hotkeys Tool v2.9.9			;current verison for update
 ;************************************************PROFILE MANAGEMENT********************************//////////////
   IniRead, profile, %A_WorkingDir%\settings.ini, Others, profile, General
 	if profile=General
@@ -156,7 +156,8 @@ gui,5:font, cwhite
 
 	RelativeCoordinatesXScoreboard := .984
 	RelativeCoordinatesXSharecontrol := .6
-	
+	RelativeCoordinatesCheckChatX := 0.738
+	RelativeCoordinatesCheckChatY := 0.019
 
 	IniRead, NewRelativeCoordinatesXS1, %A_WorkingDir%\%profileini%, CustomKeys, NewRelativeCoordinatesXS1, 0.72
 	IniRead, NewRelativeCoordinatesXS2, %A_WorkingDir%\%profileini%, CustomKeys, NewRelativeCoordinatesXS2, 0.763
@@ -164,9 +165,12 @@ gui,5:font, cwhite
 	IniRead, NewRelativeCoordinatesXS4, %A_WorkingDir%\%profileini%, CustomKeys, NewRelativeCoordinatesXS4, 0.844
 	IniRead, NewRelativeCoordinatesXSharecontrol, %A_WorkingDir%\%profileini%, CustomKeys, NewRelativeCoordinatesXSharecontrol, 0.575
 	IniRead, NewRelativeCoordinatesXScoreboard, %A_WorkingDir%\%profileini%, CustomKeys, NewRelativeCoordinatesXScoreboard, 0.864
+	IniRead, NewRelativeCoordinatesCheckChatX, %A_WorkingDir%\%profileini%, CustomKeys, NewRelativeCoordinatesCheckChatX, 0.665
+	IniRead, NewRelativeCoordinatesCheckChatY, %A_WorkingDir%\%profileini%, CustomKeys, NewRelativeCoordinatesCheckChatY, 0.019
+	IniRead, DelayAfterClickSkill, %A_WorkingDir%\%profileini%, CustomKeys, DelayAfterClickSkill, 50
 
-
-
+	IniWrite, %DelayAfterClickSkill%, %A_WorkingDir%\settings.ini, CustomKeys, DelayAfterClickSkill
+	
 	if %NewWarCraft%
 	{
 		RelativeCoordinatesXS1 := NewRelativeCoordinatesXS1
@@ -175,6 +179,8 @@ gui,5:font, cwhite
 		RelativeCoordinatesXS4 := NewRelativeCoordinatesXS4
 		RelativeCoordinatesXScoreboard := NewRelativeCoordinatesXScoreboard
 		RelativeCoordinatesXSharecontrol := NewRelativeCoordinatesXSharecontrol
+		RelativeCoordinatesCheckChatX := NewRelativeCoordinatesCheckChatX
+		RelativeCoordinatesCheckChatY := NewRelativeCoordinatesCheckChatY
 	}
 
 
@@ -1892,6 +1898,7 @@ LC(xx,yy)
    global cWidth
    global cHeight
    global UAC
+   global DelayAfterClickSkill
    if _locked
    {
    x:=left+cWidth*xx
@@ -1903,7 +1910,7 @@ LC(xx,yy)
    y:=A_ScreenHeight*yy
    }
    
-   BlockInput,MouseMove
+   ;BlockInput,MouseMove
    MouseGetPos, x0, y0
    if UAC
    {
@@ -1913,10 +1920,11 @@ LC(xx,yy)
    }
    else 
    {
-   SendPlay, {Click %x%,  %y%, Left}{Click %x0%, %y0%, 0}
+   SendPlay, {Click %x%,  %y%, Left}
    }
-   Send {Click %x0%,  %y0%, 0}
-   BlockInput,MouseMoveOff
+   sleep, DelayAfterClickSkill
+   DllCall("SetCursorPos", int, x0, int, y0)
+   ;BlockInput,MouseMoveOff
 }
 
 IsLearning()
@@ -3409,8 +3417,8 @@ VK(Param)
 		}
 }
 
-EmptyMem(PID="AHT v2.9.9Test"){
-    pid:=(pid="AHT v2.9.9Test") ? DllCall("GetCurrentProcessId") : pid
+EmptyMem(PID="AHT v2.9.9"){
+    pid:=(pid="AHT v2.9.9") ? DllCall("GetCurrentProcessId") : pid
     h:=DllCall("OpenProcess", "UInt", 0x001F0FFF, "Int", 0, "Int", pid)
     DllCall("SetProcessWorkingSetSize", "UInt", h, "Int", -1, "Int", -1)
     DllCall("CloseHandle", "Int", h)
@@ -3420,8 +3428,8 @@ EmptyMem(PID="AHT v2.9.9Test"){
 checklobby:
 IfWinActive, Warcraft III
 {
-x:=A_ScreenWidth*0.738
-y:=A_ScreenHeight*0.019
+x:=A_ScreenWidth*RelativeCoordinatesCheckChatX
+y:=A_ScreenHeight*RelativeCoordinatesCheckChatY
 PixelGetColor, color1, %x%, %y%
 if color1=0x000000
 {
