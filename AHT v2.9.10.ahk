@@ -41,7 +41,7 @@ GroupAdd, WC3DOTA , Dota 2
   VK_LIST = VK41,VK42,VK43,VK44,VK45,VK46,VK47,VK48,VK49,VK4A,VK4B,VK4C,VK4D,VK4E,VK4F,VK50,VK51,VK52,VK53,VK54,VK55,VK56,VK57,VK58,VK59,VK5A,VK30,VK31,VK32,VK33,VK34,VK35,VK36,VK37,VK38,VK39,VKC0,VKDB,VKDD,VKBE,VKBF,VKBA,VKDE,VKDC
   HK_LIST = A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,0,1,2,3,4,5,6,7,8,9,``,[,],.,/,;,',\
 
-Version=AucT Hotkeys Tool v2.9.9			;current verison for update
+Version=AucT Hotkeys Tool v2.9.10			;current verison for update
 ;************************************************PROFILE MANAGEMENT********************************//////////////
   IniRead, profile, %A_WorkingDir%\settings.ini, Others, profile, General
 	if profile=General
@@ -1215,9 +1215,10 @@ ChatFreeInfo:
 info =
 (
 This chat-free detecting system is my old from v2.1b.
-It will check pixel color in the top wc3 bar and so it will not work for window mode or dota2 game.
+It will work in warcraft 3 and will check enter presses. To detect chat. It's not reliable but if you press enter only for chatting it should work.
+Chat-free in lobby will check pixel color in the top wc3 bar to detect if you are in game so in lobby script will be off. And so chat-free in lobby will make aht not work for window mode or dota2 game.
 
-In the lobby chat-free is rarely working. Recommended to manually off/on script.
+The chat-detecting system is not as reliable as previous with reading wc3 memory. But in patch 1.30 I didn't find way to make it work.
 You can use in options menu indicator to know if it is working as expected.
 
 The benefit of this - it will work in any patch but is not as stable as reading wc3 memory. Have fun!
@@ -1910,7 +1911,7 @@ LC(xx,yy)
    y:=A_ScreenHeight*yy
    }
    
-   ;BlockInput,MouseMove
+   BlockInput,MouseMove
    MouseGetPos, x0, y0
    if UAC
    {
@@ -1922,9 +1923,10 @@ LC(xx,yy)
    {
    SendPlay, {Click %x%,  %y%, Left}
    }
+   BlockInput,MouseMoveOff
    sleep, DelayAfterClickSkill
    DllCall("SetCursorPos", int, x0, int, y0)
-   ;BlockInput,MouseMoveOff
+   
 }
 
 IsLearning()
@@ -3417,8 +3419,8 @@ VK(Param)
 		}
 }
 
-EmptyMem(PID="AHT v2.9.9"){
-    pid:=(pid="AHT v2.9.9") ? DllCall("GetCurrentProcessId") : pid
+EmptyMem(PID="AHT v2.9.10"){
+    pid:=(pid="AHT v2.9.10") ? DllCall("GetCurrentProcessId") : pid
     h:=DllCall("OpenProcess", "UInt", 0x001F0FFF, "Int", 0, "Int", pid)
     DllCall("SetProcessWorkingSetSize", "UInt", h, "Int", -1, "Int", -1)
     DllCall("CloseHandle", "Int", h)
