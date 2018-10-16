@@ -31,6 +31,8 @@ GroupAdd, WC3DOTA , Dota 2
   #SingleInstance force          ;makes sure second execution of the tool will stop teh first
   #HotkeyInterval 0
   #NoEnv
+  #InstallKeybdHook       ;Forces the unconditional installation of the keyboard hook
+  #UseHook On         ;might increase responsiveness of hotkeys
   #MaxThreads
   Process, priority, , High
   SetWorkingDir %A_ScriptDir%
@@ -41,7 +43,7 @@ GroupAdd, WC3DOTA , Dota 2
   VK_LIST = VK41,VK42,VK43,VK44,VK45,VK46,VK47,VK48,VK49,VK4A,VK4B,VK4C,VK4D,VK4E,VK4F,VK50,VK51,VK52,VK53,VK54,VK55,VK56,VK57,VK58,VK59,VK5A,VK30,VK31,VK32,VK33,VK34,VK35,VK36,VK37,VK38,VK39,VKC0,VKDB,VKDD,VKBE,VKBF,VKBA,VKDE,VKDC
   HK_LIST = A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,0,1,2,3,4,5,6,7,8,9,``,[,],.,/,;,',\
 
-Version=AucT Hotkeys Tool v2.9.10			;current verison for update
+Version=AucT Hotkeys Tool v2.9.11			;current verison for update
 ;************************************************PROFILE MANAGEMENT********************************//////////////
   IniRead, profile, %A_WorkingDir%\settings.ini, Others, profile, General
 	if profile=General
@@ -121,27 +123,27 @@ gui,5:font, cwhite
 
 	if i1 {
 	Hotkey,%i1%, i1
-	Hotkey,+%i1%, i1S,
+	Hotkey,+%i1%, i1
 	}
 	if i2 {
 	Hotkey,%i2%, i2
-	Hotkey,+%i2%, i2S
+	Hotkey,+%i2%, i2
 	}
 	if i3 {
 	Hotkey,%i3%, i3
-	Hotkey,+%i3%, i3S
+	Hotkey,+%i3%, i3
 	}
 	if i4 {
 	Hotkey,%i4%, i4
-	Hotkey,+%i4%, i4S
+	Hotkey,+%i4%, i4
 	}
 	if i5 {
 	Hotkey,%i5%, i5
-	Hotkey,+%i5%, i5S
+	Hotkey,+%i5%, i5
 	}
 	if i6 {
 	Hotkey,%i6%, i6
-	Hotkey,+%i6%, i6S
+	Hotkey,+%i6%, i6
 	}
 } 
 ;************************************************CUSTOMKEYS**********************************************
@@ -168,8 +170,10 @@ gui,5:font, cwhite
 	IniRead, NewRelativeCoordinatesCheckChatX, %A_WorkingDir%\%profileini%, CustomKeys, NewRelativeCoordinatesCheckChatX, 0.665
 	IniRead, NewRelativeCoordinatesCheckChatY, %A_WorkingDir%\%profileini%, CustomKeys, NewRelativeCoordinatesCheckChatY, 0.019
 	IniRead, DelayAfterClickSkill, %A_WorkingDir%\%profileini%, CustomKeys, DelayAfterClickSkill, 50
+	IniRead, DelayQuickCast, %A_WorkingDir%\%profileini%, CustomKeys, DelayQuickCast, 50
 
 	IniWrite, %DelayAfterClickSkill%, %A_WorkingDir%\settings.ini, CustomKeys, DelayAfterClickSkill
+	IniWrite, %DelayQuickCast%, %A_WorkingDir%\settings.ini, CustomKeys, DelayQuickCast
 	
 	if %NewWarCraft%
 	{
@@ -187,6 +191,7 @@ gui,5:font, cwhite
 	
 	IniRead, EnSkills, %A_WorkingDir%\%profileini%, CustomKeys, EnSkills, 0
 	IniRead, SmartSkills, %A_WorkingDir%\%profileini%, CustomKeys, SmartSkills, 0
+	IniRead, QuickCast, %A_WorkingDir%\%profileini%, CustomKeys, QuickCast, 0
 	IniRead, SelfCast, %A_WorkingDir%\%profileini%, CustomKeys, SelfCast, 0
 	IniRead, skill1, %A_WorkingDir%\%profileini%, CustomKeys, skill1, Q
 	IniRead, skill2, %A_WorkingDir%\%profileini%, CustomKeys, skill2, W
@@ -200,56 +205,108 @@ gui,5:font, cwhite
 	IniRead, skill10, %A_WorkingDir%\%profileini%, CustomKeys, skill10, %A_Space%
 	IniRead, skill11, %A_WorkingDir%\%profileini%, CustomKeys, skill11, %A_Space%
 	IniRead, skill12, %A_WorkingDir%\%profileini%, CustomKeys, skill12, %A_Space%
+	
+  s1:=VK(skill1)
+  s2:=VK(skill2)
+  s3:=VK(skill3)
+  s4:=VK(skill4)
+  s5:=VK(skill5)
+  s6:=VK(skill6)
+  s7:=VK(skill7)
+  s8:=VK(skill8)
+  s9:=VK(skill9)
+  s10:=VK(skill10)
+  s11:=VK(skill11)
+  s12:=VK(skill12)
+  
   if %EnSkills%
   {
 	if (!Selfcast and !SmartSkills) {
 		if %skill1%
-		Hotkey,% VK(skill1), LC1L
+		Hotkey,%s1%, LC1L
+		Hotkey,+%s1%, LC1L
 		if %skill2%
-		Hotkey,% VK(skill2), LC2L
+		Hotkey,%s2%, LC2L
+		Hotkey,+%s2%, LC2L
+
 		if %skill3%
-		Hotkey,% VK(skill3), LC3L
+		Hotkey,%s3%, LC3L
+		Hotkey,+%s3%, LC3L
+
 		if %skill4%
-		Hotkey,% VK(skill4), LC4L
+		Hotkey,%s4%, LC4L
+		Hotkey,+%s4%, LC4L
+
 		
 		if %skill5%
-		Hotkey,% VK(skill5), LC5L
+		Hotkey,%s5%, LC5L
+		Hotkey,+%s5%, LC5L
+
 		if %skill6%
-		Hotkey,% VK(skill6), LC6L
+		Hotkey,%s6%, LC6L
+		Hotkey,+%s6%, LC6L
+
 		if %skill7%
-		Hotkey,% VK(skill7), LC7L
+		Hotkey,%s7%, LC7L
+		Hotkey,+%s7%, LC7L
+
 		if %skill8%
-		Hotkey,% VK(skill8), LC8L
+		Hotkey,%s8%, LC8L
+		Hotkey,+%s8%, LC8L
+
 	}
 	else {
 		if %skill1%
-		Hotkey,% VK(skill1), LC1
+		Hotkey,%s1%, LC1
+		Hotkey,+%s1%, LC1
+
 		if %skill2%
-		Hotkey,% VK(skill2), LC2
+		Hotkey,%s2%, LC2
+		Hotkey,+%s2%, LC2
+
 		if %skill3%
-		Hotkey,% VK(skill3), LC3
+		Hotkey,%s3%, LC3
+		Hotkey,+%s3%, LC3
+
 		if %skill4%
-		Hotkey,% VK(skill4), LC4
-		
+		Hotkey,%s4%, LC4
+		Hotkey,+%s4%, LC4
+
 		if %skill5%
-		Hotkey,% VK(skill5), LC5
+		Hotkey,%s5%, LC5
+		Hotkey,+%s5%, LC5
+
 		if %skill6%
-		Hotkey,% VK(skill6), LC6
+		Hotkey,%s6%, LC6
+		Hotkey,+%s6%, LC6
+
 		if %skill7%
-		Hotkey,% VK(skill7), LC7
+		Hotkey,%s7%, LC7
+		Hotkey,+%s7%, LC7
+
 		if %skill8%
-		Hotkey,% VK(skill8), LC8
+		Hotkey,%s8%, LC8
+		Hotkey,+%s8%, LC8
+
 	
 	}
 	
 	if %skill9%
-	Hotkey,% VK(skill9), LC9
+	Hotkey,%s9%, LC9
+	Hotkey,+%s9%, LC9
+
 	if %skill10%
-	Hotkey,% VK(skill10), LC10
+	Hotkey,%s10%, LC10
+	Hotkey,+%s10%, LC10
+
 	if %skill11%
-	Hotkey,% VK(skill11), LC11
+	Hotkey,%s11%, LC11
+	Hotkey,+%s11%, LC11
+
 	if %skill12%
-	Hotkey,% VK(skill12), LC12
+	Hotkey,%s12%, LC12
+	Hotkey,+%s12%, LC12
+
 }
   
   
@@ -735,13 +792,13 @@ Menu, MyMenuBar, Add, Help, :HelpMenu
 
 Gui, Menu, MyMenuBar
 
-Gui, Add, Tab2, x0 y0 w470 h500 , Inventory|Skills|Autocast|Messages|Invoker|Remap|Other
+Gui, Add, Tab2, x0 y0 w470 h520 , Inventory|Skills|Autocast|Messages|Invoker|Remap|Other
 Gui, Tab, Inventory
 if darkstyle
 gui, font, cwhite
 else
 gui, font, cblue
-Gui, Add, GroupBox, x6 y32 w450 h400 , Inventory
+Gui, Add, GroupBox, x6 y32 w450 h420 , Inventory
 if darkstyle
 gui, font, cwhite
 else
@@ -763,18 +820,22 @@ if darkstyle
 gui, font, cwhite
 else
 gui, font, cblue
-Gui, Add, GroupBox, x6 y32 w450 h400 , Customkeys
+Gui, Add, GroupBox, x6 y32 w450 h420 , Customkeys
 if darkstyle
 gui, font, cwhite
 else
 gui, font
-Gui, Add, CheckBox,Checked%EnSkills% vEnSkills gEnSkills x36 y70 w200 h30, Enable Custom Keys
-Gui, Add, CheckBox,Checked%NewWarCraft% vNewWarCraft gNewWarCraft x36 y45 w200 h30, New WarCraft UI (1.29+)*
-Gui, Add, CheckBox,Checked%SmartSkills% vSmartSkills gSmartSkills x236 y45 w200 h30, Smart Learning Skills**
-Gui, Add, CheckBox,Checked%SelfCast% vSelfCast gSelfCast x236 y70 w200 h30, Selfcast on double-click
+Gui, Add, CheckBox,Checked%EnSkills% vEnSkills gEnSkills x36 y70 w150 h30, Enable Custom Keys
+Gui, Add, CheckBox,Checked%NewWarCraft% vNewWarCraft gNewWarCraft x36 y45 w150 h30, New WarCraft UI (1.29+)*
+Gui, Add, CheckBox,Checked%SmartSkills% vSmartSkills gSmartSkills x186 y45 w150 h30, Smart Learning Skills**
+Gui, Add, CheckBox,Checked%QuickCast% vQuickCast gQuickCast x336 y45 w100 h30, Quick Cast***
+
+
+Gui, Add, CheckBox,Checked%SelfCast% vSelfCast gSelfCast x186 y70 w200 h30, Selfcast on double-click
 gui, add, text, cBlue gHelp129 x30 y375 w410,*WarCraft 1.29 skill hotkeys are missing skill position?
 gui, add, text, x30 y390 w410,**Smart Learning will click the right (upper) skill when learning skill.
-gui, add, text, cBlue gCustomkeystxt x30 y405 w410,AucT CustomKeys.txt Generator
+gui, add, text, x30 y405 w410,***Quick Cast will left click on current position after using skill (beta).
+gui, add, text, cBlue gCustomkeystxt x30 y425 w410,Consider using Dota CustomKeys.txt Generator as it is faster, for simple dota maps
 Gui, Add, Picture, x36 y100 w402 h272 , %A_temp%\Skills.jpg
 Gui, Add, Hotkey, vskill9 gskill9 x94 y132 w30 h30 , %skill9%
 Gui, Add, Hotkey, vskill10 gskill10 x194 y132 w30 h30 , %skill10%
@@ -795,7 +856,7 @@ if darkstyle
 gui, font, cwhite
 else
 gui, font, cblue
-Gui, Add, GroupBox, x6 y32 w450 h400 , Autocast
+Gui, Add, GroupBox, x6 y32 w450 h420 , Autocast
 if darkstyle
 gui, font, cwhite
 else
@@ -815,7 +876,7 @@ if darkstyle
 gui, font, cwhite
 else
 gui, font, cblue
-Gui, Add, GroupBox, x6 y32 w450 h400,Messages
+Gui, Add, GroupBox, x6 y32 w450 h420,Messages
 
 
 mesinfo =
@@ -847,7 +908,7 @@ if darkstyle
 gui, font, cwhite
 else
 gui, font, cblue
-Gui, Add, GroupBox, x6 y32 w450 h400 , Invoker
+Gui, Add, GroupBox, x6 y32 w450 h420 , Invoker
 if darkstyle
 gui, font, cwhite
 else
@@ -921,7 +982,7 @@ if darkstyle
 gui, font, cwhite
 else
 gui, font, cblue
-Gui, Add, GroupBox, x6 y32 w450 h400,Key Remap
+Gui, Add, GroupBox, x6 y32 w450 h420,Key Remap
 if darkstyle
 gui, font, cwhite
 else
@@ -1007,16 +1068,16 @@ gui, font
 Gui, Tab
 if darkstyle
 gui, font, cwhite
-gui, add, checkbox,Checked%DontShowConfig% vDontShowConfig gDontShowConfig x16 y457, Don't show it later
+gui, add, checkbox,Checked%DontShowConfig% vDontShowConfig gDontShowConfig x16 y477, Don't show it later
 gui, font, bold
-Gui, Add, Button, x155 y450 w90 h30,Hide
-Gui, Add, Button, gButtonReload x250 y450 w110 h30,Save
-Gui, Add, Button, x365 y450 w90 h30,Exit
+Gui, Add, Button, x155 y470 w90 h30,Hide
+Gui, Add, Button, gButtonReload x250 y470 w110 h30,Save
+Gui, Add, Button, x365 y470 w90 h30,Exit
 if darkstyle
 gui, font, cwhite
 else
 gui, font
-Gui, Show, x209 y100 h500 w470, %Version% - %profile% profile
+Gui, Show, x209 y100 h520 w470, %Version% - %profile% profile
 }
 EmptyMem()
 return
@@ -1751,6 +1812,7 @@ return
 EnSkills:
 NewWarCraft:
 SmartSkills:
+QuickCast:
 SelfCast:
 skill1:
 skill2:
@@ -1851,44 +1913,27 @@ return
 i1:
 send {vk67}
 return
-i1S:
-sendplay +{vk67}
-return
 
 i2:
 send {vk68}
-return
-i2S:
-sendplay +{vk68}
 return
  
 i3:
 send {vk64}
 return
-i3S:
-sendplay +{vk64}
-return
 
 i4:
 send {vk65}
-return
-i4S:
-sendplay +{vk65}
 return
 
 i5:
 send {vk61}
 return
-i5S:
-sendplay +{vk61}
-return
 
 i6:
 send {vk62}
 return
-i6S:
-sendplay +{vk62}
-return
+
 ;===================================================CUSTOM KEYS=======================
 ;newxx - new x coordinates if user has new Warcraft 3 UI (warcraft 1.29+)
 LC(xx,yy)
@@ -1900,6 +1945,8 @@ LC(xx,yy)
    global cHeight
    global UAC
    global DelayAfterClickSkill
+   global DelayQuickCast
+   global QuickCast
    if _locked
    {
    x:=left+cWidth*xx
@@ -1925,7 +1972,19 @@ LC(xx,yy)
    }
    BlockInput,MouseMoveOff
    sleep, DelayAfterClickSkill
-   DllCall("SetCursorPos", int, x0, int, y0)
+	DllCall("SetCursorPos", int, x0, int, y0)
+   
+   if QuickCast {
+	   if UAC
+   		{
+			sleep, DelayQuickCast
+			Click
+		} else {
+			sleep,1
+	   		SendPlay, {Click %x0%,  %y0%, Left}
+		}
+	   
+   }
    
 }
 
@@ -3419,8 +3478,8 @@ VK(Param)
 		}
 }
 
-EmptyMem(PID="AHT v2.9.10"){
-    pid:=(pid="AHT v2.9.10") ? DllCall("GetCurrentProcessId") : pid
+EmptyMem(PID="AHT v2.9.11"){
+    pid:=(pid="AHT v2.9.11") ? DllCall("GetCurrentProcessId") : pid
     h:=DllCall("OpenProcess", "UInt", 0x001F0FFF, "Int", 0, "Int", pid)
     DllCall("SetProcessWorkingSetSize", "UInt", h, "Int", -1, "Int", -1)
     DllCall("CloseHandle", "Int", h)
